@@ -49,7 +49,7 @@ public class GreetingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
             }
         });
     }

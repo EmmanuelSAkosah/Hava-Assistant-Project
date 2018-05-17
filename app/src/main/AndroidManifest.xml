@@ -21,7 +21,10 @@
         <activity
             android:name=".WhatsNewActivity"
             android:label="@string/title_activity_whats_new" />
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".ScheduleEventActivity">
+
+        </activity>
     </application>
 
 </manifest>

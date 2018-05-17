@@ -19,13 +19,17 @@ public class SignUpActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.sign_up_menu, menu);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId())
+        {
+            case R.id.su_menuitem_save:
+                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                return true;
 
             case android.R.id.home:
                 finish();
