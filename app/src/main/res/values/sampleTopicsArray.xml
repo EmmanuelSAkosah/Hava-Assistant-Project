@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sampe_topics">
+        <item>Politics</item>
+        <item>Sport</item>
+        <item>Business</item>
+        <item>Technology</item>
+        <item>Celebrity/Gossip</item>
+    </string-array>
+</resources>
