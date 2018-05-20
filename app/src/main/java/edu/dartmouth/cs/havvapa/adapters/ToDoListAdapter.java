@@ -17,6 +17,11 @@ public class ToDoListAdapter extends BaseAdapter {
     private ArrayList<ToDoItem> calendarItems;
     private Context mContext;
 
+    public ToDoListAdapter(Context context, ArrayList<ToDoItem> calendarItems){
+        this.mContext = context;
+        this.calendarItems = calendarItems;
+    }
+
     public ToDoListAdapter(Context context) {
         this.mContext = context;
     }

@@ -36,7 +36,7 @@ public class WhatsNewFragment extends Fragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        startActivity(new Intent(getActivity(), WhatsNewActivity.class));
+        //startActivity(new Intent(getActivity(), WhatsNewActivity.class));
 
         return inflater.inflate(R.layout.fragment_whats_new, container, false);
 
@@ -45,6 +45,6 @@ public class WhatsNewFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        startActivity(new Intent(getActivity(), WhatsNewActivity.class));
+        //startActivity(new Intent(getActivity(), WhatsNewActivity.class));
     }
 }

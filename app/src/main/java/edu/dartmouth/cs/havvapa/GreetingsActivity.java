@@ -51,17 +51,17 @@ public class GreetingsActivity extends AppCompatActivity
         switch (item.getItemId()){
             case R.id.menuitem_settings:
                 startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
-                break;
+                return true;
 
             case R.id.menuitem_editProfile:
                 startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
-                break;
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
 
         }
-        return true;
+
     }
 
     @Override
@@ -78,6 +78,7 @@ public class GreetingsActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                return;
             }
         });
 

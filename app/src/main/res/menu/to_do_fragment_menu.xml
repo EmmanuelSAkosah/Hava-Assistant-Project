@@ -6,13 +6,7 @@
         android:id="@+id/menuitem_schedule_event_btn"
         android:title="Schedule event"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/menuitem_settings"
-        android:title="@string/menu_item_settings"/>
-    <item
-        android:id="@+id/menuitem_editProfile"
-        app:showAsAction="never"
-        android:title="@string/menu_item_edit_profile"/>
+
 
 
 </menu>

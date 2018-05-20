@@ -102,11 +102,11 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()){
             case R.id.menuitem_settings:
                 startActivity(new Intent(MainActivity.this, SignUpActivity.class));
-                break;
+                return true;
 
             case R.id.menuitem_editProfile:
                 startActivity(new Intent(MainActivity.this, SignUpActivity.class));
-                break;
+                return true;
 
             case android.R.id.home:
                 finish();
@@ -116,6 +116,6 @@ public class MainActivity extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
 
         }
-        return true;
+
     }
 }

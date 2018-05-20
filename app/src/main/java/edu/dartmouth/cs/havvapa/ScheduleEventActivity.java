@@ -2,10 +2,13 @@ package edu.dartmouth.cs.havvapa;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,18 +49,28 @@ public class ScheduleEventActivity extends AppCompatActivity
         {
             case R.id.schedule_event_btn:
 
+                eventTitle = eventTitleEt.getText().toString();
+                eventDescription = eventDescriptionEt.getText().toString();
+                Log.d("TITLE", eventTitle);
+                Log.d("DESCRIPTION", eventDescription);
+
+
+
                 Intent scheduleIntent = new Intent(ScheduleEventActivity.this, MainActivity.class);
                 scheduleIntent.putExtra("event_title",eventTitle);
                 scheduleIntent.putExtra("event_description",eventDescription);
                 scheduleIntent.putExtra("event_time",mSelectedTime);
                 scheduleIntent.putExtra("event_date",mSelectedDate);
                 startActivity(scheduleIntent);
+                return true;
 
             case R.id.menuitem_settings:
                 startActivity(new Intent(ScheduleEventActivity.this, SignUpActivity.class));
+                return true;
 
             case R.id.menuitem_editProfile:
                 startActivity(new Intent(ScheduleEventActivity.this, SignUpActivity.class));
+                return true;
 
             case android.R.id.home:
                 finish();
@@ -81,8 +94,7 @@ public class ScheduleEventActivity extends AppCompatActivity
         eventDateBtn = findViewById(R.id.to_do_item_date);
         eventTimeBtn = findViewById(R.id.to_do_item_time);
 
-        eventTitle = eventTitleEt.getText().toString();
-        eventDescription = eventDescriptionEt.getText().toString();
+
         dateTime = Calendar.getInstance();
 
         eventDateBtn.setOnClickListener(new View.OnClickListener() {
@@ -102,20 +114,53 @@ public class ScheduleEventActivity extends AppCompatActivity
 
             }
         });
-
-        eventTitleEt.setOnClickListener(new View.OnClickListener() {
+        /*
+        eventTitleEt.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                eventTitle = eventTitleEt.getText().toString();
+            public void onClick(View v)
+            {
+                //displayKeyboardDialogTitle("Event name");
+                AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
+                builder.setTitle("Event title");
+                builder.setView(eventTitleEt);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        eventTitle = eventTitleEt.getText().toString();
+                        Log.d("DESCRIPTION", eventTitle);
+                    }
+                });
+                builder.create();
+                builder.show();
+
+
+
             }
         });
 
         eventDescriptionEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eventDescription = eventDescriptionEt.getText().toString();
+               // displayKeyboardDialogDescription("Event description");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
+                builder.setTitle("Event title");
+                builder.setView(eventDescriptionEt);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        eventDescription = eventDescriptionEt.getText().toString();
+                        Log.d("DESCRIPTION", eventDescription);
+                    }
+                });
+                builder.create();
+                builder.show();
             }
-        });
+        });*/
+
+
+
 
 
 
@@ -146,6 +191,37 @@ public class ScheduleEventActivity extends AppCompatActivity
 
         }
     };
+
+    public void displayKeyboardDialogTitle(final String entryItem){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
+        builder.setTitle(entryItem);
+        //final EditText userInput = new EditText(ScheduleEventActivity.this);
+        builder.setView(eventTitleEt);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                eventTitle = eventTitleEt.getText().toString();
+                Log.d("DESCRIPTION", eventTitle);
+
+            }
+        });
+    }
+    public void displayKeyboardDialogDescription(final String entryItem){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
+        builder.setTitle(entryItem);
+        //final EditText userInput = new EditText(ScheduleEventActivity.this);
+        builder.setView(eventDescriptionEt);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                eventDescription = eventDescriptionEt.getText().toString();
+                Log.d("DESCRIPTION", eventDescription);
+
+            }
+        });
+    }
 
     private void updateDateAndTimeDisplay()
     {

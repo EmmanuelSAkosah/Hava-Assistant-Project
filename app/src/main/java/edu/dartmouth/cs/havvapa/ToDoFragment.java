@@ -30,38 +30,37 @@ public class ToDoFragment extends Fragment
     private ArrayList<ToDoItem> mToDoList;
     private ToDoItem item;
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.menuitem_schedule_event_btn:
+                startActivity(new Intent(getActivity(), ScheduleEventActivity.class));
+                return true;
+
+            case R.id.menuitem_settings:
+                startActivity(new Intent(getActivity(), SignUpActivity.class));
+                return true;
+
+            case R.id.menuitem_editProfile:
+                startActivity(new Intent(getActivity(), SignUpActivity.class));
+                return true;
+
+            default:
+               // return super.onOptionsItemSelected(item);
+                return true;
+
+        }
+
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.to_do_fragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.menuitem_settings:
-                startActivity(new Intent(getActivity(), SignUpActivity.class));
-                break;
-
-            case R.id.menuitem_editProfile:
-                startActivity(new Intent(getActivity(), SignUpActivity.class));
-                break;
-
-            case R.id.menuitem_schedule_event_btn:
-                startActivity(new Intent(getActivity(), ScheduleEventActivity.class));
-                break;
-
-            case android.R.id.home:
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
-        return true;
     }
 
     @Override
@@ -101,8 +100,8 @@ public class ToDoFragment extends Fragment
         }
 
         ListView mListView = view.findViewById(R.id.calendarListView);
-        mToDoListAdapter = new ToDoListAdapter(getActivity());
-        mToDoListAdapter.setCalendarItems(mToDoList);
+        mToDoListAdapter = new ToDoListAdapter(getActivity(), mToDoList);
+        //mToDoListAdapter.setCalendarItems(mToDoList);
         mListView.setAdapter(mToDoListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
