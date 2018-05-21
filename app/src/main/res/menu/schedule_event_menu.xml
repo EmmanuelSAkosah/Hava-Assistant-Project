@@ -7,6 +7,10 @@
         android:title="Schedule!"
         app:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/delete_event_btn"
+        android:title="Delete"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/menuitem_settings"
         android:title="@string/menu_item_settings"/>
     <item

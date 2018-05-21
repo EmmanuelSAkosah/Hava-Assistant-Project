@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_margin="10sp"
     android:orientation="horizontal"
-    tools:context=".models.ToDoItem">
+    tools:context=".models.ToDoItemForAdapter">
 
     <LinearLayout
         android:id="@+id/left_items_group"

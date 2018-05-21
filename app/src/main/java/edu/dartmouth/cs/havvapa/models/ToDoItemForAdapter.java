@@ -1,12 +1,12 @@
 package edu.dartmouth.cs.havvapa.models;
 
-public class ToDoItem {
+public class ToDoItemForAdapter {
 
     String toDoItemTitle;
     String toDoItemDescription;
     String toDoItemTime;
 
-    public ToDoItem(String toDoItemTitle, String toDoItemDescription, String toDoItemTime){
+    public ToDoItemForAdapter(String toDoItemTitle, String toDoItemDescription, String toDoItemTime){
         this.toDoItemTitle = toDoItemTitle;
         this.toDoItemDescription = toDoItemDescription;
         this.toDoItemTime = toDoItemTime;

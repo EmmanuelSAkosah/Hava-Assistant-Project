@@ -10,14 +10,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import edu.dartmouth.cs.havvapa.R;
-import edu.dartmouth.cs.havvapa.models.ToDoItem;
+import edu.dartmouth.cs.havvapa.models.ToDoItemForAdapter;
 
 public class ToDoListAdapter extends BaseAdapter {
 
-    private ArrayList<ToDoItem> calendarItems;
+    private ArrayList<ToDoItemForAdapter> calendarItems;
     private Context mContext;
 
-    public ToDoListAdapter(Context context, ArrayList<ToDoItem> calendarItems){
+    public ToDoListAdapter(Context context, ArrayList<ToDoItemForAdapter> calendarItems){
         this.mContext = context;
         this.calendarItems = calendarItems;
     }
@@ -26,11 +26,11 @@ public class ToDoListAdapter extends BaseAdapter {
         this.mContext = context;
     }
 
-    public ArrayList<ToDoItem> getCalendarItems() {
+    public ArrayList<ToDoItemForAdapter> getCalendarItems() {
         return calendarItems;
     }
 
-    public void setCalendarItems(ArrayList<ToDoItem> calendarItems) {
+    public void setCalendarItems(ArrayList<ToDoItemForAdapter> calendarItems) {
         this.calendarItems = calendarItems;
     }
 
@@ -58,7 +58,7 @@ public class ToDoListAdapter extends BaseAdapter {
 
 
     @Override
-    public ToDoItem getItem(int position) {
+    public ToDoItemForAdapter getItem(int position) {
         return calendarItems.get(position);
     }
 
@@ -72,7 +72,7 @@ public class ToDoListAdapter extends BaseAdapter {
         if (toDoItemView == null)
             toDoItemView = LayoutInflater.from(mContext).inflate(R.layout.to_do_item, parent, false);
 
-        ToDoItem curr = getItem(position);
+        ToDoItemForAdapter curr = getItem(position);
         String toDoItemTitle = curr.getToDoItemTitle();
         String toDoItemDescription = curr.getToDoItemDescription();
         String toDoItemTime = curr.getToDoItemTime();
