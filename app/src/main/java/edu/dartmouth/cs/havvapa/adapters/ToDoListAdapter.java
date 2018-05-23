@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -68,22 +69,28 @@ public class ToDoListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         View toDoItemView = convertView;
         if (toDoItemView == null)
-            toDoItemView = LayoutInflater.from(mContext).inflate(R.layout.to_do_item, parent, false);
+            toDoItemView = LayoutInflater.from(mContext).inflate(R.layout.to_do_item_frame_layout, parent, false).findViewById(R.id.event_entry);
 
+
+        //FrameLayout toDoItemView = (FrameLayout)toDoItemFrameView.findViewById(R.id.event_items);
         ToDoItemForAdapter curr = getItem(position);
-        String toDoItemTitle = curr.getToDoItemTitle();
+        String toDoItemTitleAndLocation = curr.getToDoItemTitleAndLocation();
         String toDoItemDescription = curr.getToDoItemDescription();
-        String toDoItemTime = curr.getToDoItemTime();
+        String toDoItemStartTime = curr.getToDoItemStartTime();
+        String toDoItemEndTime = curr.getToDoItemEndTime();
 
-        TextView toDoItemTitleTv = toDoItemView.findViewById(R.id.tv_todo_item_title);
-        TextView toDoItemDescriptionTv = toDoItemView.findViewById(R.id.tv_todo_item_description);
-        TextView toDoItemTimeTv = toDoItemView.findViewById(R.id.tv_todo_item_time);
+        TextView toDoItemTitleAndLocationTv = toDoItemView.findViewById(R.id.to_do_event_title_location);
+        TextView toDoItemDescriptionTv = toDoItemView.findViewById(R.id.to_do_event_description);
+        TextView toDoItemStartTimeTv = toDoItemView.findViewById(R.id.to_do_event_start_time);
+        TextView toDoItemEndTimeTv = toDoItemView.findViewById(R.id.to_do_event_end_time);
 
-        toDoItemTitleTv.setText(toDoItemTitle);
+        toDoItemTitleAndLocationTv.setText(toDoItemTitleAndLocation);
         toDoItemDescriptionTv.setText(toDoItemDescription);
-        toDoItemTimeTv.setText(toDoItemTime);
+        toDoItemStartTimeTv.setText(toDoItemStartTime);
+        toDoItemEndTimeTv.setText(toDoItemEndTime);
 
         return toDoItemView;
 

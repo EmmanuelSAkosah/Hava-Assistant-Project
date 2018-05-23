@@ -23,7 +23,7 @@
             android:layout_marginStart="20sp"
             android:layout_marginLeft="20sp"
             android:textStyle="bold"
-            android:textColor="@color/red"
+            android:textColor="#b71c1c"
             android:textSize="20sp"/>
         <TextView
             android:id="@+id/tv_todo_item_description"

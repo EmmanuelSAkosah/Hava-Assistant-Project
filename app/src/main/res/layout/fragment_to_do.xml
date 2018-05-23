@@ -3,7 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ToDoFragment">
+    android:background="#556671"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <edu.dartmouth.cs.havvapa.CompactCalendarView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/compactcalendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:compactCalendarTargetHeight="250dp"
+        app:compactCalendarTextSize="12sp"
+        app:compactCalendarBackgroundColor="#556671"
+        app:compactCalendarTextColor="#b5b67e"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#a73a62"
+        app:compactCalendarCurrentDayBackgroundColor="#b71c1c"
+        app:compactCalendarCurrentDayIndicatorStyle="fill_large_indicator"
+        app:compactCalendarEventIndicatorStyle="small_indicator"
+        app:compactCalendarOtherMonthDaysTextColor="#534c4c"
+        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="true"
+        />
 
     <ListView
         android:id="@+id/calendarListView"

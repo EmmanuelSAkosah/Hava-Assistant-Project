@@ -14,9 +14,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -30,15 +30,24 @@ public class ScheduleEventActivity extends AppCompatActivity
 
     private String eventTitle;
     private String eventDescription;
-    private Calendar dateTime;
+    private String eventLocation;
+    private Calendar startDateTime;
+    private Calendar endDateTime;
 
     private  EditText eventTitleEt;
+    private EditText eventLocationEt;
     private EditText eventDescriptionEt;
-    private Button eventDateBtn;
-    private Button eventTimeBtn;
+    private TextView eventDateStartTv;
+    private TextView eventDateEndTv;
+    private TextView eventTimeStartTv;
+    private TextView eventTimeEndTv;
 
     private String mSelectedTime;
     private String mSelectedDate;
+    private String mSelectedStartDate;
+    private String mSelectedEndDate;
+    private String mSelectedStartTime;
+    private String mSelectedEndTime;
 
     private ToDoItemsSource database;
     private ToDoEntry eventToDisplay;
@@ -67,21 +76,15 @@ public class ScheduleEventActivity extends AppCompatActivity
             case R.id.schedule_event_btn:
 
                 eventTitle = eventTitleEt.getText().toString();
+                eventLocation = eventLocationEt.getText().toString();
                 eventDescription = eventDescriptionEt.getText().toString();
                 Log.d("TITLE", eventTitle);
                 Log.d("DESCRIPTION", eventDescription);
 
-
-                /*
-                Intent scheduleIntent = new Intent(ScheduleEventActivity.this, MainActivity.class);
-                scheduleIntent.putExtra("event_title",eventTitle);
-                scheduleIntent.putExtra("event_description",eventDescription);
-                scheduleIntent.putExtra("event_time",mSelectedTime);
-                scheduleIntent.putExtra("event_date",mSelectedDate);
-                startActivity(scheduleIntent);*/
                 if(modifyEvent)
                 {
-                    database.modifyScheduledEvent(eventToDisplay.getId(), eventTitle, eventDescription, dateTime.getTimeInMillis());
+                    String eventDuration = eventToDisplay.calculateEventDuration(startDateTime, endDateTime);
+                    database.modifyScheduledEvent(eventToDisplay.getId(), eventTitle,eventLocation, eventDescription, startDateTime.getTimeInMillis(), endDateTime.getTimeInMillis(), eventDuration);
                     Intent modifyEventIntent = new Intent(ScheduleEventActivity.this, MainActivity.class);
                     startActivity(modifyEventIntent);
                 }
@@ -127,8 +130,14 @@ public class ScheduleEventActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
 
         outState.putString("EVENT_TITLE", eventTitle);
+        outState.putString("EVENT_LOCATION", eventLocation);
         outState.putString("EVENT_DESCRIPTION", eventDescription);
-        outState.putSerializable("CALENDAR_KEY", dateTime);
+        outState.putSerializable("CALENDAR_KEY_START", startDateTime);
+        outState.putSerializable("CALENDAR_KEY_END", endDateTime);
+        outState.putString("EVENT_TIME_START", mSelectedStartTime);
+        outState.putString("EVENT_TIME_END", mSelectedEndTime);
+        outState.putString("EVENT_DATE_START", mSelectedStartDate);
+        outState.putString("EVENT_DATE_END", mSelectedEndDate);
         outState.putString("DATE_KEY", mSelectedDate);
         outState.putString("TIME_KEY", mSelectedTime);
         outState.putBoolean("MODIFY_EVENT", modifyEvent);
@@ -139,26 +148,41 @@ public class ScheduleEventActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule_event);
+        //setContentView(R.layout.activity_schedule_event);
+        setContentView(R.layout.activity_schedule_event_vol2);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Schedule your event");
 
         database = new ToDoItemsSource(this);
 
-        eventTitleEt = findViewById(R.id.to_do_item_title);
-        eventDescriptionEt = findViewById(R.id.to_do_item_description);
-        eventDateBtn = findViewById(R.id.to_do_item_date);
-        eventTimeBtn = findViewById(R.id.to_do_item_time);
+        eventTitleEt = findViewById(R.id.event_title);
+        eventLocationEt = findViewById(R.id.event_location);
+        eventDescriptionEt = findViewById(R.id.event_description);
+        eventDateStartTv = findViewById(R.id.event_start_date);
+        eventDateEndTv = findViewById(R.id.event_end_date);
+        eventTimeStartTv = findViewById(R.id.event_start_time);
+        eventTimeEndTv = findViewById(R.id.event_end_time);
 
         if(savedInstanceState!=null){
             eventTitle = savedInstanceState.getString("EVENT_TITLE");
             eventDescription = savedInstanceState.getString("EVENT_DESCRIPTION");
-            dateTime = (Calendar)savedInstanceState.getSerializable("CALENDAR_KEY");
+            eventLocation = savedInstanceState.getString("EVENT_LOCATION");
+            mSelectedStartTime = savedInstanceState.getString("EVENT_TIME_START");
+            mSelectedEndTime = savedInstanceState.getString("EVENT_TIME_END");
+            mSelectedStartDate = savedInstanceState.getString("EVENT_DATE_START");
+            mSelectedEndDate = savedInstanceState.getString("EVENT_DATE_END");
+            startDateTime = (Calendar)savedInstanceState.getSerializable("CALENDAR_KEY_START");
+            endDateTime = (Calendar)savedInstanceState.getSerializable("CALENDAR_KEY_END");
             mSelectedDate = savedInstanceState.getString("DATE_KEY");
             mSelectedTime = savedInstanceState.getString("TIME_KEY");
             modifyEvent = savedInstanceState.getBoolean("MODIFY_EVENT");
             flag = savedInstanceState.getBoolean("BOOLEAN_FLAG");
+
+            eventTimeStartTv.setText(mSelectedStartTime);
+            eventTimeEndTv.setText(mSelectedEndTime);
+            eventDateStartTv.setText(mSelectedStartDate);
+            eventDateEndTv.setText(mSelectedEndDate);
         }
 
         if(flag)
@@ -167,8 +191,15 @@ public class ScheduleEventActivity extends AppCompatActivity
             {
                 long selectedEventId = getIntent().getExtras().getLong("ENTRY_ROW_ID");
                 eventToDisplay = database.fetchEntryByIndex(selectedEventId);
-                dateTime = eventToDisplay.getDateTime();
-                updateDateAndTimeDisplay();
+                startDateTime = eventToDisplay.getStartDateTime();
+                endDateTime = eventToDisplay.getEndDateTime();
+                updateStartDateTime();
+                updateEndDateTime();
+
+                eventTimeStartTv.setText(mSelectedStartTime);
+                eventTimeEndTv.setText(mSelectedEndTime);
+                eventDateStartTv.setText(mSelectedStartDate);
+                eventDateEndTv.setText(mSelectedEndDate);
 
                 eventTitle = eventToDisplay.getEventTitle();
                 eventDescription = eventToDisplay.getEventDescription();
@@ -185,106 +216,101 @@ public class ScheduleEventActivity extends AppCompatActivity
             catch (Exception e)
             {
                 modifyEvent = false;
-                dateTime = Calendar.getInstance();
+                startDateTime = Calendar.getInstance();
+                endDateTime = Calendar.getInstance();
 
             }
         }
 
 
-        eventDateBtn.setOnClickListener(new View.OnClickListener() {
+        eventDateStartTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
 
-                new DatePickerDialog(ScheduleEventActivity.this, mDateListener, dateTime.get(Calendar.YEAR),
-                        dateTime.get(Calendar.MONTH), dateTime.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(ScheduleEventActivity.this, mDateListenerStart, startDateTime.get(Calendar.YEAR),
+                        startDateTime.get(Calendar.MONTH), startDateTime.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
-        eventTimeBtn.setOnClickListener(new View.OnClickListener() {
+        eventDateEndTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(ScheduleEventActivity.this, mTimeListener, dateTime.get(Calendar.HOUR_OF_DAY), dateTime.get(Calendar.MINUTE), true).show();
-
-            }
-        });
-        /*
-        eventTitleEt.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                //displayKeyboardDialogTitle("Event name");
-                AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
-                builder.setTitle("Event title");
-                builder.setView(eventTitleEt);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        eventTitle = eventTitleEt.getText().toString();
-                        Log.d("DESCRIPTION", eventTitle);
-                    }
-                });
-                builder.create();
-                builder.show();
-
-
+                new DatePickerDialog(ScheduleEventActivity.this, mDateListenerEnd, endDateTime.get(Calendar.YEAR),
+                        endDateTime.get(Calendar.MONTH), endDateTime.get(Calendar.DAY_OF_MONTH)).show();
 
             }
         });
 
-        eventDescriptionEt.setOnClickListener(new View.OnClickListener() {
+        eventTimeStartTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // displayKeyboardDialogDescription("Event description");
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
-                builder.setTitle("Event title");
-                builder.setView(eventDescriptionEt);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        eventDescription = eventDescriptionEt.getText().toString();
-                        Log.d("DESCRIPTION", eventDescription);
-                    }
-                });
-                builder.create();
-                builder.show();
+                new TimePickerDialog(ScheduleEventActivity.this, mTimeListenerStart, startDateTime.get(Calendar.HOUR_OF_DAY), startDateTime.get(Calendar.MINUTE), true).show();
             }
-        });*/
+        });
 
-
-
-
-
+        eventTimeEndTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(ScheduleEventActivity.this, mTimeListenerEnd, endDateTime.get(Calendar.HOUR_OF_DAY), endDateTime.get(Calendar.MINUTE), true).show();
+            }
+        });
 
     }
 
-    DatePickerDialog.OnDateSetListener mDateListener = new DatePickerDialog.OnDateSetListener() {
+    DatePickerDialog.OnDateSetListener mDateListenerStart = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-            dateTime.set(Calendar.YEAR, year);
-            dateTime.set(Calendar.MONTH, month);
-            dateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateDateAndTimeDisplay();
+            startDateTime.set(Calendar.YEAR, year);
+            startDateTime.set(Calendar.MONTH, month);
+            startDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateStartDateTime();
+
+            eventDateStartTv.setText(mSelectedStartDate);
 
 
         }
     };
 
-    TimePickerDialog.OnTimeSetListener mTimeListener = new TimePickerDialog.OnTimeSetListener() {
+    TimePickerDialog.OnTimeSetListener mTimeListenerStart = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            dateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            dateTime.set(Calendar.MINUTE, minute);
-            updateDateAndTimeDisplay();
+            startDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            startDateTime.set(Calendar.MINUTE, minute);
+            updateStartDateTime();
 
+            eventTimeStartTv.setText(mSelectedStartTime);
+        }
+    };
 
+    DatePickerDialog.OnDateSetListener mDateListenerEnd = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+            endDateTime.set(Calendar.YEAR, year);
+            endDateTime.set(Calendar.MONTH, month);
+            endDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateEndDateTime();
+
+            eventDateEndTv.setText(mSelectedEndDate);
+        }
+    };
+
+    TimePickerDialog.OnTimeSetListener mTimeListenerEnd = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            endDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            endDateTime.set(Calendar.MINUTE, minute);
+            updateEndDateTime();
+
+            eventTimeEndTv.setText(mSelectedEndTime);
 
 
         }
     };
+
+
 
     public void displayKeyboardDialogTitle(final String entryItem){
         AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
@@ -317,10 +343,16 @@ public class ScheduleEventActivity extends AppCompatActivity
         });
     }
 
-    private void updateDateAndTimeDisplay()
+    private void updateStartDateTime()
     {
-        mSelectedTime = DateUtils.formatDateTime(ScheduleEventActivity.this, dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
-        mSelectedDate = DateUtils.formatDateTime(ScheduleEventActivity.this, dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
+        mSelectedStartTime = DateUtils.formatDateTime(ScheduleEventActivity.this, startDateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
+        mSelectedStartDate = DateUtils.formatDateTime(ScheduleEventActivity.this, startDateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
+    }
+
+    private void updateEndDateTime()
+    {
+        mSelectedEndTime = DateUtils.formatDateTime(ScheduleEventActivity.this, endDateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
+        mSelectedEndDate = DateUtils.formatDateTime(ScheduleEventActivity.this, endDateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
     }
 
     class AddEventTask extends AsyncTask<Void, Void, Void>
@@ -331,7 +363,7 @@ public class ScheduleEventActivity extends AppCompatActivity
             if(!isCancelled()){
 
                 try{
-                    ToDoEntry savedEvent = new ToDoEntry(eventTitle, eventDescription, dateTime);
+                    ToDoEntry savedEvent = new ToDoEntry(eventTitle, eventLocation, eventDescription, startDateTime, endDateTime );
                     database.createItem(savedEvent);
                 }
                 catch (Exception e){

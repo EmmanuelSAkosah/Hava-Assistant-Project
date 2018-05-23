@@ -1,6 +1,7 @@
 package edu.dartmouth.cs.havvapa;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +21,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import edu.dartmouth.cs.havvapa.adapters.ToDoListAdapter;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoEntryListLoader;
@@ -34,6 +38,7 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
     private ArrayList<ToDoEntry> allEntries;
     ArrayList<ToDoItemForAdapter> updatedToDoItemEnries = new ArrayList<>();
     private ToDoItemForAdapter item;
+    private CompactCalendarView compactCalendarView;
 
     private static  final int ALL_ITEMS_LOADER_ID = 1;
 
@@ -91,58 +96,89 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_to_do, container, false);
+        View view = inflater.inflate(R.layout.fragment_to_do, container, false);
+        compactCalendarView = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
+        compactCalendarView.setUseThreeLetterAbbreviation(false);
+        compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
+
+        /*
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH,cal.get(Calendar.DAY_OF_MONTH) + 1);
+
+        List<Event> events = Arrays.asList(
+                new Event(Color.argb(255, 169, 68, 65), cal.getTimeInMillis(), "Event at " + new Date(Calendar.getInstance().getTimeInMillis())),
+                new Event(Color.argb(255, 100, 68, 65), cal.getTimeInMillis(), "Event 2 at " + new Date(Calendar.getInstance().getTimeInMillis())));
+
+        compactCalendarView.addEvents(events);
+        Log.d("TRY", String.valueOf(compactCalendarView.getEvents(cal.getTimeInMillis()).size()));
+        for(Event event : compactCalendarView.getEvents(cal.getTimeInMillis())){
+            Log.d("DATE", updateDateDisplay2(event.getTimeInMillis()));
+        }*/
+        compactCalendarView.invalidate();
+
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /*
-        try {
-            Intent intent = getActivity().getIntent();
-            String title = intent.getExtras().getString("event_title");
-            String description = intent.getExtras().getString("event_description");
-            String date = intent.getExtras().getString("event_date");
-            String time = intent.getExtras().getString("event_time");
-            item = new ToDoItemForAdapter(title,description,date + " " + time);
-            updatedToDoItemEnries.add(item);
-        }
-        catch (Exception e){
-
-        }
-
         ListView mListView = view.findViewById(R.id.calendarListView);
-        mToDoListAdapter = new ToDoListAdapter(getActivity(), updatedToDoItemEnries);
-        //mToDoListAdapter.setCalendarItems(updatedToDoItemEnries);
-        mListView.setAdapter(mToDoListAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if(mToDoListAdapter!=null && mToDoListAdapter.getCount()!=0)
-                {
-
-                }
-            }
-        });*/
-
-        ListView mListView = view.findViewById(R.id.calendarListView);
-        mToDoListAdapter = new ToDoListAdapter(getContext(), updatedToDoItemEnries);
+        mToDoListAdapter = new ToDoListAdapter(getContext(),updatedToDoItemEnries);
         mListView.setAdapter(mToDoListAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if(mToDoListAdapter!=null && mToDoListAdapter.getCount()!=0)
+                if(mToDoListAdapter!=null )
                 {
                     long selectedEntryId = allEntries.get(position).getId();
+                    Log.d("ID_?", String.valueOf(selectedEntryId));
                     Intent displayIntent = new Intent(getActivity(), ScheduleEventActivity.class);
                     displayIntent.putExtra("ENTRY_ROW_ID", selectedEntryId);
                     startActivity(displayIntent);
 
                 }
+            }
+        });
+
+        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+
+                List<Event> toDoEvents = compactCalendarView.getEvents(dateClicked);
+                allEntries = new ArrayList<>();
+                updatedToDoItemEnries = new ArrayList<>();
+                if(toDoEvents!=null && mToDoListAdapter!=null )
+                {
+                    mToDoListAdapter.clear();
+
+                    Log.d("SIZE//", String.valueOf(toDoEvents.size()));
+
+                    for(Event event : toDoEvents)
+                    {
+                        ToDoEntry toDoEntryOfEvent = event.getEntry();
+                        Log.d("NAME//", toDoEntryOfEvent.getEventTitle());
+                        allEntries.add(toDoEntryOfEvent);
+                        Calendar startCal = toDoEntryOfEvent.getStartDateTime();
+                        Calendar endCal = toDoEntryOfEvent.getEndDateTime();
+
+                        ToDoItemForAdapter toDoEntryOfScheduledEvent = toDoEntryOfEvent.getToDoItemOfAdapter();
+                        toDoEntryOfScheduledEvent.setToDoItemStartTime(updateTimeDisplay(startCal));
+                        toDoEntryOfScheduledEvent.setToDoItemEndTime(updateTimeDisplay(endCal));
+                        updatedToDoItemEnries.add(toDoEntryOfScheduledEvent);
+
+                    }
+                    mToDoListAdapter.setCalendarItems(updatedToDoItemEnries);
+                    mToDoListAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+
             }
         });
     }
@@ -156,6 +192,12 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
     {
         String mSelectedTime = DateUtils.formatDateTime(getActivity(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
         return mSelectedTime;
+    }
+
+    private String updateDateDisplay2(long dateTimeInMillis)
+    {
+        String mSelectedDate = DateUtils.formatDateTime(getActivity(), dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
+        return mSelectedDate;
     }
 
     @Override
@@ -180,21 +222,35 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onLoadFinished(@NonNull Loader<ArrayList<ToDoEntry>> loader, ArrayList<ToDoEntry> entities) {
         if(loader.getId() == ALL_ITEMS_LOADER_ID)
         {
-            if(entities.size()>0){
-                allEntries = entities;
+            if(entities.size()>0)
+            {
+                try {
+                    compactCalendarView.removeAllEvents();
+                }
+                catch (Exception e){
+
+                }
+                //allEntries = entities;
+                List<Event> events = new ArrayList<>();
                 ArrayList<ToDoItemForAdapter> toDoEntriesPerScheduledEvent = new ArrayList<>();
                 for(ToDoEntry toDoEntry : entities)
                 {
-                    Calendar cal = toDoEntry.getDateTime();
+                    Calendar cal = toDoEntry.getStartDateTime();
+                    events.add(new Event(Color.argb(255, 169, 68, 65), cal.getTimeInMillis(), toDoEntry));
+
+
+                    /*
                     ToDoItemForAdapter toDoEntryOfScheduledEvent = toDoEntry.getToDoItemOfAdapter();
                     toDoEntryOfScheduledEvent.setToDoItemTime(updateDateDisplay(cal) + " " + updateTimeDisplay(cal));
-                    toDoEntriesPerScheduledEvent.add(toDoEntryOfScheduledEvent);
+                    toDoEntriesPerScheduledEvent.add(toDoEntryOfScheduledEvent);*/
 
                 }
+                compactCalendarView.addEvents(events);
+                compactCalendarView.invalidate();
 
-                updatedToDoItemEnries = toDoEntriesPerScheduledEvent;
-                mToDoListAdapter.setCalendarItems(updatedToDoItemEnries);
-                mToDoListAdapter.notifyDataSetChanged();
+                //updatedToDoItemEnries = toDoEntriesPerScheduledEvent;
+               // mToDoListAdapter.setCalendarItems(updatedToDoItemEnries);
+               // mToDoListAdapter.notifyDataSetChanged();
             }
             else {
                 mToDoListAdapter.clear();

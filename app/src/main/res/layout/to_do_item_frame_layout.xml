@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/event_items"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#556671"
+    android:focusable="true"
+    android:clickable="true"
+    android:paddingLeft="16dp"
+    tools:context=".models.ToDoItemForAdapter">
+
+    <RelativeLayout
+        android:id="@+id/event_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:id="@+id/to_do_event_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="#faeff2f4"/>
+        <TextView
+            android:id="@+id/to_do_event_end_time"
+            android:layout_below="@+id/to_do_event_start_time"
+            android:textSize="17sp"
+            android:textColor="#faeff2f4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/to_do_event_title_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/to_do_event_start_time"
+            android:layout_toLeftOf="@+id/to_do_event_edit_icon"
+            android:maxLines="1"
+            android:paddingRight="20dp"
+            android:textSize="15sp"
+            android:textColor="#faeff2f4"
+            android:ellipsize="end"/>
+        <TextView
+            android:id="@+id/to_do_event_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/to_do_event_title_location"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/to_do_event_end_time"
+            android:layout_toLeftOf="@+id/to_do_event_edit_icon"
+            android:maxLines="1"
+            android:paddingRight="20dp"
+            android:textSize="15sp"
+            android:textColor="#faeff2f4"
+            android:ellipsize="end"/>
+        <ImageView
+            android:id="@+id/to_do_event_edit_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/to_do_event_title_location"
+            android:layout_alignBottom="@+id/to_do_event_title_location"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:paddingRight="20dp"
+            android:src="@drawable/baseline_create_24"/>
+
+    </RelativeLayout>
+
+</FrameLayout>
