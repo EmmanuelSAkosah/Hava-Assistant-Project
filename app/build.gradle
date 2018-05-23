@@ -23,15 +23,18 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:support-v4:27.1.1'
-    //this line is for Tablayouts
+    //this line is for Tablayouts,Navigation Drawer
     implementation 'com.android.support:design:27.1.1'
     //this line is for FragmentPagerAdapter
     implementation 'com.android.support:support-v13:27.1.1'
     //speech to text watson
-    //implementation 'com.ibm.watson.developer_cloud:java-sdk:4.1.0'
-    implementation 'com.squareup.okhttp3:okhttp-ws:3.4.2'
+    implementation 'com.ibm.watson.developer_cloud:java-sdk:4.1.0'
+    //implementation 'com.squareup.okhttp3:okhttp-ws:3.4.2'
     implementation 'com.ibm.watson.developer_cloud:android-sdk:0.2.3'
     implementation 'com.ibm.watson.developer_cloud:speech-to-text:3.5.3'
+
+    //for http requests
+    implementation 'com.android.volley:volley:1.1.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

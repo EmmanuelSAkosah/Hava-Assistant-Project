@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.ibm.watson.developer_cloud:tradeoff-analytics:4.1.0@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.watson.developer_cloud/tradeoff-analytics/4.1.0/6796012bb041d678f889179da6bf7d157439f627/tradeoff-analytics-4.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.watson.developer_cloud/tradeoff-analytics/4.1.0/149c872cdee3580b636ddfb04fae5811f8d41002/tradeoff-analytics-4.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

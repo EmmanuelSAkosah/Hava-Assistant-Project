@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".WhatsNewActivity"
-    tools:showIn="@layout/activity_whats_new">
+    tools:context=".NewsActivity"
+    tools:showIn="@layout/app_bar_news">
+
 
 </android.support.constraint.ConstraintLayout>
