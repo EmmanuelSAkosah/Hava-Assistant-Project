@@ -3,8 +3,14 @@
     package="edu.dartmouth.cs.havvapa">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -26,9 +32,12 @@
             android:name=".WhatsNewActivity"
             android:label="@string/title_activity_whats_new" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".ScheduleEventActivity">
+        <activity android:name=".ScheduleEventActivity$EventOptionsActivity" />
+        <activity android:name=".ScheduleEventActivity"></activity>
 
-        </activity>
+        <receiver android:name=".AlarmReceiver" />
+
+        <activity android:name=".AlarmManagmentActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/event_reminder_options_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#556671"
+    tools:context=".ScheduleEventActivity">
+
+    <LinearLayout
+        android:id="@+id/event_reminder_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp">
+
+        <RadioGroup
+            android:id="@+id/event_reminder_options_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
+
+            <RadioButton
+                android:id="@+id/event_reminder_none_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="No reminder"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_start_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="Beginning of event"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_1_minute_before_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="1 minute before"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_5_minutes_before_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="5 minutes before"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_10_minutes_before_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="10 minutes before"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_20_minutes_before_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="20 minutes before"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_30_minutes_before_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="30 minutes before"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_45_minutes_before_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="45 minutes before"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_1_hour_before_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="1 hour before"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/custom_reminder_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="Custom reminder"
+                android:textColor="#faeff2f4"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+</ScrollView>
