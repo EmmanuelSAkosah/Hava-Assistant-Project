@@ -1,11 +1,15 @@
 package edu.dartmouth.cs.havvapa;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +39,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import edu.dartmouth.cs.havvapa.APIs.NewsHelper;
 import edu.dartmouth.cs.havvapa.adapters.NewsListAdapter;
+import edu.dartmouth.cs.havvapa.models.ExampleNewsResponse;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
 import edu.dartmouth.cs.havvapa.utils.Constants;
 
@@ -42,17 +49,34 @@ public class NewsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     final String TAG = "NewsActivity";
-    private ArrayList<NewsItem> newsList;
-    private NewsListAdapter mNewsAdapter;
+    private final String SAVED_NEWS = "SAVED NEWS";
+    public ArrayList<NewsItem> newsList;
+    public  NewsListAdapter mNewsAdapter;
     private ListView listView;
-    DrawerLayout drawer;
+    private DrawerLayout drawer;
+    private NewsHelper newsHelper;
+    private JSONObject mResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+
+        newsHelper = new NewsHelper();
+        newsList = new ArrayList<>();
+
+        if (savedInstanceState != null) {
+            try {
+                mResponse = new JSONObject(savedInstanceState.getString(SAVED_NEWS,""));
+                newsList = newsHelper.parseResponse(mResponse);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
         //set up app bar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();
@@ -69,27 +93,36 @@ public class NewsActivity extends AppCompatActivity
             }
         }); */
 
-         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        newsList = new ArrayList<>();
+        setUpView();
+        sendGET(newsHelper.getNewsByCategory(0));// load general news headlines
 
     }
-    @Override
+   /* @Override
     public void onStart(){
         super.onStart();
-        setUpView();
-        sendGET(getNewsByCategory(0));// load general news headlines
+
+    } */
+
+
+
+
+    @Override
+    protected void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(SAVED_NEWS,mResponse.toString());
     }
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -118,66 +151,28 @@ public class NewsActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-          // sendGET(getNewsByCategory(id));
-//TODO cut down code
+
         if (id == R.id.nav_general) {
-            sendGET(getNewsByCategory(0));
+            sendGET(newsHelper.getNewsByCategory(0));
 
         } else if (id == R.id.nav_business) {
-            sendGET(getNewsByCategory(1));
+            sendGET(newsHelper.getNewsByCategory(1));
 
         } else if (id == R.id.nav_entertainment) {
-            sendGET(getNewsByCategory(2));
+            sendGET(newsHelper.getNewsByCategory(2));
 
         } else if (id == R.id.nav_health) {
-            sendGET(getNewsByCategory(3));
+            sendGET(newsHelper.getNewsByCategory(3));
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_find_out) {
+            openFindOutFragment();
 
-        } else if (id == R.id.nav_send) {
+       // } else if (id == R.id.saved_topics) {
 
         }
         drawer.closeDrawer(GravityCompat.START);
+        refreshView();
         return true;
-    }
-
-    public String getNewsByCategory(int categoryID){
-        String category;
-        switch (categoryID){
-            case 0: category = "general"; break;
-            case 1: category = "business";break;
-            case 2: category = "entertainment";break;
-            case 3: category = "health"; break;
-            case 4: category = "science"; break;
-            case 5: category = "sports"; break;
-            case 6: category = "technology"; break;
-            default: category = "general";
-        }
-
-        return Constants.baseNewsURL+
-                "top-headlines?country=us&pageSize=8&" +
-                "category="+category+Constants.newsAPIKey;
-    }
-
-    public void parseResponse(JSONObject response){
-
-        try{
-            JSONArray articles = response.getJSONArray("articles");
-            for(int i = 0; i < articles.length(); i++){
-                JSONObject article = articles.getJSONObject(i);
-                String title = article.getString("title");
-                String url = article.getString("url");
-                String source = (article.getJSONObject("source")).getString("name");
-                String imageURL = article.getString("urlToImage");
-
-                NewsItem news = new NewsItem(title,url);
-                news.setSource(source);
-                news.setImageURL(imageURL);
-                newsList.add(news);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public void sendGET(String url) {
@@ -187,8 +182,8 @@ public class NewsActivity extends AppCompatActivity
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-               // Log.d(TAG, "Response is"+ response);
-                parseResponse(response);
+                mResponse = response;
+                newsList = newsHelper.parseResponse(response);
                 refreshView();
             }
         },new Response.ErrorListener() {
@@ -205,14 +200,13 @@ public class NewsActivity extends AppCompatActivity
     }
 
     public void refreshView(){
-       mNewsAdapter.notifyDataSetChanged();
+        mNewsAdapter = new NewsListAdapter(this,R.layout.news_item,newsList);
+        listView.setAdapter(mNewsAdapter);
+       //mNewsAdapter.notifyDataSetChanged();
     }
 
     public void setUpView(){
-        mNewsAdapter = new NewsListAdapter(this,R.layout.news_item,newsList);
-        listView = (ListView)findViewById(R.id.news_list_NDA);
-
-        listView.setAdapter(mNewsAdapter);
+        listView = findViewById(R.id.news_list_NDA);
         listView.setOnItemClickListener(mListener);
     }
 
@@ -234,4 +228,15 @@ public class NewsActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
+
+   public void openFindOutFragment(){
+       FindOutFragment findOutFragment = new FindOutFragment();
+       FragmentManager manager = getFragmentManager();
+       FragmentTransaction transaction = manager.beginTransaction();
+       transaction.add(R.id.findOut_fragment_container,findOutFragment,FindOutFragment.TAG);
+       transaction.addToBackStack(null);
+       transaction.commit();
+   }
+
+
 }
