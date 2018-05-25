@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
             {
                 if(tab.getPosition() == 1)
                 {
-                    startActivity(new Intent(MainActivity.this, WhatsNewActivity.class));
+                    startActivity(new Intent(MainActivity.this, NewsActivity.class));
                 }
             }
 
