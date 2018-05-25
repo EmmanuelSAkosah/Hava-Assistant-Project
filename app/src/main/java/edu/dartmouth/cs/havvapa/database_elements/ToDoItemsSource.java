@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.dartmouth.cs.havvapa.models.ToDoEntry;
-import edu.dartmouth.cs.havvapa.models.ToDoItemForAdapter;
 
 public class ToDoItemsSource
 {
@@ -19,7 +18,8 @@ public class ToDoItemsSource
     private MySQLiteHelper dbHelper;
     private SQLiteDatabase database;
 
-    private String[] allColumns = {MySQLiteHelper.ROW_ID,MySQLiteHelper.COLUMN_EVENT_TITLE, MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, MySQLiteHelper.COLUMN_DATE_TIME};
+    private String[] allColumns = {MySQLiteHelper.ROW_ID,MySQLiteHelper.COLUMN_EVENT_TITLE, MySQLiteHelper.COLUMN_EVENT_LOCATION, MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, MySQLiteHelper.COLUMN_START_DATE_TIME
+    , MySQLiteHelper.COLUMN_END_DATE_TIME, MySQLiteHelper.COLUMN_EVENT_DURATION};
 
     public ToDoItemsSource(Context context){
         dbHelper = new MySQLiteHelper(context);
@@ -31,8 +31,11 @@ public class ToDoItemsSource
         ContentValues values = new ContentValues();
 
         values.put(MySQLiteHelper.COLUMN_EVENT_TITLE, entry.getEventTitle());
+        values.put(MySQLiteHelper.COLUMN_EVENT_LOCATION, entry.getEventLocation());
         values.put(MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, entry.getEventDescription());
-        values.put(MySQLiteHelper.COLUMN_DATE_TIME, entry.getDateTime().getTimeInMillis());
+        values.put(MySQLiteHelper.COLUMN_START_DATE_TIME, entry.getStartDateTime().getTimeInMillis());
+        values.put(MySQLiteHelper.COLUMN_END_DATE_TIME, entry.getEndDateTime().getTimeInMillis());
+        values.put(MySQLiteHelper.COLUMN_EVENT_DURATION, entry.getEventDuration());
 
         long insertId = database.insert(MySQLiteHelper.TABLE_ITEMS, null, values);
         Cursor cursor = database.query(MySQLiteHelper.TABLE_ITEMS, allColumns, MySQLiteHelper.ROW_ID + " = " + insertId, null, null, null, null);
@@ -45,15 +48,18 @@ public class ToDoItemsSource
         return entry;
     }
 
-    public void modifyScheduledEvent(long rowId, String modifiedTitle, String modifiedDescription, long modifiedDateTime)
+    public void modifyScheduledEvent(long rowId, String modifiedTitle,String modifiedLocation, String modifiedDescription, long modifiedStartDateTime, long modifiedEndDateTime, String modifiedDuration)
     {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         String strFilter = MySQLiteHelper.ROW_ID + " = " + rowId;
         ContentValues args = new ContentValues();
 
         args.put(MySQLiteHelper.COLUMN_EVENT_TITLE, modifiedTitle);
+        args.put(MySQLiteHelper.COLUMN_EVENT_LOCATION, modifiedLocation);
         args.put(MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, modifiedDescription);
-        args.put(MySQLiteHelper.COLUMN_DATE_TIME, modifiedDateTime);
+        args.put(MySQLiteHelper.COLUMN_START_DATE_TIME, modifiedStartDateTime);
+        args.put(MySQLiteHelper.COLUMN_END_DATE_TIME, modifiedEndDateTime);
+        args.put(MySQLiteHelper.COLUMN_EVENT_DURATION, modifiedDuration);
 
         database.update(MySQLiteHelper.TABLE_ITEMS, args, strFilter, null);
 
@@ -126,13 +132,18 @@ public class ToDoItemsSource
     private ToDoEntry cursorToEntry(Cursor cursor){
 
         ToDoEntry entry = new ToDoEntry();
-        Calendar entryDateAndTime = Calendar.getInstance();
-        entryDateAndTime.setTimeInMillis(cursor.getLong(3));
+        Calendar entryStartDateAndTime = Calendar.getInstance();
+        Calendar entryEndDateAndTime = Calendar.getInstance();
+        entryStartDateAndTime.setTimeInMillis(cursor.getLong(4));
+        entryEndDateAndTime.setTimeInMillis(cursor.getLong(5));
 
         entry.setId(cursor.getLong(0));
         entry.setEventTitle(cursor.getString(1));
-        entry.setEventDescription(cursor.getString(2));
-        entry.setDateTime(entryDateAndTime);
+        entry.setEventLocation(cursor.getString(2));
+        entry.setEventDescription(cursor.getString(3));
+        entry.setStartDateTime(entryStartDateAndTime);
+        entry.setEndDateTime(entryEndDateAndTime);
+        entry.setEventDuration(cursor.getString(6));
 
         return entry;
     }

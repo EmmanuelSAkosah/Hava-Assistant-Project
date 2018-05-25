@@ -12,15 +12,21 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     public static final String TABLE_ITEMS = "items";
     public static final String ROW_ID = "_id";
     public static final String COLUMN_EVENT_TITLE = "event_title";
+    public static final String COLUMN_EVENT_LOCATION = "event_location";
     public static final String COLUMN_EVENT_DESCRIPTION = "event_description";
-    public static final String COLUMN_DATE_TIME = "date_time";
+    public static final String COLUMN_START_DATE_TIME = "start_date_time";
+    public static final String COLUMN_END_DATE_TIME = "end_date_time";
+    public static final String COLUMN_EVENT_DURATION = "event_duration";
 
 
     private static final String DATABASE_TODO_ITEMS = "CREATE TABLE IF NOT EXISTS " +
             TABLE_ITEMS + "(" + ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_EVENT_TITLE + " TEXT NOT NULL, " +
+            COLUMN_EVENT_LOCATION + " TEXT NOT NULL, " +
             COLUMN_EVENT_DESCRIPTION + " TEXT NOT NULL, " +
-            COLUMN_DATE_TIME + " DATETIME NOT NULL);";
+            COLUMN_START_DATE_TIME + " DATETIME NOT NULL, " +
+            COLUMN_END_DATE_TIME + " DATETIME NOT NULL, " +
+            COLUMN_EVENT_DURATION + " TEXT NOT NULL);";
 
 
     MySQLiteHelper(Context context){

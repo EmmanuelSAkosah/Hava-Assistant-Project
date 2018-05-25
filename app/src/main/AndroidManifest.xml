@@ -5,6 +5,12 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".utils.ImageManager"
@@ -25,11 +31,20 @@
 
         <activity android:name=".MainActivity" />
         <activity android:name=".SignUpActivity" />
+<<<<<<< HEAD
         <activity android:name=".ScheduleEventActivity"></activity>
         <activity
             android:name=".NewsActivity"
             android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+=======
+        <activity android:name=".ScheduleEventActivity$EventOptionsActivity" />
+        <activity android:name=".ScheduleEventActivity"></activity>
+
+        <receiver android:name=".AlarmReceiver" />
+
+        <activity android:name=".AlarmManagmentActivity"></activity>
+>>>>>>> 1e3dc174ac64443a17262b3cf6a66d0f5a38ada2
     </application>
 
 </manifest>
