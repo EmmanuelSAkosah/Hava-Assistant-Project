@@ -1,5 +1,6 @@
 package edu.dartmouth.cs.havvapa;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,7 +40,9 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
     private ArrayList<ToDoEntry> allEntries;
     ArrayList<ToDoItemForAdapter> updatedToDoItemEnries = new ArrayList<>();
     private ToDoItemForAdapter item;
+    private android.support.v7.widget.Toolbar toolBarForCurrMonth;
     private CompactCalendarView compactCalendarView;
+    private Date lastDateClicked;
 
     private static  final int ALL_ITEMS_LOADER_ID = 1;
 
@@ -50,6 +54,8 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
         {
             case R.id.menuitem_schedule_event_btn:
                 startActivity(new Intent(getActivity(), ScheduleEventActivity.class));
+                //Intent intent = new Intent(getActivity(), ScheduleEventActivity.EventOptionsActivity.class);
+                //startActivity(intent);
                 return true;
 
             case R.id.menuitem_settings:
@@ -84,11 +90,7 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
 
 
         setRetainInstance(true);
-        updatedToDoItemEnries = new ArrayList<>();
-
-
-
-
+        //updatedToDoItemEnries = new ArrayList<>();
 
     }
 
@@ -100,6 +102,8 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
         compactCalendarView = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
         compactCalendarView.setUseThreeLetterAbbreviation(false);
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
+
+        toolBarForCurrMonth = view.findViewById(R.id.tool_bar_for_month_display);
 
         /*
         Calendar cal = Calendar.getInstance();
@@ -140,15 +144,24 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
                     displayIntent.putExtra("ENTRY_ROW_ID", selectedEntryId);
                     startActivity(displayIntent);
 
+                    //Intent intent = new Intent(getActivity(), ScheduleEventActivity.EventOptionsActivity.class);
+                    //startActivity(intent);
+
                 }
             }
         });
+        toolBarForCurrMonth = view.findViewById(R.id.tool_bar_for_month_display);
+        toolBarForCurrMonth.setTitle(updateDateDisplay(Calendar.getInstance()));
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
-            public void onDayClick(Date dateClicked) {
+            public void onDayClick(Date dateClicked)
+            {
 
                 List<Event> toDoEvents = compactCalendarView.getEvents(dateClicked);
+                Calendar currCal = Calendar.getInstance();
+                currCal.setTime(dateClicked);
+                toolBarForCurrMonth.setTitle(updateDateDisplay(currCal));
                 allEntries = new ArrayList<>();
                 updatedToDoItemEnries = new ArrayList<>();
                 if(toDoEvents!=null && mToDoListAdapter!=null )
@@ -177,8 +190,11 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
             }
 
             @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-
+            public void onMonthScroll(Date firstDayOfNewMonth)
+            {
+                Calendar currCal = Calendar.getInstance();
+                currCal.setTime(firstDayOfNewMonth);
+                toolBarForCurrMonth.setTitle(updateDateDisplay(currCal));
             }
         });
     }

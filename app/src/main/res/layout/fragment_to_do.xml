@@ -3,9 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#556671"
     android:orientation="vertical"
     android:weightSum="1">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool_bar_for_month_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        app:titleTextColor="#b5b67e"
+        android:background="#556671">
+    </android.support.v7.widget.Toolbar>
 
     <edu.dartmouth.cs.havvapa.CompactCalendarView
         xmlns:app="http://schemas.android.com/apk/res-auto"

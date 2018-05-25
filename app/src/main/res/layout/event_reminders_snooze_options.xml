@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/event_reminders_snooze_options_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#556671"
+    tools:context=".AlarmManagmentActivity">
+
+    <LinearLayout
+        android:id="@+id/event_reminders_snooze_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp">
+
+        <RadioGroup
+            android:id="@+id/event_reminder_snooze_options_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
+
+            <RadioButton
+                android:id="@+id/event_reminder_snooze_options_1minute_radio_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="1 minute"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_snooze_options_5minutes_radio_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="5 minutes"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_snooze_options_10minutes_radio_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="10 minutes"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_snooze_options_20minutes_radio_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="20 minutes"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_snooze_options_30minutes_radio_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="30 minutes"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_snooze_options_1hour_radio_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="1 hour"
+                android:textColor="#faeff2f4"/>
+            <RadioButton
+                android:id="@+id/event_reminder_snooze_options_custom_radio_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="Custom"
+                android:textColor="#faeff2f4"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+</ScrollView>
