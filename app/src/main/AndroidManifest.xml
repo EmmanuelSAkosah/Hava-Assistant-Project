@@ -31,20 +31,27 @@
 
         <activity android:name=".MainActivity" />
         <activity android:name=".SignUpActivity" />
-<<<<<<< HEAD
-        <activity android:name=".ScheduleEventActivity"></activity>
+
+        <activity android:name=".ScheduleEventActivity">
+
+        </activity>
         <activity
             android:name=".NewsActivity"
             android:label="@string/title_activity_news"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-=======
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
         <activity android:name=".ScheduleEventActivity$EventOptionsActivity" />
-        <activity android:name=".ScheduleEventActivity"></activity>
+        <activity android:name=".ScheduleEventActivity">
+
+        </activity>
 
         <receiver android:name=".AlarmReceiver" />
 
-        <activity android:name=".AlarmManagmentActivity"></activity>
->>>>>>> 1e3dc174ac64443a17262b3cf6a66d0f5a38ada2
+        <activity android:name=".AlarmManagmentActivity">
+        </activity>
+
     </application>
 
 </manifest>

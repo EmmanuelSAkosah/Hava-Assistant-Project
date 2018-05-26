@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import edu.dartmouth.cs.havvapa.R;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
-import edu.dartmouth.cs.havvapa.models.ToDoItem;
+import edu.dartmouth.cs.havvapa.models.ToDoEntry;
 import edu.dartmouth.cs.havvapa.utils.ImageManager;
 
 public class NewsListAdapter extends ArrayAdapter {

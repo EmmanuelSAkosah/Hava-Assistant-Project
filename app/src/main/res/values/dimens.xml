@@ -1,13 +1,13 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-<<<<<<< HEAD
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-=======
+
     <dimen name="yearly_padding_side">10dp</dimen>
     <dimen name="yearly_padding_half">3dp</dimen>
     <dimen name="yearly_padding_full">6dp</dimen>
@@ -33,5 +33,5 @@
     <dimen name="month_text_size">22sp</dimen>
 
     <dimen name="year_view_day_text_size">8sp</dimen>
->>>>>>> 1e3dc174ac64443a17262b3cf6a66d0f5a38ada2
+
 </resources>
