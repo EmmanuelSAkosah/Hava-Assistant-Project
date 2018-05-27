@@ -24,6 +24,15 @@
             android:paddingTop="10dp">
 
             <RadioButton
+                android:id="@+id/event_reminder_snooze_options_none"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="No Snooze"
+                android:textColor="#faeff2f4"/>
+
+            <RadioButton
                 android:id="@+id/event_reminder_snooze_options_1minute_radio_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

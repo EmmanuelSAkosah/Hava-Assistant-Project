@@ -5,6 +5,7 @@
     <item
         android:id="@+id/menuitem_settings"
         android:title="@string/menu_item_settings"/>
+
     <item
         android:id="@+id/menuitem_editProfile"
         app:showAsAction="never"

@@ -57,7 +57,7 @@ public class GreetingsActivity extends AppCompatActivity
 
         switch (item.getItemId()){
             case R.id.menuitem_settings:
-                startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
+                startActivity(new Intent(GreetingsActivity.this, AlarmManagmentActivity.class));
                 return true;
 
             case R.id.menuitem_editProfile:

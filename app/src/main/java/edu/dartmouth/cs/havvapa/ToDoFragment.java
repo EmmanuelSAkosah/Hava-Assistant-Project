@@ -73,7 +73,6 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
         }
 
     }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
@@ -151,7 +150,7 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
             }
         });
         toolBarForCurrMonth = view.findViewById(R.id.tool_bar_for_month_display);
-        toolBarForCurrMonth.setTitle(updateDateDisplay(Calendar.getInstance()));
+        toolBarForCurrMonth.setTitle(updateDateDisplay(Calendar.getInstance()) + "  -  " + String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -161,7 +160,8 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
                 List<Event> toDoEvents = compactCalendarView.getEvents(dateClicked);
                 Calendar currCal = Calendar.getInstance();
                 currCal.setTime(dateClicked);
-                toolBarForCurrMonth.setTitle(updateDateDisplay(currCal));
+                toolBarForCurrMonth.setTitle(updateDateDisplay(currCal) + "  -  " + currCal.get(Calendar.YEAR));
+
                 allEntries = new ArrayList<>();
                 updatedToDoItemEnries = new ArrayList<>();
                 if(toDoEvents!=null && mToDoListAdapter!=null )
@@ -194,7 +194,7 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
             {
                 Calendar currCal = Calendar.getInstance();
                 currCal.setTime(firstDayOfNewMonth);
-                toolBarForCurrMonth.setTitle(updateDateDisplay(currCal));
+                toolBarForCurrMonth.setTitle(updateDateDisplay(currCal) + "  -  " + currCal.get(Calendar.YEAR));
             }
         });
     }

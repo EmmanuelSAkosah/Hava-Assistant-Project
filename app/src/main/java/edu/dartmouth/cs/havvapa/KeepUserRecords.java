@@ -35,4 +35,12 @@ public class KeepUserRecords {
         return mUserRecordsPref.getBoolean("recorded_soundPref", true);
     }
 
+    public void setAppFirstTimeDownloaded(boolean firstTimeDownloaded){
+        mUserRecordsEditor.putBoolean("first_time_downloaded", firstTimeDownloaded).apply();
+    }
+
+    public boolean isAppFirstTimeDownloaded(){
+        return mUserRecordsPref.getBoolean("first_time_downloaded",true);
+    }
+
 }

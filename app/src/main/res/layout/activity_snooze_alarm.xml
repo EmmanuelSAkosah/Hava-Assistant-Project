@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/acitvity_snooze_alarm_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#556671"
+    tools:context=".SnoozeAlarmActivity">
+    <LinearLayout
+        android:id="@+id/activity_snooze_alarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tough_decision_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:text="Wake up or Snooze!!!"
+            android:textSize="10sp"
+            android:textColor="#8ede0f"/>
+        <RelativeLayout
+            android:id="@+id/snooze_option_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:paddingRight="11dp"
+            android:paddingLeft="11dp">
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/snooze_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:text="Snooze"
+                android:textColor="#faeff2f4"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/alarm_close_option_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:paddingRight="11dp"
+            android:paddingLeft="11dp">
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/alarm_close_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:text="Alarm Off"
+                android:textColor="#faeff2f4"/>
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+</ScrollView>

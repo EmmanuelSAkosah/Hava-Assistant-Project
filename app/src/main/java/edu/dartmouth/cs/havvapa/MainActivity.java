@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()){
             case R.id.menuitem_settings:
-                startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+                startActivity(new Intent(MainActivity.this, AlarmManagmentActivity.class));
                 return true;
 
             case R.id.menuitem_editProfile:

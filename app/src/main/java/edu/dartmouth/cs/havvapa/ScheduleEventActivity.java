@@ -17,6 +17,7 @@ import android.app.AlertDialog;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.media.app.NotificationCompat;
@@ -47,7 +48,9 @@ import android.media.AudioManager;
 import java.util.Calendar;
 import java.util.zip.Inflater;
 
+import edu.dartmouth.cs.havvapa.database_elements.EventReminderItemsSource;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoItemsSource;
+import edu.dartmouth.cs.havvapa.models.EventReminderItem;
 import edu.dartmouth.cs.havvapa.models.ToDoEntry;
 
 public class ScheduleEventActivity extends AppCompatActivity
@@ -78,10 +81,14 @@ public class ScheduleEventActivity extends AppCompatActivity
     private String mSelectedEndTime;
     private String mReminderOption1;
     private long eventReminderInterval;
+    private long snoozeTime;
 
     private ToDoItemsSource database;
+    //private EventReminderItemsSource reminderItemsDatabase;
+    //private EventReminderItem eventReminderItem;
     private ToDoEntry eventToDisplay;
     private boolean modifyEvent;
+    private Intent myIntent;
 
     boolean flag = true;
 
@@ -126,7 +133,7 @@ public class ScheduleEventActivity extends AppCompatActivity
                     addEventTask = new AddEventTask();
                     addEventTask.execute();
 
-                    Intent scheduledEventIntent = new Intent(ScheduleEventActivity.this, MainActivity.class);
+                    Intent scheduledEventIntent = new Intent(this, MainActivity.class);
                     startActivity(scheduledEventIntent);
                 }
 
@@ -137,16 +144,16 @@ public class ScheduleEventActivity extends AppCompatActivity
 
                 deleteEventTask = new DeleteEventTask();
                 deleteEventTask.execute();
-                Intent deleteEventIntent = new Intent(ScheduleEventActivity.this, MainActivity.class);
+                Intent deleteEventIntent = new Intent(this, MainActivity.class);
                 startActivity(deleteEventIntent);
 
 
             case R.id.menuitem_settings:
-                startActivity(new Intent(ScheduleEventActivity.this, SignUpActivity.class));
+                startActivity(new Intent(ScheduleEventActivity.this, AlarmManagmentActivity.class));
                 return true;
 
             case R.id.menuitem_editProfile:
-                startActivity(new Intent(ScheduleEventActivity.this, SignUpActivity.class));
+                startActivity(new Intent(this, SignUpActivity.class));
                 return true;
 
             case android.R.id.home:
@@ -178,11 +185,13 @@ public class ScheduleEventActivity extends AppCompatActivity
         outState.putString("REMINDER_1", mReminderOption1);
         outState.putLong("EVENT_REMINDER_INTERVAL", eventReminderInterval);
         outState.putBoolean("BOOLEAN_FLAG", false);
+        outState.putLong("SNOOZE_TIME", snoozeTime);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.d("OnCreate of Schedule", "Schedule");
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_schedule_event);
         setContentView(R.layout.activity_schedule_event_vol2);
@@ -202,13 +211,7 @@ public class ScheduleEventActivity extends AppCompatActivity
         eventReminder2Tv = findViewById(R.id.event_reminder_2);
 
         database = new ToDoItemsSource(this);
-
-        stopAlarmServiceReciever = new StopAlarmServiceReciever();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("STOP_ALARM");
-        registerReceiver(stopAlarmServiceReciever, intentFilter);
-
-
+        //reminderItemsDatabase = new EventReminderItemsSource(this);
 
         if(savedInstanceState!=null){
             eventTitle = savedInstanceState.getString("EVENT_TITLE");
@@ -226,6 +229,7 @@ public class ScheduleEventActivity extends AppCompatActivity
             mReminderOption1 = savedInstanceState.getString("REMINDER_1");
             eventReminderInterval = savedInstanceState.getLong("EVENT_REMINDER_INTERVAL");
             flag = savedInstanceState.getBoolean("BOOLEAN_FLAG");
+            //snoozeTime = savedInstanceState.getLong("SNOOZE_TIME");
 
             eventTimeStartTv.setText(mSelectedStartTime);
             eventTimeEndTv.setText(mSelectedEndTime);
@@ -240,6 +244,8 @@ public class ScheduleEventActivity extends AppCompatActivity
             {
                 long selectedEventId = getIntent().getExtras().getLong("ENTRY_ROW_ID");
                 eventToDisplay = database.fetchEntryByIndex(selectedEventId);
+                //eventReminderItem = reminderItemsDatabase.getReminderItem();
+                //snoozeTime = eventReminderItem.getSnoozePref();
                 startDateTime = eventToDisplay.getStartDateTime();
                 endDateTime = eventToDisplay.getEndDateTime();
                 updateStartDateTime();
@@ -266,6 +272,7 @@ public class ScheduleEventActivity extends AppCompatActivity
             catch (Exception e)
             {
                 modifyEvent = false;
+                snoozeTime = 0;
                 startDateTime = Calendar.getInstance();
                 endDateTime = Calendar.getInstance();
 
@@ -447,11 +454,11 @@ public class ScheduleEventActivity extends AppCompatActivity
                             if(eventReminder1RadBtn.getId() != R.id.event_reminder_none_radio && eventReminder1RadBtn.getId() != R.id.custom_reminder_radio){
 
                                 alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-                                Intent myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
+                                myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
                                 //myIntent.putExtra(AlarmReceiver.NOTIFICATION_ID,1);
                                 //myIntent.putExtra(AlarmReceiver.NOTIFICATION, createAlarmNotification());
 
-                                pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, 0,myIntent,0);
+                                pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, 0,myIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                                 Calendar alarmCalendar = Calendar.getInstance();
                                 long alarmTimeInMillis = startDateTime.getTimeInMillis() - eventReminderInterval;
                                 if(alarmTimeInMillis <= startDateTime.getTimeInMillis()){
@@ -545,11 +552,11 @@ public class ScheduleEventActivity extends AppCompatActivity
 
 
                     alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-                    Intent myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
+                    myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
                     myIntent.putExtra(AlarmReceiver.NOTIFICATION_ID,1);
                     myIntent.putExtra(AlarmReceiver.NOTIFICATION, createAlarmNotification());
 
-                    pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, 0,myIntent,0);
+                    pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, 0,myIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                     Calendar alarmCalendar = Calendar.getInstance();
                     long alarmTimeInMillis = startDateTime.getTimeInMillis() - eventReminderInterval;
                     if(alarmTimeInMillis <= startDateTime.getTimeInMillis()){
@@ -566,6 +573,11 @@ public class ScheduleEventActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("onResume","Schedule");
+    }
 
     DatePickerDialog.OnDateSetListener mDateListenerStart = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -593,6 +605,21 @@ public class ScheduleEventActivity extends AppCompatActivity
 
         }
     };
+
+    public void stopAlarm()
+    {
+        Log.d("STOPALARM of Schedule", "Schedule");
+        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+        //pendingIntent.cancel();
+        alarmManager.cancel(pendingIntent);
+        vibrator.cancel();
+
+        Intent intent = new Intent();
+        intent.setAction("STOP_ME");
+        intent.putExtra("STOP_RINGTONE",7);
+        sendBroadcast(intent);
+
+    }
 
     TimePickerDialog.OnTimeSetListener mTimeListenerStart = new TimePickerDialog.OnTimeSetListener() {
         @Override
@@ -686,17 +713,26 @@ public class ScheduleEventActivity extends AppCompatActivity
         });
     }
 
+
     public class StopAlarmServiceReciever extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
             int rqs = intent.getIntExtra("STOP_ALARM",0);
-            if(rqs == 2)
+            if(rqs == 3)
             {
-                pendingIntent.cancel();
+                myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
+
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, 0,myIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+                //pendingIntent.cancel();
                 alarmManager.cancel(pendingIntent);
+                vibrator.cancel();
+                unregisterReceiver(stopAlarmServiceReciever);
                 //AlarmReceiver.mediaPlayer.stop();
-                AlarmReceiver.mediaPlayer.release();
-                AlarmReceiver.mediaPlayer = null;
+//                AlarmReceiver.mediaPlayer.release();
+              //  AlarmReceiver.mediaPlayer = null;
                 //AudioManager audioManager = (AudioManager)getSystemService(ScheduleEventActivity.AUDIO_SERVICE);
                 //audioManager.stopBluetoothSco();
                 //audioManager.setMicrophoneMute(true);
