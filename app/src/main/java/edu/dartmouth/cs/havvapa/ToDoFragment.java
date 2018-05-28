@@ -66,6 +66,7 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
                 startActivity(new Intent(getActivity(), SignUpActivity.class));
                 return true;
 
+
             default:
                // return super.onOptionsItemSelected(item);
                 return true;

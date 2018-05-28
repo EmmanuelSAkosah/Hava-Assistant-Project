@@ -11,7 +11,8 @@ import java.util.ArrayList;
 
 import edu.dartmouth.cs.havvapa.models.ToDoEntry;
 
-public class ToDoEntryListLoader extends AsyncTaskLoader<ArrayList<ToDoEntry>> {
+public class ToDoEntryListLoader extends AsyncTaskLoader<ArrayList<ToDoEntry>>
+{
 
     private ToDoItemsSource datasource;
 

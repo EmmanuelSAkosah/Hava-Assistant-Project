@@ -3,17 +3,23 @@ package edu.dartmouth.cs.havvapa;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,13 +29,21 @@ import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.BaseRecognizeC
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallback;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
+import edu.dartmouth.cs.havvapa.adapters.GreetingsEventsAdapter;
+import edu.dartmouth.cs.havvapa.database_elements.ToDoEntryListLoader;
+import edu.dartmouth.cs.havvapa.database_elements.ToDoItemsSource;
+import edu.dartmouth.cs.havvapa.database_elements.UpcomingToDoEntryListLoader;
+import edu.dartmouth.cs.havvapa.models.GreetingsToDoEntry;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
 import edu.dartmouth.cs.havvapa.APIs.SpeechToTextHelper;
+import edu.dartmouth.cs.havvapa.models.ToDoEntry;
+import edu.dartmouth.cs.havvapa.models.ToDoItemForAdapter;
 
 
-
-public class GreetingsActivity extends AppCompatActivity
+public class GreetingsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<ToDoEntry>>
 {
     private static final String TAG = "GreetingsActivity";
     private boolean permissionToRecordAccepted = false;
@@ -38,7 +52,17 @@ public class GreetingsActivity extends AppCompatActivity
     private Button recordBtn;
     private TextView inputMessage;
     private SpeechToText S2T_service;
+
+    private ToDoItemsSource datasource;
+    private ArrayList<ToDoEntry> allEntries;
+    private GreetingsEventsAdapter greetingsEventsAdapter;
+    ArrayList<GreetingsToDoEntry> updatedGreetingsEntries = new ArrayList<>();
+    private static  final int ALL_ITEMS_LOADER_ID = 2;
+    private Calendar currGreetingsEventCal;
+    private ListView mListView;
     //public Weather weather;
+
+    boolean flag;
 
     private RecognizeCallback mS2TCallback;
     private SpeechToTextHelper speech2Text;
@@ -63,6 +87,9 @@ public class GreetingsActivity extends AppCompatActivity
             case R.id.menuitem_editProfile:
                 startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
                 return true;
+            case android.R.id.home:
+                finish();
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -72,13 +99,37 @@ public class GreetingsActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable("curr_cal_key", currGreetingsEventCal);
+        outState.putBoolean("flag_boolean", true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_greetings);
+        getSupportActionBar().setTitle("Greetings");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(savedInstanceState != null){
+            currGreetingsEventCal = (Calendar)savedInstanceState.getSerializable("curr_cal_key");
+            flag = savedInstanceState.getBoolean("flag_boolean");
+        }
+        else {
+            currGreetingsEventCal = Calendar.getInstance();
+            flag =true;
+        }
 
         recordBtn = findViewById(R.id.record_btn_greetings);
         inputMessage = findViewById(R.id.transcribed_text_tv);
+        mListView = findViewById(R.id.to_do_items_listView);
+
         newsList = new ArrayList<>();
+
+        datasource = new ToDoItemsSource(getApplicationContext());
+        //greetingsEventsAdapter = new GreetingsEventsAdapter(getApplicationContext(), updatedGreetingsEntries);
+        //mListView.setAdapter(greetingsEventsAdapter);
 
         TextView greetings_tv = findViewById(R.id.tv_greetings);
         greetings_tv.setOnClickListener(new View.OnClickListener() {
@@ -187,5 +238,113 @@ public class GreetingsActivity extends AppCompatActivity
 
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        flag = true;
+        getSupportLoaderManager().initLoader(ALL_ITEMS_LOADER_ID, null, this).forceLoad();
+    }
+
+    private String updateDateDisplay(Calendar dateTime)
+    {
+        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
+        return mSelectedDate;
+    }
+    private String updateTimeDisplay(Calendar dateTime)
+    {
+        String mSelectedTime = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
+        return mSelectedTime;
+    }
+
+    private String updateDateDisplay2(long dateTimeInMillis)
+    {
+        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
+        return mSelectedDate;
+    }
+
+
+    @NonNull
+    @Override
+    public Loader<ArrayList<ToDoEntry>> onCreateLoader(int id, @Nullable Bundle args) {
+
+        switch (id){
+            case ALL_ITEMS_LOADER_ID:
+                return new UpcomingToDoEntryListLoader(getApplicationContext());
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ArrayList<ToDoEntry>> loader, ArrayList<ToDoEntry> entities) {
+        if(loader.getId() == ALL_ITEMS_LOADER_ID)
+        {
+            greetingsEventsAdapter = new GreetingsEventsAdapter(getApplicationContext(), updatedGreetingsEntries);
+            mListView.setAdapter(greetingsEventsAdapter);
+
+            if(entities.size() > 0)
+            {
+                allEntries = entities;
+                ArrayList<GreetingsToDoEntry> greetingsToDoEntries = new ArrayList<>();
+                for(ToDoEntry toDoEntry : entities)
+                {
+                    GreetingsToDoEntry currGreetingsEvent;
+                    String startTime = updateTimeDisplay(toDoEntry.getStartDateTime());
+                    String endTime = updateTimeDisplay(toDoEntry.getEndDateTime());
+                    String eventStartDate = updateDateDisplay(toDoEntry.getStartDateTime());
+                    int currEventStartDate = toDoEntry.getStartDateTime().get(Calendar.DAY_OF_MONTH);
+
+                    String eventTitle = toDoEntry.getEventTitle();
+                    String eventLocation = toDoEntry.getEventLocation();
+
+                    if(flag)
+                    {
+                        currGreetingsEvent = new GreetingsToDoEntry(eventStartDate,eventTitle + "  -  " + eventLocation, startTime + "  -  " + endTime);
+                        currGreetingsEventCal.setTimeInMillis(toDoEntry.getStartDateTime().getTimeInMillis());
+                    }
+                    else {
+
+                        if(currEventStartDate == currGreetingsEventCal.get(Calendar.DAY_OF_MONTH)){
+                            currGreetingsEvent = new GreetingsToDoEntry("",eventTitle + "  -  " + eventLocation, startTime + "  -  " + endTime);
+
+                        }
+                        else {
+                            currGreetingsEvent = new GreetingsToDoEntry(eventStartDate,eventTitle + "  -  " + eventLocation, startTime + "  -  " + endTime);
+
+                        }
+
+                    }
+                    flag = false;
+
+                    currGreetingsEventCal.setTimeInMillis(toDoEntry.getStartDateTime().getTimeInMillis());
+                    greetingsToDoEntries.add(currGreetingsEvent);
+
+
+
+                }
+                updatedGreetingsEntries = greetingsToDoEntries;
+                greetingsEventsAdapter.setGreetingsEntriesList(updatedGreetingsEntries);
+                greetingsEventsAdapter.notifyDataSetChanged();
+
+
+                //updatedToDoItemEnries = toDoEntriesPerScheduledEvent;
+                // mToDoListAdapter.setCalendarItems(updatedToDoItemEnries);
+                // mToDoListAdapter.notifyDataSetChanged();
+            }
+            else {
+                greetingsEventsAdapter.clear();
+                greetingsEventsAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ArrayList<ToDoEntry>> loader) {
+        if(loader.getId()==ALL_ITEMS_LOADER_ID){
+            greetingsEventsAdapter.clear();
+            greetingsEventsAdapter.notifyDataSetChanged();
+        }
     }
 }

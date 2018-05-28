@@ -1,6 +1,7 @@
 package edu.dartmouth.cs.havvapa.models;
 
-public class NewsItem {
+public class NewsItem
+{
 
     public String getTitle() {
         return mTitle;
@@ -34,14 +35,27 @@ public class NewsItem {
         this.imageURL = imageURL;
     }
 
+    public long getNewsItemId() {
+        return newsItemId;
+    }
+
+    public void setNewsItemId(long newsItemId) {
+        this.newsItemId = newsItemId;
+    }
+
     private String mTitle;
     private String mURL;
     private String mSource;
     private String imageURL = "";
+    private long newsItemId;
 
 
     public NewsItem(String title, String url) {
         mTitle = title;
         mURL = url;
+    }
+
+    public NewsItem(){
+
     }
 }

@@ -74,7 +74,6 @@ public class AlarmManagmentActivity extends AppCompatActivity
                 finish();
                 return true;
 
-
             case android.R.id.home:
                 finish();
                 return true;
@@ -103,6 +102,10 @@ public class AlarmManagmentActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_managment);
+
+        getSupportActionBar().setTitle("Reminder Settings");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         reminderSoundOptionSwitch = findViewById(R.id.reminder_sound_option);
         reminderVibrationSwitch = findViewById(R.id.reminder_vibration_option);

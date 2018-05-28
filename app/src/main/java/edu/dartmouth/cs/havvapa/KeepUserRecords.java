@@ -15,6 +15,7 @@ public class KeepUserRecords {
         mUserRecordsEditor = mUserRecordsPref.edit();
     }
 
+
     public void clearRecords(){
         mUserRecordsEditor.clear().commit();
     }
@@ -41,6 +42,16 @@ public class KeepUserRecords {
 
     public boolean isAppFirstTimeDownloaded(){
         return mUserRecordsPref.getBoolean("first_time_downloaded",true);
+    }
+
+
+    public void setUserEmail(String email){
+        mUserRecordsEditor.putString("user_email", email).apply();
+    }
+
+    public String getUserEmail(){
+
+        return mUserRecordsPref.getString("user_email","");
     }
 
 }

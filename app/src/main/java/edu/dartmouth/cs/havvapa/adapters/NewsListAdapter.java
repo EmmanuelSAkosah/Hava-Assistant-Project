@@ -4,13 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.widget.CardView;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -18,6 +24,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import java.net.URL;
 import java.util.ArrayList;
 
+import edu.dartmouth.cs.havvapa.OnSwipeTouchListener;
 import edu.dartmouth.cs.havvapa.R;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
 import edu.dartmouth.cs.havvapa.models.ToDoEntry;
@@ -27,6 +34,9 @@ public class NewsListAdapter extends ArrayAdapter {
 
     private ArrayList<NewsItem> mNewsList;
     private Context mContext;
+
+    View newsItemView;
+
   //  ImageView imageView;
     //View newsItemView;
     ImageLoader imageLoader = ImageManager.getInstance().getImageLoader();
@@ -63,7 +73,7 @@ public class NewsListAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-       View newsItemView = convertView;
+        newsItemView = convertView;
         if (newsItemView == null)
             newsItemView = LayoutInflater.from(mContext).inflate(R.layout.news_item, parent, false);
         if (imageLoader == null)
@@ -81,6 +91,11 @@ public class NewsListAdapter extends ArrayAdapter {
         newsThumbnail.setImageUrl(imageUrl, imageLoader);
         title_tv.setText(title);
         source_tv.setText(source);
+
+
+
+
+
 
 
        /* new Thread(new Runnable() {

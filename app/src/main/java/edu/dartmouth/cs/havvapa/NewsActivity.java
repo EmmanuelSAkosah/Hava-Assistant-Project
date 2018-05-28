@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -44,9 +46,10 @@ import edu.dartmouth.cs.havvapa.adapters.NewsListAdapter;
 import edu.dartmouth.cs.havvapa.models.ExampleNewsResponse;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
 import edu.dartmouth.cs.havvapa.utils.Constants;
+//import edu.dartmouth.cs.havvapa.SimpleGestureFilter.SimpleGestureListener;
 
 public class NewsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     final String TAG = "NewsActivity";
     private final String SAVED_NEWS = "SAVED NEWS";
@@ -57,6 +60,7 @@ public class NewsActivity extends AppCompatActivity
     private NewsHelper newsHelper;
     private JSONObject mResponse;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,7 @@ public class NewsActivity extends AppCompatActivity
 
         newsHelper = new NewsHelper();
         newsList = new ArrayList<>();
+
 
         if (savedInstanceState != null) {
             try {
@@ -114,7 +119,6 @@ public class NewsActivity extends AppCompatActivity
 
 
 
-
     @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -138,10 +142,14 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case android.R.id.home:
                 drawer.openDrawer(GravityCompat.START);
                 return true;
+
+            case R.id.saved_news:
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -207,7 +215,24 @@ public class NewsActivity extends AppCompatActivity
 
     public void setUpView(){
         listView = findViewById(R.id.news_list_NDA);
-        listView.setOnItemClickListener(mListener);
+        //listView.setOnItemClickListener(mListener);
+        listView.setOnTouchListener(new OnSwipeTouchListener(NewsActivity.this) {
+            public void onSwipeTop() {
+                Toast.makeText(NewsActivity.this, "top", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeRight() {
+                Toast.makeText(NewsActivity.this, "right", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeLeft() {
+                Toast.makeText(NewsActivity.this, "left", Toast.LENGTH_SHORT).show();
+            }
+            public void onSwipeBottom() {
+                Toast.makeText(NewsActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+
     }
 
 
@@ -217,6 +242,14 @@ public class NewsActivity extends AppCompatActivity
             openWebPage(newsList.get(position).getSource());
         }
     };
+
+
+
+
+
+
+
+
 
     public void openWebPage(String url) {
         try {

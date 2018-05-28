@@ -196,8 +196,8 @@ public class ScheduleEventActivity extends AppCompatActivity
         //setContentView(R.layout.activity_schedule_event);
         setContentView(R.layout.activity_schedule_event_vol2);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Schedule your event");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         eventTitleEt = findViewById(R.id.event_title);
@@ -257,12 +257,14 @@ public class ScheduleEventActivity extends AppCompatActivity
                 eventDateEndTv.setText(mSelectedEndDate);
 
                 eventTitle = eventToDisplay.getEventTitle();
+                eventLocation = eventToDisplay.getEventLocation();
                 eventDescription = eventToDisplay.getEventDescription();
                 Log.d("TITLE1", eventTitle);
                 Log.d("DESCRIPTION1", eventDescription);
 
                 eventTitleEt.setText(eventTitle);
                 eventDescriptionEt.setText(eventDescription);
+                eventLocationEt.setText(eventLocation);
 
 
                 modifyEvent = true;

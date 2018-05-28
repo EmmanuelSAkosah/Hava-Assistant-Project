@@ -13,7 +13,7 @@ import edu.dartmouth.cs.havvapa.models.ToDoEntry;
 
 public class EventReminderItemsSource
 {
-    private static final String TAF = "EventReminderItems source";
+    private static final String TAG = "EventReminderItems source";
 
     private MySQLiteHelperReminder dbHelper;
     private SQLiteDatabase database;
