@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ public class NewsActivity extends AppCompatActivity
 
     final String TAG = "NewsActivity";
     private final String SAVED_NEWS = "SAVED NEWS";
-    public ArrayList<NewsItem> newsList;
+    public static ArrayList<NewsItem> newsList;
     public  NewsListAdapter mNewsAdapter;
     private ListView listView;
     private DrawerLayout drawer;
@@ -106,13 +107,6 @@ public class NewsActivity extends AppCompatActivity
         sendGET(newsHelper.getNewsByCategory(0));// load general news headlines
 
     }
-   /* @Override
-    public void onStart(){
-        super.onStart();
-
-    } */
-
-
 
 
     @Override
@@ -135,6 +129,8 @@ public class NewsActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.news, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -166,9 +162,6 @@ public class NewsActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_find_out) {
             openFindOutFragment();
-
-       // } else if (id == R.id.saved_topics) {
-
         }
         drawer.closeDrawer(GravityCompat.START);
         refreshView();
@@ -214,16 +207,16 @@ public class NewsActivity extends AppCompatActivity
     AdapterView.OnItemClickListener mListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view,
                                 int position, long id) {
-            openWebPage(newsList.get(position).getSource());
+            openWebPage(newsList.get(position).getURL(), getApplicationContext());
         }
     };
 
-    public void openWebPage(String url) {
+    public static void openWebPage(String url, Context context) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
+            context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "No application can handle this request." +
+            Toast.makeText(context, "No application can handle this request." +
                     " Please install a web browser or check your URL.",  Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
@@ -233,7 +226,7 @@ public class NewsActivity extends AppCompatActivity
        FindOutFragment findOutFragment = new FindOutFragment();
        FragmentManager manager = getFragmentManager();
        FragmentTransaction transaction = manager.beginTransaction();
-       transaction.add(R.id.findOut_fragment_container,findOutFragment,FindOutFragment.TAG);
+       transaction.add(R.id.drawer_layout,findOutFragment,FindOutFragment.TAG);
        transaction.addToBackStack(null);
        transaction.commit();
    }

@@ -37,10 +37,6 @@
     <item android:title="Find Out!">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Voice Search" />
-            <item
                 android:id="@+id/nav_find_out"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Find News on Concept" />

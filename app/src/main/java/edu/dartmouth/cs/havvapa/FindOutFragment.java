@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +29,12 @@ import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallb
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import edu.dartmouth.cs.havvapa.APIs.NewsHelper;
 import edu.dartmouth.cs.havvapa.APIs.SpeechToTextHelper;
+import edu.dartmouth.cs.havvapa.adapters.NewsListAdapter;
+import edu.dartmouth.cs.havvapa.models.NewsItem;
 
 public class FindOutFragment extends Fragment{
 
@@ -37,7 +45,10 @@ public class FindOutFragment extends Fragment{
     private Button recordBtn;
     private TextView inputMessage;
     NewsHelper newsHelper;
-
+    private Button searchBtn;
+    public static ArrayList<NewsItem> topicNewsList;
+    public NewsListAdapter mNewsAdapter;
+    private ListView listView;
     public static final String TAG = "FindOutFragment";
     public FindOutFragment(){
 
@@ -54,12 +65,20 @@ public class FindOutFragment extends Fragment{
     public void onViewCreated(View v, @Nullable Bundle savedInstanceState) {
 
         recordBtn = v.findViewById(R.id.record_btn_findOut);
+        //searchBtn = v.findViewById(R.id.search_btn_findOut);
         inputMessage = v.findViewById(R.id.concept_query_et);
+
+        newsHelper = new NewsHelper();
+        topicNewsList = new ArrayList<>();
+
 
         //call custom speech to text service
         speechToTextHelper = new SpeechToTextHelper();
         S2T_service = speechToTextHelper.getService();
         newsHelper = new NewsHelper();
+
+        setUpView();
+        refreshView();
 
         mS2TCallback = new BaseRecognizeCallback() {
             @Override
@@ -67,15 +86,11 @@ public class FindOutFragment extends Fragment{
                 if(speechResults.getResults() != null && !speechResults.getResults().isEmpty()) {
                     String text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
                     speechToTextHelper.showMicText(text,getActivity(),inputMessage);
-                    //getConcept(text);
-                    sendGET(newsHelper.getNewsOnConcept(text)); // act on transcribed text
                 }
             }
 
             //@Override
             public void onTranscriptionComplete(){
-                //done transcribing, stop all results processing
-                // Toast.makeText(getApplicationContext(), "Watson Audio Process Complete", Toast.LENGTH_LONG).show();
 
             }
 
@@ -97,18 +112,57 @@ public class FindOutFragment extends Fragment{
                 speechToTextHelper.recordMessage(mS2TCallback,getActivity());
             }
         });
+
+
+
+        inputMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (inputMessage.getRight() - inputMessage.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        String input = inputMessage.getText().toString();
+                        sendGET(newsHelper.getNewsOnConcept(input));
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+
+        });
     }
 
+    AdapterView.OnItemClickListener mListener = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View view,
+                                int position, long id) {
+            NewsActivity.openWebPage(topicNewsList.get(position).getSource(),getActivity());
+        }
+    };
+
+    public void setUpView(){
+        listView = (getActivity()).findViewById(R.id.news_list_findOut);
+        listView.setOnItemClickListener(mListener);
+    }
+
+    public void refreshView(){
+        mNewsAdapter = new NewsListAdapter(getActivity(),R.layout.news_item,topicNewsList);
+        listView.setAdapter(mNewsAdapter);
+        //mNewsAdapter.notifyDataSetChanged();
+    }
 
     public void sendGET(String url) {
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, url,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-               //NewsActivity.newsList = newsHelper.parseResponse(response);
-               //NewsActivity.refreshView();
+               topicNewsList = newsHelper.parseResponse(response);
+               refreshView();
             }
         },new Response.ErrorListener() {
             @Override
