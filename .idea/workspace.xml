@@ -6,7 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c7f45b11-5265-443f-a107-d57c2a8bc4bb" name="Default" comment="" />
@@ -40,17 +40,27 @@
     </system>
   </component>
   <component name="FileEditorManager">
+<<<<<<< HEAD
     <leaf>
       <file leaf-file-name="NewsActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/NewsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="23">
               <caret line="209" column="55" lean-forward="false" selection-start-line="209" selection-start-column="55" selection-end-line="209" selection-end-column="55" />
+=======
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
+      <file leaf-file-name="GreetingsActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/GreetingsActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="175">
+              <caret line="74" column="43" lean-forward="false" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="43" />
+>>>>>>> a37d40b7a2f77318c758bf43e871312be755e6df
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="NewsItem.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/models/NewsItem.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -86,6 +96,16 @@
                 <element signature="e#4830#4831#0" expanded="true" />
                 <element signature="e#5714#5952#0" expanded="true" />
                 <element signature="e#5951#5952#0" expanded="true" />
+=======
+      <file leaf-file-name="NewsActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/NewsActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="213" column="8" lean-forward="false" selection-start-line="213" selection-start-column="8" selection-end-line="213" selection-end-column="8" />
+              <folding>
+                <element signature="e#6896#7135#0" expanded="true" />
+                <element signature="e#7134#7135#0" expanded="true" />
+>>>>>>> a37d40b7a2f77318c758bf43e871312be755e6df
               </folding>
             </state>
           </provider>
@@ -2466,6 +2486,7 @@
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
     <editor active="true" />
     <layout>
+<<<<<<< HEAD
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -2479,6 +2500,39 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938388" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24763033" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+=======
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938388" sideWeight="0.49783784" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938388" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6978673" sideWeight="0.50216216" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0900474" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.119668245" sideWeight="0.49783784" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2054054" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27606636" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938388" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.235782" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32938388" sideWeight="0.49783784" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6978673" sideWeight="0.50216216" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.119668245" sideWeight="0.49783784" order="5" side_tool="false" content_ui="tabs" />
+>>>>>>> a37d40b7a2f77318c758bf43e871312be755e6df
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23891892" sideWeight="0.5" order="7" side_tool="false" content_ui="combo" />
@@ -2599,9 +2653,18 @@
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.watson.developer_cloud/text-to-speech/4.1.0/cfd6819d2fd099d805b899de2b20e58baf38add2/text-to-speech-4.1.0-sources.jar!/com/ibm/watson/developer_cloud/text_to_speech/v1/model/Voice.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="514">
           <caret line="90" column="28" lean-forward="false" selection-start-line="90" selection-start-column="28" selection-end-line="90" selection-end-column="28" />
           <folding />
+=======
+        <state relative-caret-position="891">
+          <caret line="63" column="23" lean-forward="false" selection-start-line="63" selection-start-column="23" selection-end-line="63" selection-end-column="23" />
+          <folding>
+            <element signature="e#6896#7135#0" expanded="true" />
+            <element signature="e#7134#7135#0" expanded="true" />
+          </folding>
+>>>>>>> a37d40b7a2f77318c758bf43e871312be755e6df
         </state>
       </provider>
     </entry>
@@ -2645,6 +2708,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/GreetingsActivity.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="359">
           <caret line="173" column="10" lean-forward="false" selection-start-line="173" selection-start-column="10" selection-end-line="173" selection-end-column="10" />
           <folding>
@@ -2660,6 +2724,11 @@
             <element signature="e#8217#8218#0" expanded="false" />
             <element signature="e#8271#8272#0" expanded="false" />
           </folding>
+=======
+        <state relative-caret-position="3960">
+          <caret line="170" column="0" lean-forward="false" selection-start-line="170" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
+          <folding />
+>>>>>>> a37d40b7a2f77318c758bf43e871312be755e6df
         </state>
       </provider>
     </entry>
@@ -2792,6 +2861,59 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/WhatsNewFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-116">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/APIs/SpeechToTextHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="131">
+          <caret line="33" column="76" lean-forward="false" selection-start-line="33" selection-start-column="76" selection-end-line="33" selection-end-column="76" />
+          <folding>
+            <element signature="e#1014#1015#0" expanded="true" />
+            <element signature="e#1045#1046#0" expanded="true" />
+            <element signature="e#2404#2631#0" expanded="true" />
+            <element signature="e#2630#2631#0" expanded="true" />
+            <element signature="e#2774#2896#0" expanded="true" />
+            <element signature="e#2895#2896#0" expanded="true" />
+            <element signature="e#3022#3148#0" expanded="true" />
+            <element signature="e#3147#3148#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/models/ExampleNewsResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="664">
+          <caret line="22" column="1" lean-forward="false" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/FindOutFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="62">
+          <caret line="109" column="17" lean-forward="false" selection-start-line="109" selection-start-column="17" selection-end-line="109" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3508#3702#0" expanded="false" />
+            <element signature="e#3701#3702#0" expanded="false" />
+            <element signature="e#3884#4147#0" expanded="false" />
+            <element signature="e#4146#4147#0" expanded="false" />
+            <element signature="e#4148#4419#0" expanded="false" />
+            <element signature="e#4418#4419#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+>>>>>>> a37d40b7a2f77318c758bf43e871312be755e6df
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_find_out.xml">
       <provider editor-type-id="text-editor">
         <state relative-caret-position="322">
@@ -2805,8 +2927,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/models/NewsItem.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="695">
           <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+=======
+        <state relative-caret-position="1983">
+          <caret line="85" column="0" lean-forward="true" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+>>>>>>> a37d40b7a2f77318c758bf43e871312be755e6df
           <folding />
         </state>
       </provider>
@@ -2826,11 +2953,32 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/NewsActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
           <caret line="209" column="55" lean-forward="false" selection-start-line="209" selection-start-column="55" selection-end-line="209" selection-end-column="55" />
           <folding />
+=======
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/models/Content.java" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/utils/SpeechRecorder.java" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/GreetingsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="74" column="43" lean-forward="false" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/dartmouth/cs/havvapa/NewsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="213" column="8" lean-forward="false" selection-start-line="213" selection-start-column="8" selection-end-line="213" selection-end-column="8" />
+          <folding>
+            <element signature="e#6896#7135#0" expanded="true" />
+            <element signature="e#7134#7135#0" expanded="true" />
+          </folding>
+>>>>>>> a37d40b7a2f77318c758bf43e871312be755e6df
         </state>
       </provider>
     </entry>
