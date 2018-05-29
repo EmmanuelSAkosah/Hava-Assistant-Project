@@ -2,6 +2,7 @@ package edu.dartmouth.cs.havvapa.APIs;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +12,10 @@ import com.ibm.watson.developer_cloud.android.library.audio.utils.ContentType;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.RecognizeOptions;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallback;
+
+import edu.dartmouth.cs.havvapa.NewsActivity;
+import edu.dartmouth.cs.havvapa.ScheduleEventActivity;
+import edu.dartmouth.cs.havvapa.SignUpActivity;
 
 
 public class SpeechToTextHelper {
@@ -94,6 +99,24 @@ public class SpeechToTextHelper {
         });
     }
 
+
+
+    public void executeCommand(String transcribed_text, Context context){
+        String speech = transcribed_text.toLowerCase();
+        //sign in
+        if (speech.contains("sign") || speech.contains("log in") || (speech.contains("register"))){
+            context.startActivity(new Intent(context, SignUpActivity.class));
+
+            //news activity
+        }else if(speech.contains("news") || speech.contains("headlines") || speech.contains("happening") ) {
+            context.startActivity(new Intent(context, NewsActivity.class));
+
+            //open schedule activity
+        }else if(speech.contains("schedule") || speech.contains("event") || speech.contains("to do") || speech.contains("reminder")) { //open schedule activity
+            context.startActivity(new Intent(context, ScheduleEventActivity.class));
+        }
+
+    }
 
 }
 

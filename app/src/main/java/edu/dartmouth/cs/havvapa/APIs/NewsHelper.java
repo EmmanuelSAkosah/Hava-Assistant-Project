@@ -34,10 +34,10 @@ public class NewsHelper {
 
     public String getNewsOnConcept(String concept){
         String lastDate = "";
-        //TODO get last week date calendar.add(Calendar.DAY_OF_WEEK, -1);
+        //TODO get last month date calendar.add(Calendar.DAY_OF_WEEK, -1);
         return Constants.baseNewsURL+
-                "everything?country=us&pageSize=8&" +
-                "q="+concept+"from=2018-05-23"+Constants.newsAPIKey;
+                "everything?pageSize=15&" +
+                "q="+concept+"&from=2018-05-23"+Constants.newsAPIKey;
     }
 
     public ArrayList<NewsItem> parseResponse(JSONObject response){
