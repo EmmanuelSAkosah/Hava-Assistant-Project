@@ -99,8 +99,6 @@ public class SpeechToTextHelper {
         });
     }
 
-
-
     public void executeCommand(String transcribed_text, Context context){
         String speech = transcribed_text.toLowerCase();
         //sign in
@@ -112,7 +110,8 @@ public class SpeechToTextHelper {
             context.startActivity(new Intent(context, NewsActivity.class));
 
             //open schedule activity
-        }else if(speech.contains("schedule") || speech.contains("event") || speech.contains("to do") || speech.contains("reminder")) { //open schedule activity
+        }else if(speech.contains("schedule") || speech.contains("event") || speech.contains("to do")
+                || speech.contains("reminder") || speech.contains("plan")) { //open schedule activity
             context.startActivity(new Intent(context, ScheduleEventActivity.class));
         }
 

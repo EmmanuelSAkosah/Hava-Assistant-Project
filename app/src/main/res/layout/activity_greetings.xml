@@ -44,12 +44,25 @@
             android:layout_margin="75sp"
             android:text="@string/greetings_text"
             android:textSize="50dp"/>
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
         <Button
             android:id="@+id/record_btn_greetings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Record"/>
+    <EditText
+        android:id="@+id/test_et"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/analyze_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>
 
         <Button
             android:id="@+id/listen_btn_greetings"
@@ -75,8 +88,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_weight="1"/>
-
-
         </LinearLayout>
 
 

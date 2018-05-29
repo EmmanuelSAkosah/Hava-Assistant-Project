@@ -160,6 +160,15 @@ public class NewsActivity extends AppCompatActivity
         } else if (id == R.id.nav_health) {
             sendGET(newsHelper.getNewsByCategory(3));
 
+        }else if  (id == R.id.nav_science) {
+            sendGET(newsHelper.getNewsByCategory(4));
+
+        }else if  (id == R.id.nav_sports) {
+            sendGET(newsHelper.getNewsByCategory(5));
+
+        }else if  (id == R.id.nav_technology) {
+            sendGET(newsHelper.getNewsByCategory(6));
+
         } else if (id == R.id.nav_find_out) {
             openFindOutFragment();
         }

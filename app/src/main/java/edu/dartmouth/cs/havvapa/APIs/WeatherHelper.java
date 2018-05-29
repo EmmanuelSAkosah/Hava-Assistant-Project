@@ -17,7 +17,7 @@ import edu.dartmouth.cs.havvapa.models.Weather;
 
 public class WeatherHelper {
 
-    public static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
+    public static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?";
     private String TAG = "WeatherHelper";
     public static String API_KEY ="&APPID=db2e34c6ec913c5702ec1eb59a3ed321";
 

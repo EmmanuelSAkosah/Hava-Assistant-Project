@@ -1,10 +1,17 @@
 package edu.dartmouth.cs.havvapa.APIs;
 
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.TimeZone;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import edu.dartmouth.cs.havvapa.models.NewsItem;
 import edu.dartmouth.cs.havvapa.utils.Constants;
@@ -33,11 +40,19 @@ public class NewsHelper {
     }
 
     public String getNewsOnConcept(String concept){
-        String lastDate = "";
-        //TODO get last month date calendar.add(Calendar.DAY_OF_WEEK, -1);
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_YEAR, -21);
+        Long last3Weeks = cal.getTimeInMillis();
+
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        df.setTimeZone(tz);
+        String dateISO = df.format(last3Weeks);
+
         return Constants.baseNewsURL+
                 "everything?pageSize=15&" +
-                "q="+concept+"&from=2018-05-23"+Constants.newsAPIKey;
+                "q="+concept+"&from="+dateISO+Constants.newsAPIKey;
     }
 
     public ArrayList<NewsItem> parseResponse(JSONObject response){
