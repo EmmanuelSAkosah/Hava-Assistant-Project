@@ -3,7 +3,6 @@ package edu.dartmouth.cs.havvapa;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,16 +13,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.app.AlertDialog;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.media.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AlertDialogLayout;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,10 +25,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -42,15 +32,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.media.AudioManager;
 
 
 import java.util.Calendar;
-import java.util.zip.Inflater;
 
-import edu.dartmouth.cs.havvapa.database_elements.EventReminderItemsSource;
+import edu.dartmouth.cs.havvapa.AlarmHelpers.AlarmManagmentActivity;
+import edu.dartmouth.cs.havvapa.AlarmHelpers.AlarmReceiver;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoItemsSource;
-import edu.dartmouth.cs.havvapa.models.EventReminderItem;
 import edu.dartmouth.cs.havvapa.models.ToDoEntry;
 
 public class ScheduleEventActivity extends AppCompatActivity
@@ -127,6 +115,7 @@ public class ScheduleEventActivity extends AppCompatActivity
                     database.modifyScheduledEvent(eventToDisplay.getId(), eventTitle,eventLocation, eventDescription, startDateTime.getTimeInMillis(), endDateTime.getTimeInMillis(), eventDuration);
                     Intent modifyEventIntent = new Intent(ScheduleEventActivity.this, MainActivity.class);
                     startActivity(modifyEventIntent);
+                    finish();
 
                 }
                 else {
@@ -135,6 +124,7 @@ public class ScheduleEventActivity extends AppCompatActivity
 
                     Intent scheduledEventIntent = new Intent(this, MainActivity.class);
                     startActivity(scheduledEventIntent);
+                    finish();
                 }
 
 
@@ -146,6 +136,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                 deleteEventTask.execute();
                 Intent deleteEventIntent = new Intent(this, MainActivity.class);
                 startActivity(deleteEventIntent);
+                finish();
+                return true;
 
 
             case R.id.menuitem_settings:

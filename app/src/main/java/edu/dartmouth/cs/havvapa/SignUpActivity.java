@@ -29,6 +29,7 @@ public class SignUpActivity extends AppCompatActivity
         {
             case R.id.su_menuitem_save:
                 startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                finish();
                 return true;
 
             case android.R.id.home:

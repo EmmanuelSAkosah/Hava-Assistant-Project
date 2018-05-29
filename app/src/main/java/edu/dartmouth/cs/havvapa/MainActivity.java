@@ -1,8 +1,5 @@
 package edu.dartmouth.cs.havvapa;
 
-import android.app.Activity;
-import android.content.res.Configuration;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,16 +7,12 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
+import edu.dartmouth.cs.havvapa.AlarmHelpers.AlarmManagmentActivity;
 import edu.dartmouth.cs.havvapa.pageManager.ActionTabsViewPagerAdapter;
 
 
@@ -73,6 +66,8 @@ public class MainActivity extends AppCompatActivity
                 if(tab.getPosition() == 1)
                 {
                     startActivity(new Intent(MainActivity.this, NewsActivity.class));
+                    finish();
+                    return;
                 }
             }
 

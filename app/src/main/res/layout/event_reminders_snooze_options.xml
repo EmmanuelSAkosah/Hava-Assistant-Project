@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#556671"
-    tools:context=".AlarmManagmentActivity">
+    tools:context=".AlarmHelpers.AlarmManagmentActivity">
 
     <LinearLayout
         android:id="@+id/event_reminders_snooze_options"

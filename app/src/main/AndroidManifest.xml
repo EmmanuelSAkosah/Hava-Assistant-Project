@@ -33,22 +33,23 @@
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".ScheduleEventActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".NewsActivity"
             android:label="@string/title_activity_news"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ScheduleEventActivity$EventOptionsActivity" />
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".AlarmHelpers.AlarmReceiver" />
         <receiver android:name=".ScheduleEventActivity$StopAlarmServiceReciever" />
 
-        <service android:name=".RingtoneMediaService" />
+        <service android:name=".AlarmHelpers.RingtoneMediaService" />
 
-        <receiver android:name=".RingtoneMediaService$StopRingtoneReciever" />
+        <receiver android:name=".AlarmHelpers.RingtoneMediaService$StopRingtoneReciever" />
 
-        <activity android:name=".AlarmManagmentActivity"></activity>
-        <activity android:name=".SnoozeAlarmActivity"></activity>
+        <activity android:name=".AlarmHelpers.AlarmManagmentActivity" />
+        <activity android:name=".AlarmHelpers.SnoozeAlarmActivity" />
+        <activity android:name=".RecordedNewsActivity"></activity>
     </application>
 
 </manifest>

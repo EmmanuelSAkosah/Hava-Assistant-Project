@@ -1,6 +1,5 @@
 package edu.dartmouth.cs.havvapa;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,13 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import edu.dartmouth.cs.havvapa.CalendarItems.CompactCalendarView;
+import edu.dartmouth.cs.havvapa.CalendarItems.Event;
 import edu.dartmouth.cs.havvapa.adapters.ToDoListAdapter;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoEntryListLoader;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoItemsSource;

@@ -3,7 +3,6 @@ package edu.dartmouth.cs.havvapa;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -30,17 +29,15 @@ import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallb
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
+import edu.dartmouth.cs.havvapa.AlarmHelpers.AlarmManagmentActivity;
 import edu.dartmouth.cs.havvapa.adapters.GreetingsEventsAdapter;
-import edu.dartmouth.cs.havvapa.database_elements.ToDoEntryListLoader;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoItemsSource;
 import edu.dartmouth.cs.havvapa.database_elements.UpcomingToDoEntryListLoader;
 import edu.dartmouth.cs.havvapa.models.GreetingsToDoEntry;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
 import edu.dartmouth.cs.havvapa.APIs.SpeechToTextHelper;
 import edu.dartmouth.cs.havvapa.models.ToDoEntry;
-import edu.dartmouth.cs.havvapa.models.ToDoItemForAdapter;
 
 
 public class GreetingsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<ToDoEntry>>

@@ -34,7 +34,7 @@ public class WhatsNewFragment extends Fragment
 
         //startActivity(new Intent(getActivity(), WhatsNewActivity.class));
 
-        return inflater.inflate(R.layout.fragment_whats_new, container, false);
+        return null;
 
     }
 
