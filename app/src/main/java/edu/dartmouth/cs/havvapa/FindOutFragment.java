@@ -140,7 +140,7 @@ public class FindOutFragment extends Fragment{
     AdapterView.OnItemClickListener mListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view,
                                 int position, long id) {
-            NewsActivity.openWebPage(topicNewsList.get(position).getSource(),getActivity());
+            NewsActivity.openWebPage(topicNewsList.get(position).getURL(),getActivity());
         }
     };
 

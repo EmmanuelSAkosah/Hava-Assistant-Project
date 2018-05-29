@@ -113,7 +113,7 @@ public class ScheduleEventActivity extends AppCompatActivity
                 {
                     String eventDuration = eventToDisplay.calculateEventDuration(startDateTime, endDateTime);
                     database.modifyScheduledEvent(eventToDisplay.getId(), eventTitle,eventLocation, eventDescription, startDateTime.getTimeInMillis(), endDateTime.getTimeInMillis(), eventDuration);
-                    Intent modifyEventIntent = new Intent(ScheduleEventActivity.this, MainActivity.class);
+                    Intent modifyEventIntent = new Intent(ScheduleEventActivity.this, GreetingsActivity.class);
                     startActivity(modifyEventIntent);
                     finish();
 
@@ -122,7 +122,7 @@ public class ScheduleEventActivity extends AppCompatActivity
                     addEventTask = new AddEventTask();
                     addEventTask.execute();
 
-                    Intent scheduledEventIntent = new Intent(this, MainActivity.class);
+                    Intent scheduledEventIntent = new Intent(this, GreetingsActivity.class);
                     startActivity(scheduledEventIntent);
                     finish();
                 }
@@ -134,7 +134,7 @@ public class ScheduleEventActivity extends AppCompatActivity
 
                 deleteEventTask = new DeleteEventTask();
                 deleteEventTask.execute();
-                Intent deleteEventIntent = new Intent(this, MainActivity.class);
+                Intent deleteEventIntent = new Intent(this, GreetingsActivity.class);
                 startActivity(deleteEventIntent);
                 finish();
                 return true;
@@ -142,10 +142,12 @@ public class ScheduleEventActivity extends AppCompatActivity
 
             case R.id.menuitem_settings:
                 startActivity(new Intent(ScheduleEventActivity.this, AlarmManagmentActivity.class));
+                finish();
                 return true;
 
             case R.id.menuitem_editProfile:
                 startActivity(new Intent(this, SignUpActivity.class));
+                finish();
                 return true;
 
             case android.R.id.home:

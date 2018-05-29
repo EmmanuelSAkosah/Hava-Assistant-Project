@@ -1,17 +1,24 @@
 package edu.dartmouth.cs.havvapa;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+
 import android.support.v4.content.Loader;
+
+import android.support.v7.app.AlertDialog;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -20,8 +27,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 
+
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import android.widget.ImageView;
@@ -34,13 +44,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.ibm.watson.developer_cloud.android.library.audio.StreamPlayer;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechResults;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.BaseRecognizeCallback;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallback;
-import com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech;
-import com.ibm.watson.developer_cloud.text_to_speech.v1.model.Voice;
 
 
 import java.util.ArrayList;
@@ -60,6 +71,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 
 
+import edu.dartmouth.cs.havvapa.APIs.TextToSpeechHelper;
 import edu.dartmouth.cs.havvapa.APIs.WeatherHelper;
 import edu.dartmouth.cs.havvapa.APIs.SpeechToTextHelper;
 import edu.dartmouth.cs.havvapa.models.Weather;
@@ -89,15 +101,19 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     private ArrayList<NewsItem> newsList;
     StreamPlayer streamPlayer;
     private Button listenBtn;
-
+    private LinearLayout toDoItemsAndTitleView;
+    private LinearLayout newsItemsAndTitleView;
     //public Weather weather;
 
     boolean flag;
 
     private RecognizeCallback mS2TCallback;
-    private SpeechToTextHelper speech2Text;
+    private SpeechToTextHelper speechToTextHelper;
+    private TextToSpeechHelper textToSpeechHelper;
     private TextView textView;
     private TextView greetings_tv;
+    private FusedLocationProviderClient mFusedLocationClient;
+
 
 
     @Override
@@ -156,6 +172,8 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         recordBtn = findViewById(R.id.record_btn_greetings);
         listenBtn = findViewById(R.id.listen_btn_greetings);
         inputMessage = findViewById(R.id.transcribed_text_tv);
+        toDoItemsAndTitleView = findViewById(R.id.to_do_title_and_items_box);
+        newsItemsAndTitleView = findViewById(R.id.whats_new_title_and_items_box);
 
         mListView = findViewById(R.id.to_do_items_listView);
 
@@ -165,7 +183,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         //greetingsEventsAdapter = new GreetingsEventsAdapter(getApplicationContext(), updatedGreetingsEntries);
         //mListView.setAdapter(greetingsEventsAdapter);
 
-        TextView greetings_tv = findViewById(R.id.tv_greetings);
+        greetings_tv = findViewById(R.id.tv_greetings);
 
 
         textView = (TextView) findViewById(R.id.textView);
@@ -183,20 +201,51 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         recordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speech2Text.recordMessage(mS2TCallback,GreetingsActivity.this);
+                speechToTextHelper.recordMessage(mS2TCallback,GreetingsActivity.this);
             }
         });
         listenBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WatsonTask task = new WatsonTask();
-                task.execute(new String[]{});
+                textToSpeechHelper.readAloud(greetings_tv.getText().toString());
             }
         });
 
-        //call custom speech to text service
-        speech2Text = new SpeechToTextHelper();
-        S2T_service = speech2Text.getService();
+        toDoItemsAndTitleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               Intent intent = new Intent(GreetingsActivity.this, ToDoActivity.class);
+               startActivity(intent);
+
+
+            }
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(GreetingsActivity.this, ToDoActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+
+
+        newsItemsAndTitleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(GreetingsActivity.this, NewsActivity.class));
+
+            }
+        });
+
+        //get API helpers
+        speechToTextHelper = new SpeechToTextHelper();
+        S2T_service = speechToTextHelper.getService();
+        textToSpeechHelper = new TextToSpeechHelper();
 
         //permission to record audio
         int permission = ContextCompat.checkSelfPermission(this,
@@ -213,37 +262,50 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             public void onTranscription(SpeechResults speechResults) {
                 if(speechResults.getResults() != null && !speechResults.getResults().isEmpty()) {
                     String text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
-                    speech2Text.showMicText(text,GreetingsActivity.this,inputMessage);
-                    speech2Text.executeCommand(text,getApplicationContext()); // act on transcribed text
+                    speechToTextHelper.showMicText(text,GreetingsActivity.this,inputMessage);
+                    speechToTextHelper.executeCommand(text,getApplicationContext()); // act on transcribed text
                 }
             }
 
             //@Override
             public void onTranscriptionComplete(){
-                //done transcribing, stop all results processing
-                // Toast.makeText(getApplicationContext(), "Watson Audio Process Complete", Toast.LENGTH_LONG).show();
 
             }
 
             @Override public void onError(Exception e) {
-                speech2Text.showError(e,GreetingsActivity.this);
-                speech2Text.enableMicButton(recordBtn,GreetingsActivity.this);
+                speechToTextHelper.showError(e,GreetingsActivity.this);
+                speechToTextHelper.enableMicButton(recordBtn,GreetingsActivity.this);
             }
 
             @Override
             public void onDisconnected() {
                  Toast.makeText(GreetingsActivity.this, "Watson Service Disconnected", Toast.LENGTH_LONG).show();
-                speech2Text.enableMicButton(recordBtn,GreetingsActivity.this);
+                speechToTextHelper.enableMicButton(recordBtn,GreetingsActivity.this);
             }
         };
 
         //get weather
-        //sendGETForWeather("Manchester");
+       mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            sendGETForWeather(location);
+                        }
+                    }
+
+
+                });
+
     }
 
     //Weather
-    public void sendGETForWeather(String location) {
-        String url = WeatherHelper.BASE_URL+location+API_KEY;
+    public void sendGETForWeather(Location location) {
+        //api.openweathermap.org/data/2.5/weather?lat=35&lon=139
+        String url = WeatherHelper.BASE_URL+"lat="+location.getLatitude()+
+                "&lon="+location.getLongitude()+API_KEY;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, url,
                 null, new com.android.volley.Response.Listener<JSONObject>() {
@@ -267,28 +329,28 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
     public void displayWeatherIcon(String IconId){
         String IMG_URL = "http://openweathermap.org/img/w/"+IconId+".png";
-        new downloadImageTask((ImageView) findViewById(R.id.weatherImage_img_greetings))
+        new downloadWeatherIconTask((ImageView) findViewById(R.id.weatherImage_img_greetings))
                 .execute(IMG_URL);
     }
 
-    private class downloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    private class downloadWeatherIconTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
-        public downloadImageTask(ImageView bmImage) {
+        public downloadWeatherIconTask(ImageView bmImage) {
             this.bmImage = bmImage;
         }
 
         protected Bitmap doInBackground(String... urls) {
             String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
+            Bitmap mIcon = null;
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
+                mIcon = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            return mIcon11;
+            return mIcon;
         }
 
         protected void onPostExecute(Bitmap result) {
@@ -297,30 +359,6 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     }
 
 
-    private TextToSpeech initTextToSpeechService(){
-        TextToSpeech service = new TextToSpeech();
-        String username = "ff4968b9-83d1-4503-8774-ca8613213cff";
-        String password = "mPvTlusJCxf0";
-        service.setUsernameAndPassword(username, password);
-        return service;
-    }
-
-    private class WatsonTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... textToSpeak) {
-
-            TextToSpeech textToSpeech = initTextToSpeechService();
-            streamPlayer = new StreamPlayer();
-            streamPlayer.playStream(textToSpeech.synthesize(String.valueOf(greetings_tv.getText()), Voice.EN_LISA).execute());
-
-            return "text to speech done";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-        }
-
-    }
 // Speech-to-Text Record Audio permission
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -337,6 +375,17 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
                         PackageManager.PERMISSION_GRANTED) {
 
                     Log.i(TAG, "Permission has been denied by user");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("This permission is important for the app.")
+                            .setTitle("Important permission required");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                            }
+
+                        }
+                    });
                 } else {
                     Log.i(TAG, "Permission has been granted by user");
                 }
@@ -349,9 +398,10 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
     protected void makeRequest() {
     ActivityCompat.requestPermissions(this,
-            new String[]{Manifest.permission.RECORD_AUDIO},
+            new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_COARSE_LOCATION},
             RECORD_REQUEST_CODE);
     }
+
 
 
     private void executeCommand(String transcribed_text){
@@ -475,4 +525,6 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         }
     }
 
+
 }
+

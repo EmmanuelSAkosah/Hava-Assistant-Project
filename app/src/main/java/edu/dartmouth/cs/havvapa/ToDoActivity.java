@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +34,7 @@ import edu.dartmouth.cs.havvapa.models.ToDoEntry;
 import edu.dartmouth.cs.havvapa.models.ToDoItemForAdapter;
 
 
-public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<ToDoEntry>>
+public class ToDoActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<ToDoEntry>>
 {
     private ToDoItemsSource datasource;
     private ToDoListAdapter mToDoListAdapter;
@@ -53,83 +54,59 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
         switch (item.getItemId())
         {
             case R.id.menuitem_schedule_event_btn:
-                startActivity(new Intent(getActivity(), ScheduleEventActivity.class));
+                startActivity(new Intent(getApplicationContext(), ScheduleEventActivity.class));
                 //Intent intent = new Intent(getActivity(), ScheduleEventActivity.EventOptionsActivity.class);
                 //startActivity(intent);
+                finish();
                 return true;
 
             case R.id.menuitem_settings:
-                startActivity(new Intent(getActivity(), SignUpActivity.class));
+                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                finish();
                 return true;
 
             case R.id.menuitem_editProfile:
-                startActivity(new Intent(getActivity(), SignUpActivity.class));
+                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                finish();
+                return true;
+
+            case R.id.home:
+                finish();
                 return true;
 
 
             default:
-               // return super.onOptionsItemSelected(item);
+                // return super.onOptionsItemSelected(item);
                 return true;
 
         }
 
     }
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    public boolean onCreateOptionsMenu(Menu menu)
     {
-        inflater.inflate(R.menu.to_do_fragment_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.to_do_activity_menu, menu);
+        return true;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        datasource = new ToDoItemsSource(getContext());
+        setContentView(R.layout.activity_to_do);
+        getSupportActionBar().setTitle("Plan");  // Set the title. I don't know how it can give null pointer exception.
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
-        setRetainInstance(true);
-        //updatedToDoItemEnries = new ArrayList<>();
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_to_do, container, false);
-        compactCalendarView = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
+        compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         compactCalendarView.setUseThreeLetterAbbreviation(false);
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
 
-        toolBarForCurrMonth = view.findViewById(R.id.tool_bar_for_month_display);
+        toolBarForCurrMonth = findViewById(R.id.tool_bar_for_month_display);
 
-        /*
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH,cal.get(Calendar.DAY_OF_MONTH) + 1);
-
-        List<Event> events = Arrays.asList(
-                new Event(Color.argb(255, 169, 68, 65), cal.getTimeInMillis(), "Event at " + new Date(Calendar.getInstance().getTimeInMillis())),
-                new Event(Color.argb(255, 100, 68, 65), cal.getTimeInMillis(), "Event 2 at " + new Date(Calendar.getInstance().getTimeInMillis())));
-
-        compactCalendarView.addEvents(events);
-        Log.d("TRY", String.valueOf(compactCalendarView.getEvents(cal.getTimeInMillis()).size()));
-        for(Event event : compactCalendarView.getEvents(cal.getTimeInMillis())){
-            Log.d("DATE", updateDateDisplay2(event.getTimeInMillis()));
-        }*/
         compactCalendarView.invalidate();
 
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ListView mListView = view.findViewById(R.id.calendarListView);
-        mToDoListAdapter = new ToDoListAdapter(getContext(),updatedToDoItemEnries);
+        ListView mListView = findViewById(R.id.calendarListView);
+        mToDoListAdapter = new ToDoListAdapter(getApplicationContext(),updatedToDoItemEnries);
         mListView.setAdapter(mToDoListAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -140,7 +117,7 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
                 {
                     long selectedEntryId = allEntries.get(position).getId();
                     Log.d("ID_?", String.valueOf(selectedEntryId));
-                    Intent displayIntent = new Intent(getActivity(), ScheduleEventActivity.class);
+                    Intent displayIntent = new Intent(getApplicationContext(), ScheduleEventActivity.class);
                     displayIntent.putExtra("ENTRY_ROW_ID", selectedEntryId);
                     startActivity(displayIntent);
 
@@ -150,7 +127,7 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
                 }
             }
         });
-        toolBarForCurrMonth = view.findViewById(R.id.tool_bar_for_month_display);
+        toolBarForCurrMonth = findViewById(R.id.tool_bar_for_month_display);
         toolBarForCurrMonth.setTitle(updateDateDisplay(Calendar.getInstance()) + "  -  " + String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
@@ -198,29 +175,35 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
                 toolBarForCurrMonth.setTitle(updateDateDisplay(currCal) + "  -  " + currCal.get(Calendar.YEAR));
             }
         });
+
+        //updatedToDoItemEnries = new ArrayList<>();
+
     }
+
+
+
 
     private String updateDateDisplay(Calendar dateTime)
     {
-        String mSelectedDate = DateUtils.formatDateTime(getActivity(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
+        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
         return mSelectedDate;
     }
     private String updateTimeDisplay(Calendar dateTime)
     {
-        String mSelectedTime = DateUtils.formatDateTime(getActivity(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
+        String mSelectedTime = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
         return mSelectedTime;
     }
 
     private String updateDateDisplay2(long dateTimeInMillis)
     {
-        String mSelectedDate = DateUtils.formatDateTime(getActivity(), dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
+        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
         return mSelectedDate;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getSupportLoaderManager().initLoader(ALL_ITEMS_LOADER_ID, null, this).forceLoad();
+        getSupportLoaderManager().initLoader(ALL_ITEMS_LOADER_ID, null, this).forceLoad();
     }
 
     @NonNull
@@ -229,7 +212,7 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
 
         switch (id){
             case ALL_ITEMS_LOADER_ID:
-                return new ToDoEntryListLoader(getActivity());
+                return new ToDoEntryListLoader(getApplicationContext());
         }
 
         return null;
@@ -266,8 +249,8 @@ public class ToDoFragment extends Fragment implements LoaderManager.LoaderCallba
                 compactCalendarView.invalidate();
 
                 //updatedToDoItemEnries = toDoEntriesPerScheduledEvent;
-               // mToDoListAdapter.setCalendarItems(updatedToDoItemEnries);
-               // mToDoListAdapter.notifyDataSetChanged();
+                // mToDoListAdapter.setCalendarItems(updatedToDoItemEnries);
+                // mToDoListAdapter.notifyDataSetChanged();
             }
             else {
                 mToDoListAdapter.clear();

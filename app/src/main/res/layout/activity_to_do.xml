@@ -6,7 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#556671"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context=".ToDoActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar_for_month_display"

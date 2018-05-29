@@ -28,7 +28,7 @@ public class SignUpActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.su_menuitem_save:
-                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                startActivity(new Intent(SignUpActivity.this, GreetingsActivity.class));
                 finish();
                 return true;
 
