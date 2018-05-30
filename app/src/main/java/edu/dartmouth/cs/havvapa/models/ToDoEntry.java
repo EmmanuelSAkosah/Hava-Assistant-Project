@@ -10,9 +10,8 @@ public class ToDoEntry
     private String eventTitle;
     private  String eventLocation;
     private String eventDescription;
+    private String eventDuration;
     private int eventUniqueTimestamp;
-    private int eventUniqueTimestamp2;
-    //private String eventReminderOption;
 
 
     public ToDoEntry(){
@@ -32,25 +31,21 @@ public class ToDoEntry
         this.eventDescription = eventDescription;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-
+        this.setEventDuration(this.calculateEventDuration(startDateTime, endDateTime));
 
     }
 
-    public ToDoEntry(String eventTitle, String eventLocation, String eventDescription, Calendar startDateTime, Calendar endDateTime,int eventUniqueTimestamp, int eventUniqueTimestamp2)
+    public ToDoEntry(String eventTitle, String eventLocation, String eventDescription, Calendar startDateTime, Calendar endDateTime, int eventUniqueTimestamp)
     {
         this.eventTitle = eventTitle;
         this.eventLocation = eventLocation;
         this.eventDescription = eventDescription;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-        //this.eventReminderOption = eventReminderOption;
         this.eventUniqueTimestamp = eventUniqueTimestamp;
-        this.eventUniqueTimestamp2 = eventUniqueTimestamp2;
-
+        this.setEventDuration(this.calculateEventDuration(startDateTime, endDateTime));
 
     }
-
-
 
     public int getEventUniqueTimestamp() {
         return eventUniqueTimestamp;
@@ -58,14 +53,6 @@ public class ToDoEntry
 
     public void setEventUniqueTimestamp(int eventUniqueTimestamp) {
         this.eventUniqueTimestamp = eventUniqueTimestamp;
-    }
-
-    public int getEventUniqueTimestamp2() {
-        return eventUniqueTimestamp2;
-    }
-
-    public void setEventUniqueTimestamp2(int eventUniqueTimestamp2) {
-        this.eventUniqueTimestamp2 = eventUniqueTimestamp2;
     }
 
     public long getId() {
@@ -108,7 +95,48 @@ public class ToDoEntry
         this.eventLocation = eventLocation;
     }
 
+    public String getEventDuration()
+    {
+        return eventDuration;
 
+    }
+
+    public String calculateEventDuration(Calendar dateTimeStart, Calendar dateTimeEnd)
+    {
+
+        String eventDuration = null;
+        long secondDifference = ((dateTimeEnd.getTimeInMillis() - dateTimeStart.getTimeInMillis())/1000);
+        int hourDifference = (int)(secondDifference/3600);
+        int remainderSeconds = (int)(secondDifference % 3600);
+        int remainderMinutes = (remainderSeconds/60);
+        if(hourDifference < 24)
+        {
+            if(remainderMinutes<60){
+                eventDuration = (String.valueOf(hourDifference) + " hours - " + String.valueOf(remainderMinutes) + " minutes");
+            }
+
+        }
+        else if(hourDifference == 24){
+            if(remainderMinutes<60){
+                eventDuration = ("1 day - " + String.valueOf(remainderMinutes) + " minutes");
+            }
+
+        }
+        else {
+
+            int day = (hourDifference / 24);
+            int remainderHours = (hourDifference%24);
+            eventDuration = (String.valueOf(day) + " day - " + String.valueOf(remainderHours) + " hours - " + String.valueOf(remainderMinutes) + " minutes");
+        }
+
+
+
+        return eventDuration;
+    }
+
+    public void setEventDuration(String eventDuration) {
+        this.eventDuration = eventDuration;
+    }
 
     public Calendar getStartDateTime() {
         return startDateTime;

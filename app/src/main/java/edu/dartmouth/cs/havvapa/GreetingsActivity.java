@@ -73,7 +73,6 @@ import java.io.InputStream;
 
 import edu.dartmouth.cs.havvapa.APIs.TextToSpeechHelper;
 import edu.dartmouth.cs.havvapa.APIs.WeatherHelper;
-import edu.dartmouth.cs.havvapa.APIs.SpeechToTextHelper;
 import edu.dartmouth.cs.havvapa.models.Weather;
 
 

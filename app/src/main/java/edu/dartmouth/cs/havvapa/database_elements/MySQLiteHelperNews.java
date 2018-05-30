@@ -12,10 +12,10 @@ public class MySQLiteHelperNews extends SQLiteOpenHelper
 
     public static final String TABLE_ITEMS = "items";
     public static final String ROW_ID = "_id";
-    public static final String COLUMN_NEWS_TITLE = "newsTitle";
-    public static final String COLUMN_NEWS_URL = "newsUrl";
-    public static final String COLUMN_NEWS_SOURCE = "newsSource";
-    public static final String COLUMN_NEWS_IMAGE_URL = "newsImageUrl";
+    public static final String COLUMN_NEWS_TITLE = "news_title";
+    public static final String COLUMN_NEWS_URL = "news_url";
+    public static final String COLUMN_NEWS_SOURCE = "news_source";
+    public static final String COLUMN_NEWS_IMAGE_URL = "news_image_url";
 
 
 

@@ -9,11 +9,11 @@ public class MySQLiteHelperReminder extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "event_reminders.db";
     private static final int DATABASE_VERSION = 1;
 
-    public static final String TABLE_ITEMS = "reminderItems";
+    public static final String TABLE_ITEMS = "reminder_items";
     public static final String ROW_ID = "_id";
-    public static final String COLUMN_SNOOZE_PREFERENCE = "snoozePreference";
-    public static final String COLUMN_VIBRATION_PREFERENCE = "vibrationPreference";
-    public static final String COLUMN_SOUND_PREFERENCE = "soundPreference";
+    public static final String COLUMN_SNOOZE_PREFERENCE = "snooze_preference";
+    public static final String COLUMN_VIBRATION_PREFERENCE = "vibration_preference";
+    public static final String COLUMN_SOUND_PREFERENCE = "sound_preference";
 
     private static final String DATABASE_TODO_ITEMS = "CREATE TABLE IF NOT EXISTS " +
             TABLE_ITEMS + "(" + ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
