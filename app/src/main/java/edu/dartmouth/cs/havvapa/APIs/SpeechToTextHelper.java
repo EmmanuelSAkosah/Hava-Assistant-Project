@@ -101,6 +101,14 @@ public class SpeechToTextHelper {
         });
     }
 
+    public void enableMicButton(final android.support.design.widget.FloatingActionButton recordBtn,Context context) {
+        ((Activity)context).runOnUiThread(new Runnable() {
+            @Override public void run() {
+                recordBtn.setEnabled(true);
+            }
+        });
+    }
+
     public void executeCommand(String transcribed_text, Context context){
         String speech = transcribed_text.toLowerCase();
         //sign in

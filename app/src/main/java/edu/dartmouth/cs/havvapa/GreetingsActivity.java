@@ -89,7 +89,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     private boolean permissionToRecordAccepted = false;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static final int RECORD_REQUEST_CODE = 101;
-    private Button recordBtn;
+    private android.support.design.widget.FloatingActionButton recordBtn;
     private TextView inputMessage;
     private SpeechToText S2T_service;
 
@@ -102,6 +102,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     private Calendar currGreetingsEventCal;
     private ListView mListView;
     private ListView mHeadlinesListView;
+    private TextView weatherTv;
     private static ArrayList<NewsItem> newsList;
     StreamPlayer streamPlayer;
     private Button listenBtn;
@@ -184,8 +185,11 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         inputMessage = findViewById(R.id.transcribed_text_tv);
         toDoItemsAndTitleView = findViewById(R.id.to_do_title_and_items_box);
         newsItemsAndTitleView = findViewById(R.id.whats_new_title_and_items_box);
+        weatherTv = findViewById(R.id.weather_tv);
+
 
         mListView = findViewById(R.id.to_do_items_listView);
+        mHeadlinesListView = findViewById(R.id.greetings_headlines_listView);
 
         newsList = new ArrayList<>();
 
@@ -212,12 +216,6 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             @Override
             public void onClick(View v) {
                 speechToTextHelper.recordMessage(mS2TCallback,GreetingsActivity.this);
-            }
-        });
-        listenBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textToSpeechHelper.readAloud(greetings_tv.getText().toString());
             }
         });
 
@@ -252,11 +250,20 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             }
         });
 
+        mHeadlinesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(GreetingsActivity.this, NewsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //get API helpers
         speechToTextHelper = new SpeechToTextHelper();
         S2T_service = speechToTextHelper.getService();
         newsHelper = new NewsHelper();
         textToSpeechHelper = new TextToSpeechHelper();
+        sendGET(newsHelper.getNewsByCategory(0));
 
         //permission to record audio
         int permission = ContextCompat.checkSelfPermission(this,
@@ -324,6 +331,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             public void onResponse(JSONObject response) {
                Weather weather = WeatherHelper.parseWeatherResponse(response);
                displayWeatherIcon(weather.getIcon());
+               weatherTv.setText(String.valueOf(String.valueOf((double)weather.getTemperature()- 273)));
             }
         },new com.android.volley.Response.ErrorListener() {
             @Override
