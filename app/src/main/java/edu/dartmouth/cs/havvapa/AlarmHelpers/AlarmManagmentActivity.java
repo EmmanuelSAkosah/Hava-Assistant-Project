@@ -22,13 +22,11 @@ import edu.dartmouth.cs.havvapa.user_records.KeepUserRecords;
 import edu.dartmouth.cs.havvapa.R;
 import edu.dartmouth.cs.havvapa.database_elements.EventReminderItemsSource;
 import edu.dartmouth.cs.havvapa.models.EventReminderItem;
-import edu.dartmouth.cs.havvapa.utils.Preferences;
 
 public class AlarmManagmentActivity extends AppCompatActivity
 {
     private SwitchCompat reminderSoundOptionSwitch;
     private SwitchCompat reminderVibrationSwitch;
-    private SwitchCompat mutePreferenceSwitch;
     private TextView reminderSnoozeTimeIndicatorTv;
     private TextView reminderSnoozeTimeTv;
     //private TextView alarmCloseTv;
@@ -43,7 +41,6 @@ public class AlarmManagmentActivity extends AppCompatActivity
     private long selectedSnoozeOptionLong;
     private boolean vibrationOn;
     private boolean soundOn;
-    private Preferences pref;
 
     private boolean itemExists;
     private boolean flag=true;
@@ -105,14 +102,13 @@ public class AlarmManagmentActivity extends AppCompatActivity
 
         getSupportActionBar().setTitle("Reminder Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        pref = new Preferences(getApplicationContext());
 
 
         reminderSoundOptionSwitch = findViewById(R.id.reminder_sound_option);
         reminderVibrationSwitch = findViewById(R.id.reminder_vibration_option);
         reminderSnoozeTimeIndicatorTv = findViewById(R.id.reminder_snooze_time_indicator);
         reminderSnoozeTimeTv = findViewById(R.id.reminder_snooze_time);
-        mutePreferenceSwitch = findViewById(R.id.mute_preference_switch);
+        //alarmCloseTv = findViewById(R.id.alarm_close_tv);
         reminderSnoozeOptionsBox = findViewById(R.id.reminder_snooze_options_box);
 
         datasource = new EventReminderItemsSource(this);
@@ -172,7 +168,6 @@ public class AlarmManagmentActivity extends AppCompatActivity
             }
 
         }
-
         reminderVibrationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
@@ -220,6 +215,7 @@ public class AlarmManagmentActivity extends AppCompatActivity
                 else {
                     userRecords.setSoundPref(false);
                     soundOn = false;
+                    Log.d("Is Sound?", String.valueOf(isChecked));
                     if(itemExists){
                         datasource.updateItemSoundPref(reminderItem.getEventReminderId(), false);
                     }
@@ -370,21 +366,11 @@ public class AlarmManagmentActivity extends AppCompatActivity
                 });
 
                 builder.show();
-
             }
 
         });
 
-        mutePreferenceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    pref.muteHavva(true);
-                }else {
-                    pref.muteHavva(false);
-                }
-            }
-        });
+
 
 
     }

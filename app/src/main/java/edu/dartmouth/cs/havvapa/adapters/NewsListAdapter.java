@@ -42,6 +42,9 @@ public class NewsListAdapter extends ArrayAdapter {
     private NewsItemsSource datasource;
 
     View newsItemView;
+
+  //  ImageView imageView;
+    //View newsItemView;
     ImageLoader imageLoader = ImageManager.getInstance().getImageLoader();
 
     public NewsListAdapter(Context context,int layoutID, ArrayList<NewsItem> newsList){
@@ -153,6 +156,25 @@ public class NewsListAdapter extends ArrayAdapter {
 
         });
 
+
+
+
+
+
+
+       /* new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    URL url = new URL(imageUrl);
+                    Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    displayImage(bitmap,newsItemView);
+                }catch (Exception e){
+                    e.printStackTrace();
+                   //showImageUnavailableError();
+                }
+            }
+        }).start(); */
+
         return newsItemView;
     }
 
@@ -160,4 +182,26 @@ public class NewsListAdapter extends ArrayAdapter {
         return newsItemView;
     }
 
+   /* public void displayImage(final Bitmap bitmap, final View newsItemView){
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (bitmap == null) {
+                    showImageUnavailableError();
+                }else {
+                    imageView = newsItemView.findViewById(R.id.tv_news_item_image);
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
+        });
+    }
+
+    public void showImageUnavailableError(){
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setContentDescription("Image not available");
+            }
+        });
+    } */
 }

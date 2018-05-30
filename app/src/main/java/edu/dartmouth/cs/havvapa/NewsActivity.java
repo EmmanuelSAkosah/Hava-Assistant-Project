@@ -45,11 +45,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import edu.dartmouth.cs.havvapa.APIs.NewsHelper;
-import edu.dartmouth.cs.havvapa.APIs.TextToSpeechHelper;
 import edu.dartmouth.cs.havvapa.adapters.NewsListAdapter;
+import edu.dartmouth.cs.havvapa.models.ExampleNewsResponse;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
-import edu.dartmouth.cs.havvapa.utils.Preferences;
-
+import edu.dartmouth.cs.havvapa.utils.Constants;
+//import edu.dartmouth.cs.havvapa.SimpleGestureFilter.SimpleGestureListener;
+import edu.dartmouth.cs.havvapa.OnSwipeTouchListener;
 
 public class NewsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -62,22 +63,16 @@ public class NewsActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private NewsHelper newsHelper;
     private JSONObject mResponse;
-    private TextToSpeechHelper textToSpeechHelper;
-    private Preferences pref;
+    private OnSwipeTouchListener onSwipeTouchListener;
 
-    private FloatingActionButton readNews_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
-        pref = new Preferences(getApplicationContext());
         newsHelper = new NewsHelper();
         newsList = new ArrayList<>();
-        textToSpeechHelper = new TextToSpeechHelper();
-
-
 
 
         if (savedInstanceState != null) {
@@ -98,15 +93,15 @@ public class NewsActivity extends AppCompatActivity
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
-        readNews_btn = findViewById(R.id.read_news_btn);
-        readNews_btn.setOnClickListener(new View.OnClickListener() {
+        //Set as refresh button
+      /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!pref.isHavvaMute()) {
-                    readNewsAloud();
-                }
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
-        });
+        }); */
 
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -224,12 +219,107 @@ public class NewsActivity extends AppCompatActivity
     public void refreshView(){
         mNewsAdapter = new NewsListAdapter(this,R.layout.news_item,newsList);
         listView.setAdapter(mNewsAdapter);
+       //mNewsAdapter.notifyDataSetChanged();
+        //Log.d("ASIZE1", String.valueOf(mNewsAdapter.getAllNewsViews().size()));
+        Log.d("ASIZE2", String.valueOf(newsList.size()));
+        /*
+        try{
+            listView.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+            {
+                CardView newsItemView = mNewsAdapter.getSelectedView().findViewById(R.id.swipe_card);
+                public void onSwipeTop() {
+                    Toast.makeText(getApplicationContext(), "top", Toast.LENGTH_SHORT).show();
+                    Rect rect = new Rect();
+                    //int childCount = listView.getChildCount();
+                    //Log.d("Child number", String.valueOf(childCount));
+                    int [] listViewCoords = new int[2];
+                    newsItemView.getLocationOnScreen(listViewCoords);
+                    int x = OnSwipeTouchListener.getMotionX() - listViewCoords[0];
+                    int y = OnSwipeTouchListener.getMotionY() - listViewCoords[1];
+                    //View child;
+                    newsItemView.getHitRect(rect);
+                    if(rect.contains(x,y))
+                    {
+                        Toast.makeText(getApplicationContext(), "item swiped",Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+                public void onSwipeRight() {
+                    Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                    Rect rect = new Rect();
+                    //int childCount = listView.getChildCount();
+                    //Log.d("Child number", String.valueOf(childCount));
+                    int [] listViewCoords = new int[2];
+                    newsItemView.getLocationOnScreen(listViewCoords);
+                    int x = OnSwipeTouchListener.getMotionX() - listViewCoords[0];
+                    int y = OnSwipeTouchListener.getMotionY() - listViewCoords[1];
+                    View child;
+                    newsItemView.getHitRect(rect);
+                    if(rect.contains(x,y))
+                    {
+                        Toast.makeText(getApplicationContext(), "item swiped",Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                }
+                public void onSwipeLeft() {
+                    Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
+                    Rect rect = new Rect();
+                    //int childCount = listView.getChildCount();
+                    // Log.d("Child number", String.valueOf(childCount));
+                    int [] listViewCoords = new int[2];
+                    newsItemView.getLocationOnScreen(listViewCoords);
+                    int x = OnSwipeTouchListener.getMotionX() - listViewCoords[0];
+                    int y = OnSwipeTouchListener.getMotionY() - listViewCoords[1];
+                    View child;
+                    newsItemView.getHitRect(rect);
+                    if(rect.contains(x,y))
+                    {
+                        Toast.makeText(getApplicationContext(), "item swiped",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                public void onSwipeBottom() {
+                    Toast.makeText(getApplicationContext(), "bottom", Toast.LENGTH_SHORT).show();
+                    Rect rect = new Rect();
+                    //int childCount = listView.getChildCount();
+                    //Log.d("Child number", String.valueOf(childCount));
+                    int [] listViewCoords = new int[2];
+                    newsItemView.getLocationOnScreen(listViewCoords);
+                    int x = OnSwipeTouchListener.getMotionX() - listViewCoords[0];
+                    int y = OnSwipeTouchListener.getMotionY() - listViewCoords[1];
+                    View child;
+                    newsItemView.getHitRect(rect);
+                    if(rect.contains(x,y))
+                    {
+                        Toast.makeText(getApplicationContext(), "item swiped",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            });
+
+        }
+        catch (Exception e){
+            Log.d("HATA", "NULL");
+        }*/
+
+
+
+
+
+
     }
 
-    public void setUpView()    {
+    public void setUpView()
+    {
         //mNewsAdapter = new NewsListAdapter(this,R.layout.news_item,newsList);
         listView = findViewById(R.id.news_list_NDA);
         listView.setOnItemClickListener(mListener);
+
+
+
+
     }
 
 
@@ -264,13 +354,5 @@ public class NewsActivity extends AppCompatActivity
        transaction.commit();
    }
 
-   public void readNewsAloud(){
-       for (NewsItem news : newsList){
-           textToSpeechHelper.readAloud("headlines for today are");
-           textToSpeechHelper.readAloud("Next up,");
-           textToSpeechHelper.readAloud(news.getTitle());
-
-       }
-   }
 
 }

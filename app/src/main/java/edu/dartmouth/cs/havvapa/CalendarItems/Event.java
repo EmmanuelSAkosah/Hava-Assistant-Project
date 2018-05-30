@@ -34,9 +34,6 @@ public class Event {
         return entry;
     }
 
-    public void setEntry(ToDoEntry entry){
-        this.entry = entry;
-    }
 
     @Override
     public boolean equals(Object o) {

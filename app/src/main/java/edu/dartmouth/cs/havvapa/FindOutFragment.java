@@ -9,10 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +44,6 @@ public class FindOutFragment extends Fragment{
     private SpeechToText S2T_service;
     private Button recordBtn;
     private TextView inputMessage;
-    private Spinner savedTopicsSpinner;
     NewsHelper newsHelper;
     private Button searchBtn;
     public static ArrayList<NewsItem> topicNewsList;
@@ -137,15 +135,6 @@ public class FindOutFragment extends Fragment{
 
 
         });
-
-
-      /*  //populate input Type spinner
-        savedTopicsSpinner = v.findViewById(R.id.saved_topics);
-        //String [] savedTopics = pref.getSavedTopics();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, str);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        savedTopicsSpinner.setAdapter(adapter); */
     }
 
     AdapterView.OnItemClickListener mListener = new AdapterView.OnItemClickListener() {

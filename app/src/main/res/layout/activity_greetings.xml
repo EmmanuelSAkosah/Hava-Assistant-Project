@@ -20,17 +20,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/weather_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="...C"
-                android:textSize="50dp"
-                android:textColor="#faeff2f4"/>
-
+                android:text="18C"/>
             <ImageView
                 android:id="@+id/weatherImage_img_greetings"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
 
         </LinearLayout>
 
@@ -46,85 +42,91 @@
             android:id="@+id/tv_greetings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="50sp"
             android:text="@string/greetings_text"
             android:textColor="#faeff2f4"
             android:textSize="50dp"/>
-
-
-    <TextView
-        android:id="@+id/transcribed_text_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/record_btn_greetings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_mic_black_24dp"
-        tools:backgroundTint="?android:attr/textColorHighlightInverse" />
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/to_do_title_and_items_box"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            <Button
+                android:id="@+id/record_btn_greetings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Record"/>
 
             <TextView
-                android:id="@+id/tv_toDo"
+                android:id="@+id/transcribed_text_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                android:text="Upcoming Events"
-                android:textColor="#8ede0f"
-                android:textSize="20sp" />
-
-            <ListView
-                android:id="@+id/to_do_items_listView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="10sp"></ListView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/whats_new_title_and_items_box"
-            android:layout_width="wrap_content"
-
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_whats_new"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                android:text="Headlines"
-                android:textColor="#8ede0f"
-                android:textSize="20sp" />
-
-            <ListView
-                android:id="@+id/greetings_headlines_listView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="10sp"></ListView>
-
-        </LinearLayout>
+                android:textColor="#faeff2f4"/>
 
     </LinearLayout>
 
+
+        <Button
+            android:id="@+id/listen_btn_greetings"
+            android:text="Listen To Havva"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/to_do_title_and_items_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_toDo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Upcoming Events"
+                    android:textSize="20sp"
+                    android:textColor="#8ede0f"/>
+                <ListView
+                    android:id="@+id/to_do_items_listView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="10sp">
+                </ListView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/whats_new_title_and_items_box"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_whats_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Current news"
+                    android:textSize="20sp"
+                    android:textColor="#8ede0f"/>
+                <ListView
+                    android:id="@+id/whats_new_items_listView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="10sp">
+                </ListView>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
 </LinearLayout>

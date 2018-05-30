@@ -6,27 +6,27 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_general"
-            android:icon="@drawable/ic_public_black_24dp"
+            android:icon="@drawable/ic_menu_camera"
             android:title="General" />
         <item
             android:id="@+id/nav_business"
-            android:icon="@drawable/ic_business_black_24dp"
+            android:icon="@drawable/ic_menu_gallery"
             android:title="Business" />
         <item
             android:id="@+id/nav_entertainment"
-            android:icon="@drawable/ic_album_black_24dp"
+            android:icon="@drawable/ic_menu_slideshow"
             android:title="Entertainment" />
         <item
             android:id="@+id/nav_health"
-            android:icon="@drawable/ic_directions_run_black_24dp"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Health" />
         <item
             android:id="@+id/nav_science"
-            android:icon="@drawable/ic_account_balance_black_24dp"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Science" />
         <item
             android:id="@+id/nav_sports"
-            android:icon="@drawable/ic_radio_button_unchecked_black_24dp"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Sports" />
         <item
             android:id="@+id/nav_technology"
@@ -40,13 +40,7 @@
             <item
                 android:id="@+id/nav_find_out"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Find News on Topic" />
-
-        <!--    <item
-                android:id="@+id/nav_savedTopics"
-                android:icon="@drawable/ic_history_black_24dp"
-                android:title="Saved Topics" /> -->
-
+                android:title="Find News on Concept" />
         </menu>
     </item>
 

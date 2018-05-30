@@ -17,7 +17,7 @@ import edu.dartmouth.cs.havvapa.models.Weather;
 
 public class WeatherHelper {
 
-    public static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?units=imperial&";
+    public static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?";
     private String TAG = "WeatherHelper";
     public static String API_KEY ="&APPID=db2e34c6ec913c5702ec1eb59a3ed321";
 
@@ -43,8 +43,7 @@ public class WeatherHelper {
             //weather.currentCondition.setPressure(getInt("pressure", mainObj));
             //weather.temperature.setMaxTemp(getFloat("temp_max", mainObj));
             //weather.temperature.setMinTemp(getFloat("temp_min", mainObj));
-            int standardTemp = mainObj.getInt("temp");
-            weather.setTemperature(standardTemp);
+            weather.setTemperature(mainObj.getInt("temp"));
 
             // Wind
            // JSONObject wObj = getObject("wind", jObj);

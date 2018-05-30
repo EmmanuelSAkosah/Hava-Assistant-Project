@@ -7,12 +7,12 @@ class Events {
     private final List<Event> events;
     private final long timeInMillis;
 
-    Events(long timeInMillis, List<Event> events) {
+    public Events(long timeInMillis, List<Event> events) {
         this.timeInMillis = timeInMillis;
         this.events = events;
     }
 
-    long getTimeInMillis() {
+    public long getTimeInMillis() {
         return timeInMillis;
     }
 
