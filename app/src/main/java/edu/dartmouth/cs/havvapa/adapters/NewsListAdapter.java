@@ -103,7 +103,8 @@ public class NewsListAdapter extends ArrayAdapter {
         source_tv.setText(source);
 
         //final android.support.v7.widget.CardView networkImageView = newsItemView.findViewById(R.id.swipe_card);
-        networkImageView.setOnTouchListener(new OnSwipeTouchListener(getContext())
+        LinearLayout newsItemLinewrView = (LinearLayout)newsItemView.findViewById(R.id.history_layout);
+        newsItemLinewrView.setOnTouchListener(new OnSwipeTouchListener(getContext())
         {
             //CardView newsItemView = mNewsAdapter.getSelectedView().findViewById(R.id.swipe_card);
             public void onSwipeTop() {

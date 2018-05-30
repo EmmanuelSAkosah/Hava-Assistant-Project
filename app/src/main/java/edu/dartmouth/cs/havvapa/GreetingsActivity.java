@@ -78,7 +78,6 @@ import java.io.InputStream;
 
 import edu.dartmouth.cs.havvapa.APIs.TextToSpeechHelper;
 import edu.dartmouth.cs.havvapa.APIs.WeatherHelper;
-import edu.dartmouth.cs.havvapa.APIs.SpeechToTextHelper;
 import edu.dartmouth.cs.havvapa.models.Weather;
 import edu.dartmouth.cs.havvapa.utils.Preferences;
 
@@ -213,7 +212,8 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         greetings_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+
+                startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
                 return;
             }
         });
@@ -266,7 +266,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
                 if(speechResults.getResults() != null && !speechResults.getResults().isEmpty()) {
                     String text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
                     speechToTextHelper.showMicText(text,GreetingsActivity.this,inputMessage);
-                    speechToTextHelper.executeCommand(text,getApplicationContext()); // act on transcribed text
+                    speechToTextHelper.executeCommand(text,GreetingsActivity.this); // act on transcribed text
                 }
             }
 
@@ -327,7 +327,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             }
         });
 
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        RequestQueue queue = Volley.newRequestQueue(GreetingsActivity.this);
         queue.add(jsonObjectRequest);
     }
 
@@ -417,12 +417,12 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
     private String updateDateDisplay(Calendar dateTime)
     {
-        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
+        String mSelectedDate = DateUtils.formatDateTime(GreetingsActivity.this, dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
         return mSelectedDate;
     }
     private String updateTimeDisplay(Calendar dateTime)
     {
-        String mSelectedTime = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
+        String mSelectedTime = DateUtils.formatDateTime(GreetingsActivity.this, dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
         return mSelectedTime;
     }
 
@@ -433,7 +433,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
         switch (id){
             case ALL_ITEMS_LOADER_ID:
-                return new UpcomingToDoEntryListLoader(getApplicationContext());
+                return new UpcomingToDoEntryListLoader(GreetingsActivity.this);
         }
 
         return null;
@@ -443,13 +443,13 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     public void onLoadFinished(@NonNull Loader<ArrayList<ToDoEntry>> loader, ArrayList<ToDoEntry> entities) {
         if(loader.getId() == ALL_ITEMS_LOADER_ID)
         {
-            greetingsEventsAdapter = new GreetingsEventsAdapter(getApplicationContext(), updatedGreetingsEntries);
-            greetingsHeadlinesAdapter = new GreetingsHeadlinesAdapter(getApplicationContext(),R.id.news_item_greetings, newsList);
+
+            greetingsEventsAdapter = new GreetingsEventsAdapter(GreetingsActivity.this, updatedGreetingsEntries);
             mListView.setAdapter(greetingsEventsAdapter);
             mHeadlinesListView = findViewById(R.id.greetings_headlines_listView);
             mHeadlinesListView.setAdapter(greetingsHeadlinesAdapter);
 
-            if(entities.size() > 0)
+            if(entities!=null&&entities.size() > 0)
             {
                 allEntries = entities;
                 ArrayList<GreetingsToDoEntry> greetingsToDoEntries = new ArrayList<>();

@@ -35,6 +35,9 @@ public class RingtoneMediaService extends Service
     private boolean soundOn;
     private boolean vibrationOn;
     private MediaPlayer mediaPlayer;
+    private int eventUniqueTimestamp;
+
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -65,14 +68,16 @@ public class RingtoneMediaService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
+        eventUniqueTimestamp = intent.getIntExtra("EVENT_TIMESTAMP",0);
 
         Intent myIntent = new Intent(this.getApplicationContext(), SnoozeAlarmActivity.class);
+        myIntent.putExtra("EVENT_TIMESTAMP",eventUniqueTimestamp);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("STOP_ME");
         registerReceiver(stopRingtoneReciever, intentFilter);
 
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,myIntent, PendingIntent.FLAG_UPDATE_CURRENT );
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,eventUniqueTimestamp,myIntent, PendingIntent.FLAG_CANCEL_CURRENT );
+        Log.d("UniqueID  ", String.valueOf(eventUniqueTimestamp));
         NotificationChannel notificationChannel = new NotificationChannel("CHANNEL_ID",
                 "channel name", NotificationManager.IMPORTANCE_HIGH);
         android.support.v4.app.NotificationCompat.Builder notificationBuilder =
@@ -88,7 +93,7 @@ public class RingtoneMediaService extends Service
         if(notificationManager!=null)
         {
             notificationManager.createNotificationChannel(notificationChannel);
-            notificationManager.notify(0,notification);
+            notificationManager.notify(eventUniqueTimestamp, notification);
         }
 
         if(vibrationOn){
@@ -140,7 +145,7 @@ public class RingtoneMediaService extends Service
             Log.d("STOP_RINGTONEEE", "Schedule");
             NotificationManager notificationManager = (NotificationManager)getSystemService(ScheduleEventActivity.NOTIFICATION_SERVICE);
             int rqs = intent.getIntExtra("STOP_RINGTONE", 0);
-            if(rqs == 7)
+            if(rqs == eventUniqueTimestamp)
             {
                 notificationManager.cancelAll();
                 Vibrator vibrator = (Vibrator)getSystemService(ScheduleEventActivity.VIBRATOR_SERVICE);

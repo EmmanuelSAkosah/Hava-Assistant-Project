@@ -17,6 +17,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     public static final String COLUMN_START_DATE_TIME = "start_date_time";
     public static final String COLUMN_END_DATE_TIME = "end_date_time";
     public static final String COLUMN_EVENT_DURATION = "event_duration";
+    public static final String COLUMN_UNIQUE_TIMESTAMP = "timestamp";
 
 
     private static final String DATABASE_TODO_ITEMS = "CREATE TABLE IF NOT EXISTS " +
@@ -26,7 +27,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper
             COLUMN_EVENT_DESCRIPTION + " TEXT NOT NULL, " +
             COLUMN_START_DATE_TIME + " DATETIME NOT NULL, " +
             COLUMN_END_DATE_TIME + " DATETIME NOT NULL, " +
-            COLUMN_EVENT_DURATION + " TEXT NOT NULL);";
+            COLUMN_EVENT_DURATION + " TEXT NOT NULL, " +
+            COLUMN_UNIQUE_TIMESTAMP + "INTEGER NOT NULL);";
 
 
     MySQLiteHelper(Context context){

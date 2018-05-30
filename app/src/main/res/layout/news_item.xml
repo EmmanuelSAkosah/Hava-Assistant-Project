@@ -10,8 +10,8 @@
 
     <LinearLayout
         android:id="@+id/history_layout"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10sp"
         android:orientation="vertical">
 
@@ -19,15 +19,15 @@
             android:id="@+id/tv_news_item_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="italic"/>
+            android:textStyle="italic" />
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/tv_news_item_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="120dp"
+            android:layout_margin="10dp"
             android:maxHeight="120dp"
-            android:layout_margin="10dp"/>
+            android:maxWidth="120dp" />
 
         <TextView
             android:id="@+id/tv_news_item_title"

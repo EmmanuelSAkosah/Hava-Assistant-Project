@@ -39,7 +39,6 @@
         <activity android:name=".ScheduleEventActivity$EventOptionsActivity" />
 
         <receiver android:name=".AlarmHelpers.AlarmReceiver" />
-        <receiver android:name=".ScheduleEventActivity$StopAlarmServiceReciever" />
 
         <service android:name=".AlarmHelpers.RingtoneMediaService" />
 
@@ -48,7 +47,9 @@
         <activity android:name=".AlarmHelpers.AlarmManagmentActivity" />
         <activity android:name=".AlarmHelpers.SnoozeAlarmActivity" />
         <activity android:name=".RecordedNewsActivity" />
-        <activity android:name=".ToDoActivity"></activity>
+        <activity android:name=".ToDoActivity">
+
+        </activity>
     </application>
 
 </manifest>

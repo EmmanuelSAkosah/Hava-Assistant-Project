@@ -20,7 +20,7 @@ public class ToDoItemsSource
     private Calendar todaysCalendar = Calendar.getInstance();
 
     private String[] allColumns = {MySQLiteHelper.ROW_ID,MySQLiteHelper.COLUMN_EVENT_TITLE, MySQLiteHelper.COLUMN_EVENT_LOCATION, MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, MySQLiteHelper.COLUMN_START_DATE_TIME
-    , MySQLiteHelper.COLUMN_END_DATE_TIME, MySQLiteHelper.COLUMN_EVENT_DURATION};
+            , MySQLiteHelper.COLUMN_END_DATE_TIME, MySQLiteHelper.COLUMN_EVENT_DURATION, MySQLiteHelper.COLUMN_UNIQUE_TIMESTAMP};
 
     public ToDoItemsSource(Context context){
         dbHelper = new MySQLiteHelper(context);
@@ -37,6 +37,7 @@ public class ToDoItemsSource
         values.put(MySQLiteHelper.COLUMN_START_DATE_TIME, entry.getStartDateTime().getTimeInMillis());
         values.put(MySQLiteHelper.COLUMN_END_DATE_TIME, entry.getEndDateTime().getTimeInMillis());
         values.put(MySQLiteHelper.COLUMN_EVENT_DURATION, entry.getEventDuration());
+        values.put(MySQLiteHelper.COLUMN_UNIQUE_TIMESTAMP, entry.getEventUniqueTimestamp());
 
         long insertId = database.insert(MySQLiteHelper.TABLE_ITEMS, null, values);
         Cursor cursor = database.query(MySQLiteHelper.TABLE_ITEMS, allColumns, MySQLiteHelper.ROW_ID + " = " + insertId, null, null, null, null);
@@ -184,6 +185,7 @@ public class ToDoItemsSource
         entry.setStartDateTime(entryStartDateAndTime);
         entry.setEndDateTime(entryEndDateAndTime);
         entry.setEventDuration(cursor.getString(6));
+        entry.setEventUniqueTimestamp(cursor.getInt(7));
 
         return entry;
     }

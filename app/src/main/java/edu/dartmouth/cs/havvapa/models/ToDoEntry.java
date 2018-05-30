@@ -11,6 +11,7 @@ public class ToDoEntry
     private  String eventLocation;
     private String eventDescription;
     private String eventDuration;
+    private int eventUniqueTimestamp;
 
 
     public ToDoEntry(){
@@ -34,6 +35,25 @@ public class ToDoEntry
 
     }
 
+    public ToDoEntry(String eventTitle, String eventLocation, String eventDescription, Calendar startDateTime, Calendar endDateTime, int eventUniqueTimestamp)
+    {
+        this.eventTitle = eventTitle;
+        this.eventLocation = eventLocation;
+        this.eventDescription = eventDescription;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.eventUniqueTimestamp = eventUniqueTimestamp;
+        this.setEventDuration(this.calculateEventDuration(startDateTime, endDateTime));
+
+    }
+
+    public int getEventUniqueTimestamp() {
+        return eventUniqueTimestamp;
+    }
+
+    public void setEventUniqueTimestamp(int eventUniqueTimestamp) {
+        this.eventUniqueTimestamp = eventUniqueTimestamp;
+    }
 
     public long getId() {
         return id;
