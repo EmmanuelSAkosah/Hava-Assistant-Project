@@ -1,4 +1,4 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.CalendarItems;
 
 import android.support.annotation.Nullable;
 

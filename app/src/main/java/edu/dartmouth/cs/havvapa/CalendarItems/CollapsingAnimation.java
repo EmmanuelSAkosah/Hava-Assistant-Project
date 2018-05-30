@@ -1,9 +1,11 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.CalendarItems;
 
 import android.view.animation.Animation;
 
-import android.view.animation.Animation;
 import android.view.animation.Transformation;
+
+import edu.dartmouth.cs.havvapa.CalendarItems.CompactCalendarController;
+import edu.dartmouth.cs.havvapa.CalendarItems.CompactCalendarView;
 
 class CollapsingAnimation extends Animation {
     private final int targetHeight;

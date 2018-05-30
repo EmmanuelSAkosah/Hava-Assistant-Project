@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#556671"
-    tools:context=".SnoozeAlarmActivity">
+    tools:context=".AlarmHelpers.SnoozeAlarmActivity">
     <LinearLayout
         android:id="@+id/activity_snooze_alarm"
         android:layout_width="match_parent"

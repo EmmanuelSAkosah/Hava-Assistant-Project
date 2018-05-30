@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-    android:id="@+id/history_layout"
-    android:layout_height="wrap_content"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_card"
     android:layout_width="match_parent"
-    android:layout_margin="10sp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:id="@+id/history_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="10sp"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_news_item_source"
@@ -13,7 +21,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"/>
 
-         <com.android.volley.toolbox.NetworkImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/tv_news_item_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,10 +29,12 @@
             android:maxHeight="120dp"
             android:layout_margin="10dp"/>
 
-    <TextView
-        android:id="@+id/tv_news_item_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-smallcaps" />
+        <TextView
+            android:id="@+id/tv_news_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-smallcaps" />
 
-</LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

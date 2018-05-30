@@ -1,4 +1,4 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.CalendarItems;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
+
+import edu.dartmouth.cs.havvapa.CalendarItems.CollapsingAnimation;
+import edu.dartmouth.cs.havvapa.CalendarItems.CompactCalendarController;
 
 class AnimationHandler {
 

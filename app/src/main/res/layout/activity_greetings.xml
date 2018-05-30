@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#556671"
     tools:context=".GreetingsActivity">
 
     <LinearLayout
@@ -24,8 +26,7 @@
             <ImageView
                 android:id="@+id/weatherImage_img_greetings"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                />
+                android:layout_height="40dp" />
 
         </LinearLayout>
 
@@ -41,28 +42,29 @@
             android:id="@+id/tv_greetings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="75sp"
+            android:layout_margin="50sp"
             android:text="@string/greetings_text"
+            android:textColor="#faeff2f4"
             android:textSize="50dp"/>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-        <Button
-            android:id="@+id/record_btn_greetings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Record"/>
-    <EditText
-        android:id="@+id/test_et"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/analyze_btn"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
-</LinearLayout>
+        android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/record_btn_greetings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Record"/>
+
+            <TextView
+                android:id="@+id/transcribed_text_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#faeff2f4"/>
+
+    </LinearLayout>
+
 
         <Button
             android:id="@+id/listen_btn_greetings"
@@ -74,22 +76,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <TextView
-                android:id="@+id/transcribed_text_tv"
+
+            <LinearLayout
+                android:id="@+id/to_do_title_and_items_box"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_toDo"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_toDo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Upcoming Events"
+                    android:textSize="20sp"
+                    android:textColor="#8ede0f"/>
+                <ListView
+                    android:id="@+id/to_do_items_listView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="10sp">
+                </ListView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/whats_new_title_and_items_box"
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_weight="1"/>
-            <TextView
-                android:id="@+id/tv_whats_new"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_weight="1"/>
+
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_whats_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Current news"
+                    android:textSize="20sp"
+                    android:textColor="#8ede0f"/>
+                <ListView
+                    android:id="@+id/whats_new_items_listView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="10sp">
+                </ListView>
+
+            </LinearLayout>
+
         </LinearLayout>
-
-
 
 </LinearLayout>

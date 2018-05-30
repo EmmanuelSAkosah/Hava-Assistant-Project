@@ -1,4 +1,4 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.CalendarItems;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Comparator;
+
+import edu.dartmouth.cs.havvapa.CalendarItems.Events;
 
 public class EventsContainer {
 

@@ -1,4 +1,4 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.AlarmHelpers;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -20,6 +20,9 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import edu.dartmouth.cs.havvapa.AlarmHelpers.SnoozeAlarmActivity;
+import edu.dartmouth.cs.havvapa.R;
+import edu.dartmouth.cs.havvapa.ScheduleEventActivity;
 import edu.dartmouth.cs.havvapa.database_elements.EventReminderItemsSource;
 import edu.dartmouth.cs.havvapa.models.EventReminderItem;
 

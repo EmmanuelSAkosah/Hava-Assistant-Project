@@ -1,4 +1,4 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.CalendarItems;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -21,8 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import edu.dartmouth.cs.havvapa.CompactCalendarView.*;
 
+import edu.dartmouth.cs.havvapa.CalendarItems.CompactCalendarView.*;
+import edu.dartmouth.cs.havvapa.CalendarItems.Events;
+import edu.dartmouth.cs.havvapa.R;
 
 
 class CompactCalendarController {

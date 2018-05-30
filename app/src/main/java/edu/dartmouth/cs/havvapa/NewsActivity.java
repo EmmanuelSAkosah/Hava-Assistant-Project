@@ -6,13 +6,16 @@ import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -45,9 +49,11 @@ import edu.dartmouth.cs.havvapa.adapters.NewsListAdapter;
 import edu.dartmouth.cs.havvapa.models.ExampleNewsResponse;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
 import edu.dartmouth.cs.havvapa.utils.Constants;
+//import edu.dartmouth.cs.havvapa.SimpleGestureFilter.SimpleGestureListener;
+import edu.dartmouth.cs.havvapa.OnSwipeTouchListener;
 
 public class NewsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     final String TAG = "NewsActivity";
     private final String SAVED_NEWS = "SAVED NEWS";
@@ -57,6 +63,8 @@ public class NewsActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private NewsHelper newsHelper;
     private JSONObject mResponse;
+    private OnSwipeTouchListener onSwipeTouchListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,7 @@ public class NewsActivity extends AppCompatActivity
 
         newsHelper = new NewsHelper();
         newsList = new ArrayList<>();
+
 
         if (savedInstanceState != null) {
             try {
@@ -108,7 +117,6 @@ public class NewsActivity extends AppCompatActivity
 
     }
 
-
     @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -134,9 +142,15 @@ public class NewsActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case android.R.id.home:
                 drawer.openDrawer(GravityCompat.START);
+                return true;
+
+            case R.id.saved_news:
+                startActivity(new Intent(NewsActivity.this, RecordedNewsActivity.class));
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -144,7 +158,8 @@ public class NewsActivity extends AppCompatActivity
 
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -205,22 +220,121 @@ public class NewsActivity extends AppCompatActivity
         mNewsAdapter = new NewsListAdapter(this,R.layout.news_item,newsList);
         listView.setAdapter(mNewsAdapter);
        //mNewsAdapter.notifyDataSetChanged();
+        //Log.d("ASIZE1", String.valueOf(mNewsAdapter.getAllNewsViews().size()));
+        Log.d("ASIZE2", String.valueOf(newsList.size()));
+        /*
+        try{
+            listView.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext())
+            {
+                CardView newsItemView = mNewsAdapter.getSelectedView().findViewById(R.id.swipe_card);
+                public void onSwipeTop() {
+                    Toast.makeText(getApplicationContext(), "top", Toast.LENGTH_SHORT).show();
+                    Rect rect = new Rect();
+                    //int childCount = listView.getChildCount();
+                    //Log.d("Child number", String.valueOf(childCount));
+                    int [] listViewCoords = new int[2];
+                    newsItemView.getLocationOnScreen(listViewCoords);
+                    int x = OnSwipeTouchListener.getMotionX() - listViewCoords[0];
+                    int y = OnSwipeTouchListener.getMotionY() - listViewCoords[1];
+                    //View child;
+                    newsItemView.getHitRect(rect);
+                    if(rect.contains(x,y))
+                    {
+                        Toast.makeText(getApplicationContext(), "item swiped",Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+                public void onSwipeRight() {
+                    Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                    Rect rect = new Rect();
+                    //int childCount = listView.getChildCount();
+                    //Log.d("Child number", String.valueOf(childCount));
+                    int [] listViewCoords = new int[2];
+                    newsItemView.getLocationOnScreen(listViewCoords);
+                    int x = OnSwipeTouchListener.getMotionX() - listViewCoords[0];
+                    int y = OnSwipeTouchListener.getMotionY() - listViewCoords[1];
+                    View child;
+                    newsItemView.getHitRect(rect);
+                    if(rect.contains(x,y))
+                    {
+                        Toast.makeText(getApplicationContext(), "item swiped",Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                }
+                public void onSwipeLeft() {
+                    Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
+                    Rect rect = new Rect();
+                    //int childCount = listView.getChildCount();
+                    // Log.d("Child number", String.valueOf(childCount));
+                    int [] listViewCoords = new int[2];
+                    newsItemView.getLocationOnScreen(listViewCoords);
+                    int x = OnSwipeTouchListener.getMotionX() - listViewCoords[0];
+                    int y = OnSwipeTouchListener.getMotionY() - listViewCoords[1];
+                    View child;
+                    newsItemView.getHitRect(rect);
+                    if(rect.contains(x,y))
+                    {
+                        Toast.makeText(getApplicationContext(), "item swiped",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                public void onSwipeBottom() {
+                    Toast.makeText(getApplicationContext(), "bottom", Toast.LENGTH_SHORT).show();
+                    Rect rect = new Rect();
+                    //int childCount = listView.getChildCount();
+                    //Log.d("Child number", String.valueOf(childCount));
+                    int [] listViewCoords = new int[2];
+                    newsItemView.getLocationOnScreen(listViewCoords);
+                    int x = OnSwipeTouchListener.getMotionX() - listViewCoords[0];
+                    int y = OnSwipeTouchListener.getMotionY() - listViewCoords[1];
+                    View child;
+                    newsItemView.getHitRect(rect);
+                    if(rect.contains(x,y))
+                    {
+                        Toast.makeText(getApplicationContext(), "item swiped",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            });
+
+        }
+        catch (Exception e){
+            Log.d("HATA", "NULL");
+        }*/
+
+
+
+
+
+
     }
 
-    public void setUpView(){
+    public void setUpView()
+    {
+        //mNewsAdapter = new NewsListAdapter(this,R.layout.news_item,newsList);
         listView = findViewById(R.id.news_list_NDA);
         listView.setOnItemClickListener(mListener);
+
+
+
+
     }
 
 
     AdapterView.OnItemClickListener mListener = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View view,
-                                int position, long id) {
-            openWebPage(newsList.get(position).getURL(), getApplicationContext());
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            openWebPage(newsList.get(position).getURL(),getApplicationContext());
+            Toast.makeText(NewsActivity.this, "adapter", Toast.LENGTH_SHORT).show();
+
         }
     };
 
+
     public static void openWebPage(String url, Context context) {
+
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);

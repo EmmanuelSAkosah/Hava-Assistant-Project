@@ -17,6 +17,7 @@ public class ToDoItemsSource
 
     private MySQLiteHelper dbHelper;
     private SQLiteDatabase database;
+    private Calendar todaysCalendar = Calendar.getInstance();
 
     private String[] allColumns = {MySQLiteHelper.ROW_ID,MySQLiteHelper.COLUMN_EVENT_TITLE, MySQLiteHelper.COLUMN_EVENT_LOCATION, MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, MySQLiteHelper.COLUMN_START_DATE_TIME
     , MySQLiteHelper.COLUMN_END_DATE_TIME, MySQLiteHelper.COLUMN_EVENT_DURATION};
@@ -112,6 +113,45 @@ public class ToDoItemsSource
         database.close();
         dbHelper.close();
         return allEntries;
+    }
+
+    public ArrayList<ToDoEntry> getAllUpcomingEntries()
+    {
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        ArrayList<ToDoEntry> allUpcomingEntries = new ArrayList<>();
+
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_ITEMS, allColumns, null, null, null, null, MySQLiteHelper.COLUMN_START_DATE_TIME + " ASC ");
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast())
+        {
+            ToDoEntry item = cursorToEntry(cursor);
+            Calendar cal = item.getStartDateTime();
+
+
+            if(cal.getTimeInMillis() >= todaysCalendar.getTimeInMillis() && (cal.get(Calendar.YEAR) == todaysCalendar.get(Calendar.YEAR)))
+            {
+                allUpcomingEntries.add(item);
+            }
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        database.close();
+        dbHelper.close();
+
+        if (allUpcomingEntries.size() <= 5){
+            return allUpcomingEntries;
+        }
+        else {
+            ArrayList<ToDoEntry> fetchedUpcomingEvents = new ArrayList<>();
+            for(int i = 0; i < 5; i++){
+                fetchedUpcomingEvents.add(allUpcomingEntries.get(i));
+            }
+            return fetchedUpcomingEvents;
+        }
     }
 
     public ToDoEntry fetchEntryByIndex(long rowId)

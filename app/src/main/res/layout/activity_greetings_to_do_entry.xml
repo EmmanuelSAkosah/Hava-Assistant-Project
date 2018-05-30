@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/greetings_event_entry_frameView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#556671"
+    android:focusable="true"
+    android:clickable="true"
+    android:paddingLeft="16dp"
+    tools:context=".models.GreetingsToDoEntry">
+
+    <RelativeLayout
+        android:id="@+id/greetings_event_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+        <TextView
+            android:id="@+id/greetings_event_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/greetings_event_entry_icon"
+            android:maxLines="1"
+            android:paddingRight="20dp"
+            android:textSize="15sp"
+            android:textColor="#eda509"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/greetings_event_title_and_location_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/greetings_event_date_tv"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/greetings_event_entry_icon"
+            android:maxLines="1"
+            android:paddingRight="20dp"
+            android:textSize="15sp"
+            android:textColor="#faeff2f4"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/greetings_event_start_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/greetings_event_title_and_location_tv"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/greetings_event_entry_icon"
+            android:maxLines="1"
+            android:paddingRight="20dp"
+            android:textSize="15sp"
+            android:textColor="#faeff2f4"
+            android:ellipsize="end"/>
+        <ImageView
+            android:id="@+id/greetings_event_entry_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/greetings_event_title_and_location_tv"
+            android:layout_alignBottom="@+id/greetings_event_title_and_location_tv"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:paddingRight="3dp"
+            android:src="@drawable/baseline_arrow_right_alt_24"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

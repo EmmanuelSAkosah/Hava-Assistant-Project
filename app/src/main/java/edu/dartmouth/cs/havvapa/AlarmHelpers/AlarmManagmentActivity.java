@@ -1,10 +1,7 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.AlarmHelpers;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
@@ -21,8 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
-
+import edu.dartmouth.cs.havvapa.user_records.KeepUserRecords;
+import edu.dartmouth.cs.havvapa.R;
 import edu.dartmouth.cs.havvapa.database_elements.EventReminderItemsSource;
 import edu.dartmouth.cs.havvapa.models.EventReminderItem;
 
@@ -74,7 +71,6 @@ public class AlarmManagmentActivity extends AppCompatActivity
                 finish();
                 return true;
 
-
             case android.R.id.home:
                 finish();
                 return true;
@@ -103,6 +99,10 @@ public class AlarmManagmentActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_managment);
+
+        getSupportActionBar().setTitle("Reminder Settings");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         reminderSoundOptionSwitch = findViewById(R.id.reminder_sound_option);
         reminderVibrationSwitch = findViewById(R.id.reminder_vibration_option);

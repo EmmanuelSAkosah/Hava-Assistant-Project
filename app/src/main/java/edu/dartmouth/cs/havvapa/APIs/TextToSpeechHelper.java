@@ -42,7 +42,7 @@ public class TextToSpeechHelper {
     public void readAloud(String text){
        WatsonTask task = new WatsonTask();
        task.execute(text);
-        //task.execute(new String[]{"bro"});
+
     }
 
 }

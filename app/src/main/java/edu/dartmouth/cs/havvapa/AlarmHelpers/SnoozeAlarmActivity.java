@@ -1,4 +1,4 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.AlarmHelpers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import edu.dartmouth.cs.havvapa.R;
 import edu.dartmouth.cs.havvapa.database_elements.EventReminderItemsSource;
 import edu.dartmouth.cs.havvapa.models.EventReminderItem;
 

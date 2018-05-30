@@ -36,6 +36,7 @@
 
     <item android:title="Find Out!">
         <menu>
+
             <item
                 android:id="@+id/nav_find_out"
                 android:icon="@drawable/ic_menu_send"

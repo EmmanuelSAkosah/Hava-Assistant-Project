@@ -1,4 +1,4 @@
-package edu.dartmouth.cs.havvapa;
+package edu.dartmouth.cs.havvapa.CalendarItems;
 
 import android.view.View;
 
@@ -12,7 +12,6 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
-import android.view.View;
 import android.widget.OverScroller;
 
 
@@ -22,6 +21,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import edu.dartmouth.cs.havvapa.CalendarItems.AnimationHandler;
+import edu.dartmouth.cs.havvapa.CalendarItems.CompactCalendarController;
 
 public class CompactCalendarView extends View {
 
