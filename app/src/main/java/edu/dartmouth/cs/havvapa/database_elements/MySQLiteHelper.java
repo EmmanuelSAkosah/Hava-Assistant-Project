@@ -9,26 +9,25 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     private static final String DATABASE_NAME = "manuel_items.db";
     private static final int DATABASE_VERSION = 1;
 
-    public static final String TABLE_ITEMS = "items";
+    public static final String TABLE_EVENT = "items";
     public static final String ROW_ID = "_id";
-    public static final String COLUMN_EVENT_TITLE = "eventTitle";
-    public static final String COLUMN_EVENT_LOCATION = "eventLocation";
+    public static final String COLUMN_TITLE = "event_title";
+    public static final String COLUMN_LOCATION = "event_location";
     public static final String COLUMN_EVENT_DESCRIPTION = "event_description";
-    public static final String COLUMN_START_DATE_TIME = "startDateTime";
-    public static final String COLUMN_END_DATE_TIME = "endDateTime";
-    public static final String COLUMN_R = "opt";
-    public static final String COLUMN_UNIQUE_TIMESTAMP = "itemId";
-    public static final String COLUMN_UNIQUE_TIMESTAMPP = "iteId";
+    public static final String COLUMN_START_DATE_TIME = "start_date_time";
+    public static final String COLUMN_END_DATE_TIME = "end_date_time";
+    //public static final String COLUMN_R = "event_reminder";
+    public static final String COLUMN_UNIQUE_TIMESTAMP = "item_id";
+    public static final String COLUMN_UNIQUE_TIMESTAMPP = "ite_id";
 
 
-    private static final String DATABASE_TODO_ITEMS = "CREATE TABLE IF NOT EXISTS " +
-            TABLE_ITEMS + "(" + ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_EVENT_TITLE + " TEXT NOT NULL, " +
-            COLUMN_EVENT_LOCATION + " TEXT NOT NULL, " +
+    private static final String DATABASE_TODO_EVENT = "CREATE TABLE IF NOT EXISTS " +
+            TABLE_EVENT + "(" + ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_TITLE + " TEXT NOT NULL, " +
+            COLUMN_LOCATION + " TEXT NOT NULL, " +
             COLUMN_EVENT_DESCRIPTION + " TEXT NOT NULL, " +
             COLUMN_START_DATE_TIME + " DATETIME NOT NULL, " +
             COLUMN_END_DATE_TIME + " DATETIME NOT NULL, " +
-            COLUMN_R + " TEXT, " +
             COLUMN_UNIQUE_TIMESTAMP + " INTEGER NOT NULL, " +
             COLUMN_UNIQUE_TIMESTAMPP + " INTEGER NOT NULL);";
 
@@ -41,7 +40,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DATABASE_TODO_ITEMS);
+        db.execSQL(DATABASE_TODO_EVENT);
 
 
 
@@ -50,7 +49,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL(TABLE_ITEMS);
+        db.execSQL(TABLE_EVENT);
         onCreate(db);
     }
 }

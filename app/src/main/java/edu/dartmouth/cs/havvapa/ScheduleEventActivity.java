@@ -118,7 +118,7 @@ public class ScheduleEventActivity extends AppCompatActivity
 
                 if(modifyEvent)
                 {
-                    database.modifyScheduledEvent(eventToDisplay.getId(), eventTitle,eventLocation, eventDescription, startDateTime.getTimeInMillis(), endDateTime.getTimeInMillis(), mReminderOption1);
+                    database.modifyScheduledEvent(eventToDisplay.getId(), eventTitle,eventLocation, eventDescription, startDateTime.getTimeInMillis(), endDateTime.getTimeInMillis());
                     Intent modifyEventIntent = new Intent(ScheduleEventActivity.this, GreetingsActivity.class);
                     startActivity(modifyEventIntent);
                     finish();
@@ -261,7 +261,7 @@ public class ScheduleEventActivity extends AppCompatActivity
                 endDateTime = eventToDisplay.getEndDateTime();
                 eventUniqueTimestamp = eventToDisplay.getEventUniqueTimestamp();
                 eventUniqueTimestamp2 = eventToDisplay.getEventUniqueTimestamp2();
-                mReminderOption1 = eventToDisplay.getEventReminderOption();
+                //mReminderOption1 = eventToDisplay.getEventReminderOption();
                 updateStartDateTime();
                 updateEndDateTime();
 
@@ -279,8 +279,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                 eventTitleEt.setText(eventTitle);
                 eventDescriptionEt.setText(eventDescription);
                 eventLocationEt.setText(eventLocation);
-                eventReminder1Tv.setText(mReminderOption1);
-
+               // eventReminder1Tv.setText(mReminderOption1);
+                /*
                 if(!mReminderOption1.equals("Add a reminder") && !mReminderOption1.equals("No reminder")){
                     reminder1Created=true;
                 }
@@ -288,7 +288,7 @@ public class ScheduleEventActivity extends AppCompatActivity
                     reminder1Created = false;
                 }
 
-                modifyEvent = true;
+                modifyEvent = true;*/
 
 
             }
@@ -1007,7 +1007,7 @@ public class ScheduleEventActivity extends AppCompatActivity
             if(!isCancelled()){
 
                 try{
-                    ToDoEntry savedEvent = new ToDoEntry(eventTitle, eventLocation, eventDescription, startDateTime, endDateTime,mReminderOption1, eventUniqueTimestamp, eventUniqueTimestamp2);
+                    ToDoEntry savedEvent = new ToDoEntry(eventTitle, eventLocation, eventDescription, startDateTime, endDateTime, eventUniqueTimestamp, eventUniqueTimestamp2);
                     database.createItem(savedEvent);
                 }
                 catch (Exception e){

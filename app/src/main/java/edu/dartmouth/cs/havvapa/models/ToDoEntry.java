@@ -12,7 +12,7 @@ public class ToDoEntry
     private String eventDescription;
     private int eventUniqueTimestamp;
     private int eventUniqueTimestamp2;
-    private String eventReminderOption;
+    //private String eventReminderOption;
 
 
     public ToDoEntry(){
@@ -36,27 +36,21 @@ public class ToDoEntry
 
     }
 
-    public ToDoEntry(String eventTitle, String eventLocation, String eventDescription, Calendar startDateTime, Calendar endDateTime, String eventReminderOption,int eventUniqueTimestamp, int eventUniqueTimestamp2)
+    public ToDoEntry(String eventTitle, String eventLocation, String eventDescription, Calendar startDateTime, Calendar endDateTime,int eventUniqueTimestamp, int eventUniqueTimestamp2)
     {
         this.eventTitle = eventTitle;
         this.eventLocation = eventLocation;
         this.eventDescription = eventDescription;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-        this.eventReminderOption = eventReminderOption;
+        //this.eventReminderOption = eventReminderOption;
         this.eventUniqueTimestamp = eventUniqueTimestamp;
         this.eventUniqueTimestamp2 = eventUniqueTimestamp2;
 
 
     }
 
-    public String getEventReminderOption() {
-        return eventReminderOption;
-    }
 
-    public void setEventReminderOption(String eventReminderOption) {
-        this.eventReminderOption = eventReminderOption;
-    }
 
     public int getEventUniqueTimestamp() {
         return eventUniqueTimestamp;
