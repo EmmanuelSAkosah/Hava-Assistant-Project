@@ -3,6 +3,7 @@ package edu.dartmouth.cs.havvapa.APIs;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.RecognizeOptions;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallback;
 
+import edu.dartmouth.cs.havvapa.GreetingsActivity;
 import edu.dartmouth.cs.havvapa.NewsActivity;
 import edu.dartmouth.cs.havvapa.ScheduleEventActivity;
 import edu.dartmouth.cs.havvapa.SignUpActivity;
@@ -54,11 +56,10 @@ public class SpeechToTextHelper {
         try {
             capture.close();
             listening = false;
-            Toast.makeText(context,"Stopped Listening....Click to Start", Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"Stopped Listening...Click to Start", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
 
@@ -99,6 +100,14 @@ public class SpeechToTextHelper {
         });
     }
 
+    public void enableMicButton(final FloatingActionButton recordBtn, Context context) {
+        ((Activity)context).runOnUiThread(new Runnable() {
+            @Override public void run() {
+                recordBtn.setEnabled(true);
+            }
+        });
+    }
+
     public void executeCommand(String transcribed_text, Context context){
         String speech = transcribed_text.toLowerCase();
         //sign in
@@ -113,6 +122,15 @@ public class SpeechToTextHelper {
         }else if(speech.contains("schedule") || speech.contains("event") || speech.contains("to do")
                 || speech.contains("reminder") || speech.contains("plan")) { //open schedule activity
             context.startActivity(new Intent(context, ScheduleEventActivity.class));
+        }
+
+        //tell weather, readheadlines, say my name
+        else if (speech.contains("tell") || speech.contains("say") || speech.contains("read")){
+
+            if ((speech.contains("weather") || speech.contains("temperature")) || speech.contains("conditions")){
+                GreetingsActivity.tellWeather();
+            }
+
         }
 
     }

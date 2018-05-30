@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
 
@@ -41,6 +43,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -57,8 +60,10 @@ import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallb
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import edu.dartmouth.cs.havvapa.APIs.NewsHelper;
 import edu.dartmouth.cs.havvapa.AlarmHelpers.AlarmManagmentActivity;
 import edu.dartmouth.cs.havvapa.adapters.GreetingsEventsAdapter;
+import edu.dartmouth.cs.havvapa.adapters.GreetingsHeadlinesAdapter;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoItemsSource;
 import edu.dartmouth.cs.havvapa.database_elements.UpcomingToDoEntryListLoader;
 import edu.dartmouth.cs.havvapa.models.GreetingsToDoEntry;
@@ -75,7 +80,7 @@ import edu.dartmouth.cs.havvapa.APIs.TextToSpeechHelper;
 import edu.dartmouth.cs.havvapa.APIs.WeatherHelper;
 import edu.dartmouth.cs.havvapa.APIs.SpeechToTextHelper;
 import edu.dartmouth.cs.havvapa.models.Weather;
-
+import edu.dartmouth.cs.havvapa.utils.Preferences;
 
 
 import static edu.dartmouth.cs.havvapa.APIs.WeatherHelper.API_KEY;
@@ -83,36 +88,40 @@ import static edu.dartmouth.cs.havvapa.APIs.WeatherHelper.API_KEY;
 public class GreetingsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<ToDoEntry>>
 {
     private static final String TAG = "GreetingsActivity";
+
+
     private boolean permissionToRecordAccepted = false;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static final int RECORD_REQUEST_CODE = 101;
-    private Button recordBtn;
+    private FloatingActionButton recordBtn;
     private TextView inputMessage;
-    private SpeechToText S2T_service;
-
+    private Preferences pref;
 
     private ToDoItemsSource datasource;
     private ArrayList<ToDoEntry> allEntries;
     private GreetingsEventsAdapter greetingsEventsAdapter;
+    private GreetingsHeadlinesAdapter greetingsHeadlinesAdapter;
     ArrayList<GreetingsToDoEntry> updatedGreetingsEntries = new ArrayList<>();
     private static  final int ALL_ITEMS_LOADER_ID = 2;
     private Calendar currGreetingsEventCal;
     private ListView mListView;
+    private ListView mHeadlinesListView;
+    private TextView greetings_tv;
+    private TextView weather_tv;
     private ArrayList<NewsItem> newsList;
-    StreamPlayer streamPlayer;
-    private Button listenBtn;
     private LinearLayout toDoItemsAndTitleView;
     private LinearLayout newsItemsAndTitleView;
-    //public Weather weather;
+
 
     boolean flag;
 
     private RecognizeCallback mS2TCallback;
     private SpeechToTextHelper speechToTextHelper;
-    private TextToSpeechHelper textToSpeechHelper;
-    private TextView textView;
-    private TextView greetings_tv;
+    private static TextToSpeechHelper textToSpeechHelper;
+    private NewsHelper newsHelper;
+
     private FusedLocationProviderClient mFusedLocationClient;
+    private static Weather weather;
 
 
 
@@ -134,6 +143,11 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
             case R.id.menuitem_editProfile:
                 startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
+                return true;
+
+            case R.id.menuitem_singOut:
+               pref.setUserLoggedIn(false);
+               resetUserOptions();
                 return true;
             case android.R.id.home:
                 finish();
@@ -157,9 +171,16 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pref = new Preferences(getApplicationContext());
+        //first time opening app, direct to log in
+        boolean VisitedLogInStatus = pref.hasVisitedLogIn();
+        if(!VisitedLogInStatus){
+            startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
+        }
         setContentView(R.layout.activity_greetings);
-        getSupportActionBar().setTitle("Greetings");
+        getSupportActionBar().setTitle("Havva PA");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if(savedInstanceState != null){
             currGreetingsEventCal = (Calendar)savedInstanceState.getSerializable("curr_cal_key");
             flag = savedInstanceState.getBoolean("flag_boolean");
@@ -169,30 +190,29 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             flag =true;
         }
 
+        //get API helpers
+        speechToTextHelper = new SpeechToTextHelper();
+        textToSpeechHelper = new TextToSpeechHelper();
+        newsHelper = new NewsHelper();
+
         recordBtn = findViewById(R.id.record_btn_greetings);
-        listenBtn = findViewById(R.id.listen_btn_greetings);
         inputMessage = findViewById(R.id.transcribed_text_tv);
         toDoItemsAndTitleView = findViewById(R.id.to_do_title_and_items_box);
         newsItemsAndTitleView = findViewById(R.id.whats_new_title_and_items_box);
 
         mListView = findViewById(R.id.to_do_items_listView);
-
         newsList = new ArrayList<>();
-
         datasource = new ToDoItemsSource(getApplicationContext());
-        //greetingsEventsAdapter = new GreetingsEventsAdapter(getApplicationContext(), updatedGreetingsEntries);
-        //mListView.setAdapter(greetingsEventsAdapter);
 
+        //set username
         greetings_tv = findViewById(R.id.tv_greetings);
+        addressUser();
 
-
-        textView = (TextView) findViewById(R.id.textView);
+        weather_tv = findViewById(R.id.weather_tv);
         greetings_tv = findViewById(R.id.tv_greetings);
-
         greetings_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
                 return;
             }
@@ -204,21 +224,12 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
                 speechToTextHelper.recordMessage(mS2TCallback,GreetingsActivity.this);
             }
         });
-        listenBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textToSpeechHelper.readAloud(greetings_tv.getText().toString());
-            }
-        });
 
         toDoItemsAndTitleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                Intent intent = new Intent(GreetingsActivity.this, ToDoActivity.class);
                startActivity(intent);
-
-
             }
         });
 
@@ -227,7 +238,6 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(GreetingsActivity.this, ToDoActivity.class);
                 startActivity(intent);
-
             }
         });
 
@@ -236,16 +246,9 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         newsItemsAndTitleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 startActivity(new Intent(GreetingsActivity.this, NewsActivity.class));
-
             }
         });
-
-        //get API helpers
-        speechToTextHelper = new SpeechToTextHelper();
-        S2T_service = speechToTextHelper.getService();
-        textToSpeechHelper = new TextToSpeechHelper();
 
         //permission to record audio
         int permission = ContextCompat.checkSelfPermission(this,
@@ -286,11 +289,10 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
         //get weather
        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.getLastLocation()
+       mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             sendGETForWeather(location);
                         }
@@ -299,11 +301,12 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
                 });
 
+        sendGET(newsHelper.getNewsByCategory(0));// load general news headlines
     }
 
     //Weather
     public void sendGETForWeather(Location location) {
-        //api.openweathermap.org/data/2.5/weather?lat=35&lon=139
+
         String url = WeatherHelper.BASE_URL+"lat="+location.getLatitude()+
                 "&lon="+location.getLongitude()+API_KEY;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -311,7 +314,8 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
                 null, new com.android.volley.Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-               Weather weather = WeatherHelper.parseWeatherResponse(response);
+               weather = WeatherHelper.parseWeatherResponse(response);
+               weather_tv.setText(""+weather.getTemperature()+"°");
                displayWeatherIcon(weather.getIcon());
             }
         },new com.android.volley.Response.ErrorListener() {
@@ -328,6 +332,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     }
 
     public void displayWeatherIcon(String IconId){
+
         String IMG_URL = "http://openweathermap.org/img/w/"+IconId+".png";
         new downloadWeatherIconTask((ImageView) findViewById(R.id.weatherImage_img_greetings))
                 .execute(IMG_URL);
@@ -403,20 +408,6 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     }
 
 
-
-    private void executeCommand(String transcribed_text){
-       String speech = transcribed_text.toLowerCase();
-        //sign in
-        if (speech.contains("sign")){
-            startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
-
-        }else if(speech.contains("schedule")) {
-            startActivity(new Intent(getApplicationContext(), ScheduleEventActivity.class));
-
-        }
-
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -433,12 +424,6 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     {
         String mSelectedTime = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
         return mSelectedTime;
-    }
-
-    private String updateDateDisplay2(long dateTimeInMillis)
-    {
-        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
-        return mSelectedDate;
     }
 
 
@@ -459,7 +444,10 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         if(loader.getId() == ALL_ITEMS_LOADER_ID)
         {
             greetingsEventsAdapter = new GreetingsEventsAdapter(getApplicationContext(), updatedGreetingsEntries);
+            greetingsHeadlinesAdapter = new GreetingsHeadlinesAdapter(getApplicationContext(),R.id.news_item_greetings, newsList);
             mListView.setAdapter(greetingsEventsAdapter);
+            mHeadlinesListView = findViewById(R.id.greetings_headlines_listView);
+            mHeadlinesListView.setAdapter(greetingsHeadlinesAdapter);
 
             if(entities.size() > 0)
             {
@@ -525,6 +513,62 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         }
     }
 
+    public void resetUserOptions(){
+        //user signed out, clear his name and alarm settings
 
+    }
+
+    public void addressUser(){
+        if(!pref.getUsername().isEmpty()) { //write user's name
+            greetings_tv.setText("Hi, " + pref.getUsername());
+        }
+        if(!pref.isHavvaMute()){ //say hi to user
+            textToSpeechHelper.readAloud(greetings_tv.getText().toString());
+        }
+
+    }
+
+    public static void tellWeather(){
+        if (!weather.getDecscription().isEmpty())
+        textToSpeechHelper.readAloud(" weather forecast for today is"+weather.getDecscription());
+        if (!Integer.toString(weather.getTemperature()).isEmpty())
+        textToSpeechHelper.readAloud("It is"+weather.getTemperature() +"degrees Fahrenheits");
+    }
+
+
+    public void sendGET(String url) {
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, url,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                newsList = newsHelper.parseResponse(response);
+                greetingsHeadlinesAdapter = new GreetingsHeadlinesAdapter(getApplicationContext(),R.id.news_item_greetings, newsList);
+                mHeadlinesListView.setAdapter(greetingsHeadlinesAdapter);
+            }
+        },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if(error.getMessage() != null) {
+                    Log.d(TAG, "error is: " + error.getMessage());
+                }
+            }
+        });
+
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        queue.add(jsonObjectRequest);
+    }
+
+   /* public void refreshView(){
+        mNewsAdapter = new NewsListAdapter(this,R.layout.news_item,newsList);
+        listView.setAdapter(mNewsAdapter);
+    }
+
+    public void setUpView()    {
+        //mNewsAdapter = new NewsListAdapter(this,R.layout.news_item,newsList);
+        listView = findViewById(R.id.news_list_NDA);
+
+    }*/
 }
 

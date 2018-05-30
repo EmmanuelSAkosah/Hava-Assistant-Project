@@ -11,5 +11,10 @@
         app:showAsAction="never"
         android:title="@string/menu_item_edit_profile"/>
 
+    <item
+        android:id="@+id/menuitem_singOut"
+        app:showAsAction="never"
+        android:title="@string/menu_item_signOut"/>
+
 
 </menu>

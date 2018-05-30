@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "94902902618",
+    "firebase_url": "https://havvapa-a2f25.firebaseio.com",
+    "project_id": "havvapa-a2f25",
+    "storage_bucket": "havvapa-a2f25.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94902902618:android:820791a2d40513ba",
+        "android_client_info": {
+          "package_name": "edu.dartmouth.cs.havvapa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94902902618-pq5l8v71psa5h83rvtc1h2ifi58maetr.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "94902902618-pq5l8v71psa5h83rvtc1h2ifi58maetr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeICRN0-BfKuqTKrnhrONmXy262XPRf2Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

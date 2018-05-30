@@ -6,13 +6,5 @@
         android:id="@+id/su_menuitem_save"
         android:title="@string/su_menuitem_save"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/menuitem_settings"
-        android:title="@string/menu_item_settings"/>
-    <item
-        android:id="@+id/menuitem_editProfile"
-        app:showAsAction="never"
-        android:title="@string/menu_item_edit_profile"/>
-
 
 </menu>

@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Hava-Assistant-Project.iml" filepath="$PROJECT_DIR$/Hava-Assistant-Project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/Hava-Assistant-Project-app.iml" filepath="$PROJECT_DIR$/app/Hava-Assistant-Project-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

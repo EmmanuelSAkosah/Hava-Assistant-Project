@@ -5,6 +5,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_item_settings">Settings</string>
     <string name="menu_item_edit_profile">Edit Profile</string>
+    <string name="menu_item_signOut">Sign Out</string>
+
+
     <string name="title_activity_whats_new">WhatsNewActivity</string>
     <string name="greetings_text">Greetings, do I know you?</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
