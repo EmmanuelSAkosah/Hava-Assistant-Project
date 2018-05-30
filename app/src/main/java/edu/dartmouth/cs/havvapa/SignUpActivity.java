@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import edu.dartmouth.cs.havvapa.APIs.TextToSpeechHelper;
 import edu.dartmouth.cs.havvapa.utils.Preferences;
 
 public class SignUpActivity extends AppCompatActivity
@@ -28,6 +29,8 @@ public class SignUpActivity extends AppCompatActivity
     private EditText email_et;
     private EditText password_et;
     private Preferences pref;
+    private static TextToSpeechHelper textToSpeechHelper;
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -42,7 +45,13 @@ public class SignUpActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.su_menuitem_save:
-                createProfile();
+                if(pref.isUserLoggedIn()){
+                    //save name
+                    name_et = findViewById(R.id.su_name_et);
+                    pref.setUsername(name_et.getText().toString());
+                }else {
+                    createProfile();
+                }
                 return true;
 
             case android.R.id.home:
@@ -71,15 +80,16 @@ public class SignUpActivity extends AppCompatActivity
         name_et = findViewById(R.id.su_name_et);
 
         mAuth = FirebaseAuth.getInstance();
+        textToSpeechHelper = new TextToSpeechHelper();
     }
 
     public void createProfile() {
-
         String email = email_et.getText().toString();
         String password = password_et.getText().toString();
         final String name = name_et.getText().toString();
 
-        if(name.isEmpty()){
+        if(name.isEmpty() && pref.getUsername().isEmpty()){
+            textToSpeechHelper.readAloud("I would love to learn your name");
             Toast.makeText(SignUpActivity.this, "Enter your name,please",
                     Toast.LENGTH_LONG).show();
             return;

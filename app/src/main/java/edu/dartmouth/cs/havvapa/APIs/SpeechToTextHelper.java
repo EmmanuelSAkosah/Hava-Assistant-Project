@@ -25,6 +25,8 @@ public class SpeechToTextHelper {
     private SpeechToText mService;
     private MicrophoneInputStream capture;
     private boolean listening = false;
+    TextToSpeechHelper textToSpeechHelper = new TextToSpeechHelper();
+
 
 
     public SpeechToTextHelper(){
@@ -122,18 +124,27 @@ public class SpeechToTextHelper {
         }else if(speech.contains("schedule") || speech.contains("event") || speech.contains("to do")
                 || speech.contains("reminder") || speech.contains("plan")) { //open schedule activity
             context.startActivity(new Intent(context, ScheduleEventActivity.class));
-        }
-
-        //tell weather, readheadlines, say my name
+        }        //tell weather, readheadlines, say my name
         else if (speech.contains("tell") || speech.contains("say") || speech.contains("read")){
 
             if ((speech.contains("weather") || speech.contains("temperature")) || speech.contains("conditions")){
                 GreetingsActivity.tellWeather();
             }
 
+            if(speech.contains("news")){
+                GreetingsActivity.readNewsAloud();
+            }
+
+        }
+        else if (speech.contains("tell me about") || speech.contains("who") || speech.contains("explain") || speech.contains("describe")){
+            context.startActivity(new Intent(context, NewsActivity.class));
         }
 
-    }
+        else if (speech.contains("socks") || speech.contains("arsenal") || speech.contains("socks")){
+           textToSpeechHelper.readAloud("Arsenal Sucks. Big time!");
+        }
+
+        }
 
 }
 

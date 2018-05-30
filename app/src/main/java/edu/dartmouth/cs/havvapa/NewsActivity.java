@@ -48,6 +48,7 @@ import edu.dartmouth.cs.havvapa.APIs.NewsHelper;
 import edu.dartmouth.cs.havvapa.APIs.TextToSpeechHelper;
 import edu.dartmouth.cs.havvapa.adapters.NewsListAdapter;
 import edu.dartmouth.cs.havvapa.models.NewsItem;
+import edu.dartmouth.cs.havvapa.utils.Preferences;
 
 
 public class NewsActivity extends AppCompatActivity
@@ -62,6 +63,7 @@ public class NewsActivity extends AppCompatActivity
     private NewsHelper newsHelper;
     private JSONObject mResponse;
     private TextToSpeechHelper textToSpeechHelper;
+    private Preferences pref;
 
     private FloatingActionButton readNews_btn;
 
@@ -70,10 +72,12 @@ public class NewsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
 
-
+        pref = new Preferences(getApplicationContext());
         newsHelper = new NewsHelper();
         newsList = new ArrayList<>();
         textToSpeechHelper = new TextToSpeechHelper();
+
+
 
 
         if (savedInstanceState != null) {
@@ -98,7 +102,9 @@ public class NewsActivity extends AppCompatActivity
         readNews_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                readNewsAloud();
+                if(!pref.isHavvaMute()) {
+                    readNewsAloud();
+                }
             }
         });
 
@@ -260,6 +266,7 @@ public class NewsActivity extends AppCompatActivity
 
    public void readNewsAloud(){
        for (NewsItem news : newsList){
+           textToSpeechHelper.readAloud("headlines for today are");
            textToSpeechHelper.readAloud("Next up,");
            textToSpeechHelper.readAloud(news.getTitle());
 

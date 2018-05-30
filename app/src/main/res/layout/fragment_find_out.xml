@@ -33,7 +33,12 @@
                 android:drawableRight="@drawable/ic_search_black_24dp"/>
 
 
-        </LinearLayout>
+       </LinearLayout>
+        <!--  <android.support.v7.widget.AppCompatSpinner
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/saved_topics">
+         </android.support.v7.widget.AppCompatSpinner> -->
 
 
         <ListView

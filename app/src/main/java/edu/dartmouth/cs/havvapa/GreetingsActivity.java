@@ -94,7 +94,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     private static final int RECORD_REQUEST_CODE = 101;
     private FloatingActionButton recordBtn;
     private TextView inputMessage;
-    private Preferences pref;
+    private static Preferences pref;
 
     private ToDoItemsSource datasource;
     private ArrayList<ToDoEntry> allEntries;
@@ -107,7 +107,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     private ListView mHeadlinesListView;
     private TextView greetings_tv;
     private TextView weather_tv;
-    private ArrayList<NewsItem> newsList;
+    private static ArrayList<NewsItem> newsList;
     private LinearLayout toDoItemsAndTitleView;
     private LinearLayout newsItemsAndTitleView;
 
@@ -221,7 +221,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
         recordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speechToTextHelper.recordMessage(mS2TCallback,GreetingsActivity.this);
+                    speechToTextHelper.recordMessage(mS2TCallback, GreetingsActivity.this);
             }
         });
 
@@ -240,8 +240,6 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
                 startActivity(intent);
             }
         });
-
-
 
         newsItemsAndTitleView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -401,6 +399,9 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
     }
 
+
+
+
     protected void makeRequest() {
     ActivityCompat.requestPermissions(this,
             new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -448,6 +449,12 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             mListView.setAdapter(greetingsEventsAdapter);
             mHeadlinesListView = findViewById(R.id.greetings_headlines_listView);
             mHeadlinesListView.setAdapter(greetingsHeadlinesAdapter);
+            mHeadlinesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    startActivity(new Intent(GreetingsActivity.this, NewsActivity.class));
+                }
+            });
 
             if(entities!=null&&entities.size() > 0)
             {
@@ -519,22 +526,32 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     }
 
     public void addressUser(){
-        if(!pref.getUsername().isEmpty()) { //write user's name
+        if(!pref.isHavvaMute()){
+            if(!pref.getUsername().isEmpty()) { //write user's name
             greetings_tv.setText("Hi, " + pref.getUsername());
-        }
-        if(!pref.isHavvaMute()){ //say hi to user
+             }
+        //say hi to user
             textToSpeechHelper.readAloud(greetings_tv.getText().toString());
         }
 
     }
 
     public static void tellWeather(){
-        if (!weather.getDecscription().isEmpty())
-        textToSpeechHelper.readAloud(" weather forecast for today is"+weather.getDecscription());
-        if (!Integer.toString(weather.getTemperature()).isEmpty())
-        textToSpeechHelper.readAloud("It is"+weather.getTemperature() +"degrees Fahrenheits");
+        if(!pref.isHavvaMute()) {
+            if (!weather.getDecscription().isEmpty())
+                textToSpeechHelper.readAloud(" weather forecast for today is" + weather.getDecscription());
+            if (!Integer.toString(weather.getTemperature()).isEmpty())
+                textToSpeechHelper.readAloud("It is " + weather.getTemperature() + "degrees Fahrenheits");
+        }
     }
 
+    public static void readNewsAloud(){
+        for (NewsItem news : newsList){
+            textToSpeechHelper.readAloud("Next up,");
+            textToSpeechHelper.readAloud(news.getTitle());
+
+        }
+    }
 
     public void sendGET(String url) {
 
