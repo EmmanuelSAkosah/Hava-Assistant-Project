@@ -375,6 +375,12 @@ public class AlarmManagmentActivity extends AppCompatActivity
 
         });
 
+        if(pref.isHavvaMute()){
+            mutePreferenceSwitch.setChecked(true);
+        }else{
+            mutePreferenceSwitch.setChecked(false);
+        }
+
         mutePreferenceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

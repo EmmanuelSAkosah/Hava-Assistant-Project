@@ -143,11 +143,10 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             case R.id.menuitem_editProfile:
                 startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
                 return true;
-
-            case R.id.menuitem_singOut:
+          /*  case R.id.menuitem_singOut:
                pref.setUserLoggedIn(false);
                resetUserOptions();
-                return true;
+                return true; */
             case android.R.id.home:
                 finish();
                 return true;
@@ -562,7 +561,11 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             public void onResponse(JSONObject response) {
                 newsList = newsHelper.parseResponse(response);
                 greetingsHeadlinesAdapter = new GreetingsHeadlinesAdapter(getApplicationContext(),R.id.news_item_greetings, newsList);
+                if( mHeadlinesListView == null){
+                    mHeadlinesListView = findViewById(R.id.greetings_headlines_listView);
+                }
                 mHeadlinesListView.setAdapter(greetingsHeadlinesAdapter);
+
             }
         },new Response.ErrorListener() {
             @Override
