@@ -3,21 +3,16 @@ package edu.dartmouth.cs.havvapa;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -34,7 +30,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import edu.dartmouth.cs.havvapa.AlarmHelpers.AlarmManagmentActivity;
 import edu.dartmouth.cs.havvapa.AlarmHelpers.AlarmReceiver;
@@ -60,6 +59,7 @@ public class ScheduleEventActivity extends AppCompatActivity
     private TextView eventReminder1Tv;
     private TextView eventReminder2Tv;
     private RadioButton eventReminder1RadBtn;
+    private RadioButton eventReminder2RadBtn;
 
     private String mSelectedTime;
     private String mSelectedDate;
@@ -68,8 +68,11 @@ public class ScheduleEventActivity extends AppCompatActivity
     private String mSelectedStartTime;
     private String mSelectedEndTime;
     private String mReminderOption1;
-    private long eventReminderInterval;
+    private String mReminderOption2;
+    private long eventReminder1Interval;
+    private long eventReminder2Interval;
     private long snoozeTime;
+    private SwitchCompat eventAllDaySwitch;
 
     private ToDoItemsSource database;
     //private EventReminderItemsSource reminderItemsDatabase;
@@ -79,13 +82,17 @@ public class ScheduleEventActivity extends AppCompatActivity
     private Intent myIntent;
 
     boolean flag = true;
+    private boolean reminder1Created;
 
-    private StopAlarmServiceReciever stopAlarmServiceReciever;
+
     private AddEventTask addEventTask = null;
     private DeleteEventTask deleteEventTask = null;
 
     public AlarmManager alarmManager;
     private PendingIntent pendingIntent;
+    private int eventUniqueTimestamp;
+    private int eventUniqueTimestamp2;
+
 
 
     @Override
@@ -111,8 +118,7 @@ public class ScheduleEventActivity extends AppCompatActivity
 
                 if(modifyEvent)
                 {
-                    String eventDuration = eventToDisplay.calculateEventDuration(startDateTime, endDateTime);
-                    database.modifyScheduledEvent(eventToDisplay.getId(), eventTitle,eventLocation, eventDescription, startDateTime.getTimeInMillis(), endDateTime.getTimeInMillis(), eventDuration);
+                    database.modifyScheduledEvent(eventToDisplay.getId(), eventTitle,eventLocation, eventDescription, startDateTime.getTimeInMillis(), endDateTime.getTimeInMillis(), mReminderOption1);
                     Intent modifyEventIntent = new Intent(ScheduleEventActivity.this, GreetingsActivity.class);
                     startActivity(modifyEventIntent);
                     finish();
@@ -177,9 +183,14 @@ public class ScheduleEventActivity extends AppCompatActivity
         outState.putString("TIME_KEY", mSelectedTime);
         outState.putBoolean("MODIFY_EVENT", modifyEvent);
         outState.putString("REMINDER_1", mReminderOption1);
-        outState.putLong("EVENT_REMINDER_INTERVAL", eventReminderInterval);
+        outState.putString("REMINDER_2",mReminderOption2);
+        outState.putLong("EVENT_REMINDER_1_INTERVAL", eventReminder1Interval);
+        outState.putLong("EVENT_REMINDER_2_INTERVAL", eventReminder2Interval);
         outState.putBoolean("BOOLEAN_FLAG", false);
+        outState.putBoolean("BOOLEAN_REMINDER_1", reminder1Created);
         outState.putLong("SNOOZE_TIME", snoozeTime);
+        outState.putInt("UNIQUE_TIMESTAMP",eventUniqueTimestamp);
+        outState.putInt("UNIQUE_TIMESTAMP_2", eventUniqueTimestamp2);
     }
 
     @Override
@@ -203,6 +214,7 @@ public class ScheduleEventActivity extends AppCompatActivity
         eventTimeEndTv = findViewById(R.id.event_end_time);
         eventReminder1Tv = findViewById(R.id.event_reminder_1);
         eventReminder2Tv = findViewById(R.id.event_reminder_2);
+        eventAllDaySwitch = findViewById(R.id.event_all_day);
 
         database = new ToDoItemsSource(this);
         //reminderItemsDatabase = new EventReminderItemsSource(this);
@@ -221,9 +233,14 @@ public class ScheduleEventActivity extends AppCompatActivity
             mSelectedTime = savedInstanceState.getString("TIME_KEY");
             modifyEvent = savedInstanceState.getBoolean("MODIFY_EVENT");
             mReminderOption1 = savedInstanceState.getString("REMINDER_1");
-            eventReminderInterval = savedInstanceState.getLong("EVENT_REMINDER_INTERVAL");
+            mReminderOption2 = savedInstanceState.getString("REMINDER_2");
+            eventReminder1Interval = savedInstanceState.getLong("EVENT_REMINDER_1_INTERVAL");
+            eventReminder2Interval = savedInstanceState.getLong("EVENT_REMINDER_2_INTERVAL");
             flag = savedInstanceState.getBoolean("BOOLEAN_FLAG");
+            reminder1Created = savedInstanceState.getBoolean("BOOLEAN_REMINDER_1");
             //snoozeTime = savedInstanceState.getLong("SNOOZE_TIME");
+            eventUniqueTimestamp = savedInstanceState.getInt("UNIQUE_TIMESTAMP");
+            eventUniqueTimestamp2 = savedInstanceState.getInt("UNIQUE_TIMESTAMP_2");
 
             eventTimeStartTv.setText(mSelectedStartTime);
             eventTimeEndTv.setText(mSelectedEndTime);
@@ -242,6 +259,9 @@ public class ScheduleEventActivity extends AppCompatActivity
                 //snoozeTime = eventReminderItem.getSnoozePref();
                 startDateTime = eventToDisplay.getStartDateTime();
                 endDateTime = eventToDisplay.getEndDateTime();
+                eventUniqueTimestamp = eventToDisplay.getEventUniqueTimestamp();
+                eventUniqueTimestamp2 = eventToDisplay.getEventUniqueTimestamp2();
+                mReminderOption1 = eventToDisplay.getEventReminderOption();
                 updateStartDateTime();
                 updateEndDateTime();
 
@@ -259,7 +279,14 @@ public class ScheduleEventActivity extends AppCompatActivity
                 eventTitleEt.setText(eventTitle);
                 eventDescriptionEt.setText(eventDescription);
                 eventLocationEt.setText(eventLocation);
+                eventReminder1Tv.setText(mReminderOption1);
 
+                if(!mReminderOption1.equals("Add a reminder") && !mReminderOption1.equals("No reminder")){
+                    reminder1Created=true;
+                }
+                else {
+                    reminder1Created = false;
+                }
 
                 modifyEvent = true;
 
@@ -271,6 +298,10 @@ public class ScheduleEventActivity extends AppCompatActivity
                 snoozeTime = 0;
                 startDateTime = Calendar.getInstance();
                 endDateTime = Calendar.getInstance();
+                mReminderOption1 = "Add a reminder";
+                eventUniqueTimestamp = createUniqueTimestamp();
+                eventUniqueTimestamp2= createUniqueTimestamp();
+                reminder1Created = false;
 
             }
         }
@@ -308,6 +339,44 @@ public class ScheduleEventActivity extends AppCompatActivity
                 new TimePickerDialog(ScheduleEventActivity.this, mTimeListenerEnd, endDateTime.get(Calendar.HOUR_OF_DAY), endDateTime.get(Calendar.MINUTE), true).show();
             }
         });
+
+
+        eventAllDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked)
+                {
+                    Log.d("IsAllDayChecked", "Checked");
+                    eventTimeStartTv.setVisibility(View.INVISIBLE);
+                    eventTimeEndTv.setVisibility(View.INVISIBLE);
+                    eventTimeStartTv.setOnClickListener(null);
+                    eventTimeEndTv.setOnClickListener(null);
+                }
+
+                else
+                    {
+                        Log.d("IsAllDayChecked", "Not Checked");
+                        eventTimeStartTv.setVisibility(View.VISIBLE);
+                        eventTimeEndTv.setVisibility(View.VISIBLE);
+                        eventTimeStartTv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new TimePickerDialog(ScheduleEventActivity.this, mTimeListenerStart, startDateTime.get(Calendar.HOUR_OF_DAY), startDateTime.get(Calendar.MINUTE), true).show();
+                            }
+                        });
+
+                        eventTimeEndTv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new TimePickerDialog(ScheduleEventActivity.this, mTimeListenerEnd, endDateTime.get(Calendar.HOUR_OF_DAY), endDateTime.get(Calendar.MINUTE), true).show();
+                            }
+                        });
+
+                    }
+            }
+        });
+
 
 
 
@@ -367,8 +436,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                                     {
                                         mReminderOption1 = eventReminder1RadBtn.getText().toString();
                                         eventReminder1Tv.setText(mReminderOption1);
-                                        eventReminderInterval=0;
-                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminderInterval));
+                                        eventReminder1Interval =0;
+                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder1Interval));
                                     }
                                     break;
 
@@ -377,8 +446,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                                     {
                                         mReminderOption1 = eventReminder1RadBtn.getText().toString();
                                         eventReminder1Tv.setText(mReminderOption1);
-                                        eventReminderInterval = 60*1000;
-                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminderInterval));
+                                        eventReminder1Interval = 60*1000;
+                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder1Interval));
                                     }
                                     break;
                                 case R.id.event_reminder_5_minutes_before_radio:
@@ -386,8 +455,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                                     {
                                         mReminderOption1 = eventReminder1RadBtn.getText().toString();
                                         eventReminder1Tv.setText(mReminderOption1);
-                                        eventReminderInterval = 5 * 60 *1000;
-                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminderInterval));
+                                        eventReminder1Interval = 5 * 60 *1000;
+                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder1Interval));
                                     }
                                     break;
                                 case R.id.event_reminder_10_minutes_before_radio:
@@ -395,8 +464,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                                     {
                                         mReminderOption1 = eventReminder1RadBtn.getText().toString();
                                         eventReminder1Tv.setText(mReminderOption1);
-                                        eventReminderInterval = 10*60*1000;
-                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminderInterval));
+                                        eventReminder1Interval = 10*60*1000;
+                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder1Interval));
                                     }
                                     break;
                                 case R.id.event_reminder_20_minutes_before_radio:
@@ -404,8 +473,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                                     {
                                         mReminderOption1 = eventReminder1RadBtn.getText().toString();
                                         eventReminder1Tv.setText(mReminderOption1);
-                                        eventReminderInterval = 20*60*1000;
-                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminderInterval));
+                                        eventReminder1Interval = 20*60*1000;
+                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder1Interval));
 
                                     }
                                     break;
@@ -414,8 +483,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                                     {
                                         mReminderOption1 = eventReminder1RadBtn.getText().toString();
                                         eventReminder1Tv.setText(mReminderOption1);
-                                        eventReminderInterval = 30*60*1000;
-                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminderInterval));
+                                        eventReminder1Interval = 30*60*1000;
+                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder1Interval));
                                     }
                                     break;
                                 case R.id.event_reminder_45_minutes_before_radio:
@@ -423,8 +492,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                                     {
                                         mReminderOption1 = eventReminder1RadBtn.getText().toString();
                                         eventReminder1Tv.setText(mReminderOption1);
-                                        eventReminderInterval = 45*60*1000;
-                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminderInterval));
+                                        eventReminder1Interval = 45*60*1000;
+                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder1Interval));
                                     }
                                     break;
 
@@ -433,8 +502,8 @@ public class ScheduleEventActivity extends AppCompatActivity
                                     {
                                         mReminderOption1 = eventReminder1RadBtn.getText().toString();
                                         eventReminder1Tv.setText(mReminderOption1);
-                                        eventReminderInterval = 60*60*1000;
-                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminderInterval));
+                                        eventReminder1Interval = 60*60*1000;
+                                        Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder1Interval));
                                     }
                                     break;
 
@@ -453,16 +522,24 @@ public class ScheduleEventActivity extends AppCompatActivity
                                 myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
                                 //myIntent.putExtra(AlarmReceiver.NOTIFICATION_ID,1);
                                 //myIntent.putExtra(AlarmReceiver.NOTIFICATION, createAlarmNotification());
+                                myIntent.putExtra("EVENT_TIMESTAMP", eventUniqueTimestamp);
 
-                                pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, 0,myIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                                pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, eventUniqueTimestamp,myIntent,PendingIntent.FLAG_CANCEL_CURRENT);
                                 Calendar alarmCalendar = Calendar.getInstance();
-                                long alarmTimeInMillis = startDateTime.getTimeInMillis() - eventReminderInterval;
-                                if(alarmTimeInMillis <= startDateTime.getTimeInMillis()){
+                                long alarmTimeInMillis = startDateTime.getTimeInMillis() - eventReminder1Interval;
+
+                                Calendar currCal = Calendar.getInstance();
+                                if((alarmTimeInMillis <= startDateTime.getTimeInMillis()) && (startDateTime.getTimeInMillis() >= currCal.getTimeInMillis())){
 
                                     alarmCalendar.setTimeInMillis(alarmTimeInMillis);
                                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), pendingIntent);
+                                    reminder1Created = true;
+                                    eventReminder2Tv.setAlpha(1);
                                 }
                             }
+                        }
+                        else {
+                            mReminderOption1 = null;
                         }
 
                         }
@@ -474,24 +551,181 @@ public class ScheduleEventActivity extends AppCompatActivity
         });
 
 
+        if(reminder1Created){
+            eventReminder2Tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v)
+                {
+
+                    //RadioGroup rg = findViewById(R.id.event_reminder_options_radio_group);
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    //RadioGroup rgf = new RadioGroup(ScheduleEventActivity.this);
+                    //rgf.addView(inflater.inflate(R.layout.activity_event_reminder_options, (ViewGroup)findViewById(R.id.event_reminder_options_radio_group)));
+                    final View view = (View)inflater.inflate(R.layout.activity_event_reminder_options,null);
+                    //RadioGroup grp = (RadioGroup)view.findViewById(R.id.event_reminder_options_radio_group) ;
+                    final RadioGroup rgg = view.findViewById(R.id.event_reminder_options_radio_group);
+                    rgg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId)
+                        {
+                            Log.d("ITEM_CHECKED_radio", String.valueOf(checkedId));
+                            eventReminder2RadBtn =(RadioButton)view.findViewById(checkedId);
+
+
+                        }
+                    });
+
+                    builder.setView(view);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            Log.d("ITEM_CHECKED_builder", String.valueOf(which));
+                            Log.d("IN ALARM", "ALARM");
+                            int checkedId = rgg.getCheckedRadioButtonId();
+
+                            if(checkedId!=-1)
+                            {
+
+                                switch (eventReminder2RadBtn.getId())
+                                {
+                                    case R.id.event_reminder_none_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2 = eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            if (alarmManager != null){
+                                                alarmManager.cancel(pendingIntent);
+                                            }
+
+                                        }
+                                        break;
+
+                                    case R.id.event_reminder_start_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2 = eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            eventReminder2Interval =0;
+                                            Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder2Interval));
+                                        }
+                                        break;
+
+                                    case R.id.event_reminder_1_minute_before_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2 = eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            eventReminder2Interval = 60*1000;
+                                            Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder2Interval));
+                                        }
+                                        break;
+                                    case R.id.event_reminder_5_minutes_before_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2 = eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            eventReminder2Interval = 5 * 60 *1000;
+                                            Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder2Interval));
+                                        }
+                                        break;
+                                    case R.id.event_reminder_10_minutes_before_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2 = eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            eventReminder2Interval = 10*60*1000;
+                                            Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder2Interval));
+                                        }
+                                        break;
+                                    case R.id.event_reminder_20_minutes_before_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2 = eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            eventReminder2Interval = 20*60*1000;
+                                            Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder2Interval));
+
+                                        }
+                                        break;
+                                    case R.id.event_reminder_30_minutes_before_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2 = eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            eventReminder2Interval = 30*60*1000;
+                                            Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder2Interval));
+                                        }
+                                        break;
+                                    case R.id.event_reminder_45_minutes_before_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2= eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            eventReminder2Interval = 45*60*1000;
+                                            Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder2Interval));
+                                        }
+                                        break;
+
+                                    case R.id.event_reminder_1_hour_before_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            mReminderOption2 = eventReminder2RadBtn.getText().toString();
+                                            eventReminder2Tv.setText(mReminderOption2);
+                                            eventReminder2Interval = 60*60*1000;
+                                            Log.d("WHICH REMINDER OPTION?", String.valueOf(eventReminder2Interval));
+                                        }
+                                        break;
+
+                                    case R.id.custom_reminder_radio:
+                                        if(eventReminder2RadBtn.isChecked())
+                                        {
+                                            goToCustomOptionView2();
+                                        }
+                                        break;
+
+
+                                }
+                                if(eventReminder2RadBtn.getId() != R.id.event_reminder_none_radio && eventReminder2RadBtn.getId() != R.id.custom_reminder_radio){
+
+                                    alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+                                    myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
+                                    //myIntent.putExtra(AlarmReceiver.NOTIFICATION_ID,1);
+                                    //myIntent.putExtra(AlarmReceiver.NOTIFICATION, createAlarmNotification());
+                                    myIntent.putExtra("EVENT_TIMESTAMP", eventUniqueTimestamp2);
+
+                                    pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, eventUniqueTimestamp2,myIntent,PendingIntent.FLAG_CANCEL_CURRENT);
+                                    Calendar alarmCalendar = Calendar.getInstance();
+                                    long alarmTimeInMillis = startDateTime.getTimeInMillis() - eventReminder2Interval;
+
+                                    Calendar currCal = Calendar.getInstance();
+                                    if((alarmTimeInMillis <= startDateTime.getTimeInMillis()) && (startDateTime.getTimeInMillis() >= currCal.getTimeInMillis())){
+
+                                        alarmCalendar.setTimeInMillis(alarmTimeInMillis);
+                                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), pendingIntent);
+                                    }
+                                }
+                            }
+                            else {
+                                mReminderOption2 = null;
+                            }
+
+                        }
+                    });
+
+                    builder.show();
+
+                }
+            });
+
+        }
+
+
 
     }
 
-
-    public Notification createAlarmNotification(){
-        NotificationChannel notificationChannel = new NotificationChannel("CHANNEL_ID",
-                "channel name", NotificationManager.IMPORTANCE_DEFAULT);
-        android.support.v4.app.NotificationCompat.Builder notificationBuilder =
-                new android.support.v4.app.NotificationCompat.Builder(this, "CHANNEL_ID")
-                        .setContentTitle("Alarm")
-                        .setContentText("Event started")
-                        .setSmallIcon(R.drawable.baseline_add_alert_24);
-        Notification notification = notificationBuilder.build();
-        notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
-        //NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
-        return notification;
-    }
 
     public void goToCustomOptionView()
     {
@@ -524,21 +758,21 @@ public class ScheduleEventActivity extends AppCompatActivity
                         case R.id.event_reminder_custom_days_radio_btn:
                             String customReminderOption = customOptionEt.getText().toString();
                             int customReminderInterval = Integer.parseInt(customReminderOption);
-                            eventReminderInterval = customReminderInterval*24*60*60*1000;
+                            eventReminder1Interval = customReminderInterval*24*60*60*1000;
                             mReminderOption1 = String.valueOf(customReminderInterval) + " days before";
                             eventReminder1Tv.setText(mReminderOption1);
 
                         case R.id.event_reminder_custom_hours_radio_btn:
                             String customReminderOption2 = customOptionEt.getText().toString();
                             int customReminderInterval2 = Integer.parseInt(customReminderOption2);
-                            eventReminderInterval = customReminderInterval2*60*60*1000;
+                            eventReminder1Interval = customReminderInterval2*60*60*1000;
                             mReminderOption1 = String.valueOf(customReminderInterval2) + " hours before";
                             eventReminder1Tv.setText(mReminderOption1);
 
                         case R.id.event_reminder_custom_minutes_radio_btn:
                             String customReminderOption3 = customOptionEt.getText().toString();
                             int customReminderInterval3 = Integer.parseInt(customReminderOption3);
-                            eventReminderInterval = customReminderInterval3*60*1000;
+                            eventReminder1Interval = customReminderInterval3*60*1000;
                             mReminderOption1 = String.valueOf(customReminderInterval3) + " minutes before";
                             eventReminder1Tv.setText(mReminderOption1);
                     }
@@ -549,13 +783,14 @@ public class ScheduleEventActivity extends AppCompatActivity
 
                     alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                     myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
-                    myIntent.putExtra(AlarmReceiver.NOTIFICATION_ID,1);
-                    myIntent.putExtra(AlarmReceiver.NOTIFICATION, createAlarmNotification());
+                    myIntent.putExtra("EVENT_TIMESTAMP", eventUniqueTimestamp);
 
-                    pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, 0,myIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, eventUniqueTimestamp,myIntent,PendingIntent.FLAG_CANCEL_CURRENT);
                     Calendar alarmCalendar = Calendar.getInstance();
-                    long alarmTimeInMillis = startDateTime.getTimeInMillis() - eventReminderInterval;
-                    if(alarmTimeInMillis <= startDateTime.getTimeInMillis()){
+                    long alarmTimeInMillis = startDateTime.getTimeInMillis() - eventReminder1Interval;
+
+                    Calendar currCal = Calendar.getInstance();
+                    if((alarmTimeInMillis <= startDateTime.getTimeInMillis()) && (startDateTime.getTimeInMillis() >= currCal.getTimeInMillis())){
 
                         alarmCalendar.setTimeInMillis(alarmTimeInMillis);
                         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), pendingIntent);
@@ -568,6 +803,84 @@ public class ScheduleEventActivity extends AppCompatActivity
         customOptionBuilder.show();
 
     }
+
+    public void goToCustomOptionView2()
+    {
+        final AlertDialog.Builder customOptionBuilder = new AlertDialog.Builder(ScheduleEventActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View customOptionsView = (View)inflater.inflate(R.layout.activity_event_reminder_custom_option,null);
+
+        final RadioGroup customOptionRg = customOptionsView.findViewById(R.id.event_reminder_custom_radio_group);
+        customOptionRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                Log.d("Custom-radio-checked", "radio button checked");
+            }
+        });
+
+        customOptionBuilder.setView(customOptionsView);
+        customOptionBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                EditText customOptionEt = (EditText)customOptionsView.findViewById(R.id.event_reminder_custom_et);
+                int checkedId = customOptionRg.getCheckedRadioButtonId();
+
+                if(!customOptionEt.getText().toString().equals("") && checkedId != -1)
+                {
+
+                    switch (checkedId)
+                    {
+                        case R.id.event_reminder_custom_days_radio_btn:
+                            String customReminderOption = customOptionEt.getText().toString();
+                            int customReminderInterval = Integer.parseInt(customReminderOption);
+                            eventReminder2Interval = customReminderInterval*24*60*60*1000;
+                            mReminderOption2 = String.valueOf(customReminderInterval) + " days before";
+                            eventReminder2Tv.setText(mReminderOption2);
+
+                        case R.id.event_reminder_custom_hours_radio_btn:
+                            String customReminderOption2 = customOptionEt.getText().toString();
+                            int customReminderInterval2 = Integer.parseInt(customReminderOption2);
+                            eventReminder2Interval = customReminderInterval2*60*60*1000;
+                            mReminderOption2 = String.valueOf(customReminderInterval2) + " hours before";
+                            eventReminder2Tv.setText(mReminderOption2);
+
+                        case R.id.event_reminder_custom_minutes_radio_btn:
+                            String customReminderOption3 = customOptionEt.getText().toString();
+                            int customReminderInterval3 = Integer.parseInt(customReminderOption3);
+                            eventReminder2Interval = customReminderInterval3*60*1000;
+                            mReminderOption2 = String.valueOf(customReminderInterval3) + " minutes before";
+                            eventReminder2Tv.setText(mReminderOption2);
+                    }
+
+
+
+
+
+                    alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+                    myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
+                    myIntent.putExtra("EVENT_TIMESTAMP", eventUniqueTimestamp2);
+
+                    pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, eventUniqueTimestamp2,myIntent,PendingIntent.FLAG_CANCEL_CURRENT);
+                    Calendar alarmCalendar = Calendar.getInstance();
+                    long alarmTimeInMillis = startDateTime.getTimeInMillis() - eventReminder2Interval;
+
+                    Calendar currCal = Calendar.getInstance();
+                    if((alarmTimeInMillis <= startDateTime.getTimeInMillis()) && (startDateTime.getTimeInMillis() >= currCal.getTimeInMillis())){
+
+                        alarmCalendar.setTimeInMillis(alarmTimeInMillis);
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmCalendar.getTimeInMillis(), pendingIntent);
+                    }
+                }
+
+            }
+        });
+
+        customOptionBuilder.show();
+
+    }
+
 
     @Override
     protected void onResume() {
@@ -602,20 +915,7 @@ public class ScheduleEventActivity extends AppCompatActivity
         }
     };
 
-    public void stopAlarm()
-    {
-        Log.d("STOPALARM of Schedule", "Schedule");
-        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-        //pendingIntent.cancel();
-        alarmManager.cancel(pendingIntent);
-        vibrator.cancel();
 
-        Intent intent = new Intent();
-        intent.setAction("STOP_ME");
-        intent.putExtra("STOP_RINGTONE",7);
-        sendBroadcast(intent);
-
-    }
 
     TimePickerDialog.OnTimeSetListener mTimeListenerStart = new TimePickerDialog.OnTimeSetListener() {
         @Override
@@ -677,65 +977,11 @@ public class ScheduleEventActivity extends AppCompatActivity
     };
 
 
-
-    public void displayKeyboardDialogTitle(final String entryItem){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
-        builder.setTitle(entryItem);
-        //final EditText userInput = new EditText(ScheduleEventActivity.this);
-        builder.setView(eventTitleEt);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                eventTitle = eventTitleEt.getText().toString();
-                Log.d("DESCRIPTION", eventTitle);
-
-            }
-        });
-    }
-    public void displayKeyboardDialogDescription(final String entryItem){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleEventActivity.this);
-        builder.setTitle(entryItem);
-        //final EditText userInput = new EditText(ScheduleEventActivity.this);
-        builder.setView(eventDescriptionEt);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                eventDescription = eventDescriptionEt.getText().toString();
-                Log.d("DESCRIPTION", eventDescription);
-
-            }
-        });
-    }
-
-
-    public class StopAlarmServiceReciever extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int rqs = intent.getIntExtra("STOP_ALARM",0);
-            if(rqs == 3)
-            {
-                myIntent = new Intent(ScheduleEventActivity.this, AlarmReceiver.class);
-
-
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(ScheduleEventActivity.this, 0,myIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-                Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-                //pendingIntent.cancel();
-                alarmManager.cancel(pendingIntent);
-                vibrator.cancel();
-                unregisterReceiver(stopAlarmServiceReciever);
-                //AlarmReceiver.mediaPlayer.stop();
-//                AlarmReceiver.mediaPlayer.release();
-              //  AlarmReceiver.mediaPlayer = null;
-                //AudioManager audioManager = (AudioManager)getSystemService(ScheduleEventActivity.AUDIO_SERVICE);
-                //audioManager.stopBluetoothSco();
-                //audioManager.setMicrophoneMute(true);
-
-
-            }
-        }
+    public int createUniqueTimestamp(){
+        Date now = new Date();
+        int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
+        Log.d("UniqueID  ", String.valueOf(id));
+        return id;
     }
 
 
@@ -761,7 +1007,7 @@ public class ScheduleEventActivity extends AppCompatActivity
             if(!isCancelled()){
 
                 try{
-                    ToDoEntry savedEvent = new ToDoEntry(eventTitle, eventLocation, eventDescription, startDateTime, endDateTime );
+                    ToDoEntry savedEvent = new ToDoEntry(eventTitle, eventLocation, eventDescription, startDateTime, endDateTime,mReminderOption1, eventUniqueTimestamp, eventUniqueTimestamp2);
                     database.createItem(savedEvent);
                 }
                 catch (Exception e){
@@ -774,7 +1020,7 @@ public class ScheduleEventActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getApplicationContext(), "Successfully added to database!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScheduleEventActivity.this, "Successfully added to database!", Toast.LENGTH_SHORT).show();
             addEventTask = null;
         }
     }
@@ -792,7 +1038,7 @@ public class ScheduleEventActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getApplicationContext(), "Item successfully deleted!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScheduleEventActivity.this, "Item successfully deleted!", Toast.LENGTH_SHORT).show();
             deleteEventTask = null;
            // finish();
         }
@@ -810,30 +1056,6 @@ public class ScheduleEventActivity extends AppCompatActivity
 
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

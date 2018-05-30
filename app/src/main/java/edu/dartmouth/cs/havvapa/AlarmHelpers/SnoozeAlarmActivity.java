@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -25,6 +26,8 @@ public class SnoozeAlarmActivity extends AppCompatActivity
     private AlarmManager alarmManager;
     private Intent myIntent;
     private PendingIntent pendingIntent;
+    private int eventUniqueTimestamp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -34,6 +37,8 @@ public class SnoozeAlarmActivity extends AppCompatActivity
         alarmOffSwitch = findViewById(R.id.alarm_close_switch);
         snoozeSwitch =findViewById(R.id.snooze_switch);
         reminderItemsSource = new EventReminderItemsSource(this);
+        eventUniqueTimestamp = getIntent().getExtras().getInt("EVENT_TIMESTAMP");
+
         try{
             reminderItem = reminderItemsSource.getReminderItem();
             snoozeTime = reminderItem.getSnoozePref();
@@ -50,9 +55,9 @@ public class SnoozeAlarmActivity extends AppCompatActivity
                 if(isChecked){
                     Intent closeAlarmIntent = new Intent();
                     closeAlarmIntent.setAction("STOP_ME");
-                    closeAlarmIntent.putExtra("STOP_RINGTONE", 7);
+                    closeAlarmIntent.putExtra("STOP_RINGTONE", eventUniqueTimestamp);
                     sendBroadcast(closeAlarmIntent);
-                    Toast.makeText(getApplicationContext(), "Sleep Well my friend!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SnoozeAlarmActivity.this, "Sleep Well my friend!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
@@ -66,21 +71,33 @@ public class SnoozeAlarmActivity extends AppCompatActivity
                 {
                     Intent closeAlarmIntent = new Intent();
                     closeAlarmIntent.setAction("STOP_ME");
-                    closeAlarmIntent.putExtra("STOP_RINGTONE", 7);
+                    closeAlarmIntent.putExtra("STOP_RINGTONE", eventUniqueTimestamp);
                     sendBroadcast(closeAlarmIntent);
 
                     alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                     myIntent = new Intent(SnoozeAlarmActivity.this, AlarmReceiver.class);
-                    pendingIntent = PendingIntent.getBroadcast(SnoozeAlarmActivity.this, 0,myIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    myIntent.putExtra("EVENT_TIMESTAMP", eventUniqueTimestamp);
+                    Log.d("UniqueID  ", String.valueOf(eventUniqueTimestamp));
+                    pendingIntent = PendingIntent.getBroadcast(SnoozeAlarmActivity.this, eventUniqueTimestamp ,myIntent,PendingIntent.FLAG_CANCEL_CURRENT);
 
                     Calendar currCal = Calendar.getInstance();
                     long snoozeTimeInMillis = currCal.getTimeInMillis() + snoozeTime;
-                    Toast.makeText(getApplicationContext(), "Woow you are gonna try eh!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SnoozeAlarmActivity.this, "Woow you are gonna try eh!", Toast.LENGTH_SHORT).show();
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, snoozeTimeInMillis, pendingIntent);
 
                 }
+                else if (isChecked && snoozeTime == 0)
+                {
+                    Intent closeAlarmIntent = new Intent();
+                    closeAlarmIntent.setAction("STOP_ME");
+                    closeAlarmIntent.putExtra("STOP_RINGTONE", eventUniqueTimestamp);
+                    Log.d("UniqueID  ", String.valueOf(eventUniqueTimestamp));
+                    sendBroadcast(closeAlarmIntent);
+                    Toast.makeText(SnoozeAlarmActivity.this, "Sleep Well my friend!", Toast.LENGTH_SHORT).show();
+                }
                 finish();
             }
+
         });
 
 

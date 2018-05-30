@@ -179,7 +179,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
         newsList = new ArrayList<>();
 
-        datasource = new ToDoItemsSource(getApplicationContext());
+        datasource = new ToDoItemsSource(GreetingsActivity.this);
         //greetingsEventsAdapter = new GreetingsEventsAdapter(getApplicationContext(), updatedGreetingsEntries);
         //mListView.setAdapter(greetingsEventsAdapter);
 
@@ -193,7 +193,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
                 return;
             }
         });
@@ -263,7 +263,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
                 if(speechResults.getResults() != null && !speechResults.getResults().isEmpty()) {
                     String text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
                     speechToTextHelper.showMicText(text,GreetingsActivity.this,inputMessage);
-                    speechToTextHelper.executeCommand(text,getApplicationContext()); // act on transcribed text
+                    speechToTextHelper.executeCommand(text,GreetingsActivity.this); // act on transcribed text
                 }
             }
 
@@ -323,7 +323,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
             }
         });
 
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        RequestQueue queue = Volley.newRequestQueue(GreetingsActivity.this);
         queue.add(jsonObjectRequest);
     }
 
@@ -408,10 +408,10 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
        String speech = transcribed_text.toLowerCase();
         //sign in
         if (speech.contains("sign")){
-            startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+            startActivity(new Intent(GreetingsActivity.this, SignUpActivity.class));
 
         }else if(speech.contains("schedule")) {
-            startActivity(new Intent(getApplicationContext(), ScheduleEventActivity.class));
+            startActivity(new Intent(GreetingsActivity.this, ScheduleEventActivity.class));
 
         }
 
@@ -426,18 +426,18 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
     private String updateDateDisplay(Calendar dateTime)
     {
-        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
+        String mSelectedDate = DateUtils.formatDateTime(GreetingsActivity.this, dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
         return mSelectedDate;
     }
     private String updateTimeDisplay(Calendar dateTime)
     {
-        String mSelectedTime = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
+        String mSelectedTime = DateUtils.formatDateTime(GreetingsActivity.this, dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
         return mSelectedTime;
     }
 
     private String updateDateDisplay2(long dateTimeInMillis)
     {
-        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
+        String mSelectedDate = DateUtils.formatDateTime(GreetingsActivity.this, dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
         return mSelectedDate;
     }
 
@@ -448,7 +448,7 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
 
         switch (id){
             case ALL_ITEMS_LOADER_ID:
-                return new UpcomingToDoEntryListLoader(getApplicationContext());
+                return new UpcomingToDoEntryListLoader(GreetingsActivity.this);
         }
 
         return null;
@@ -458,10 +458,10 @@ public class GreetingsActivity extends AppCompatActivity implements LoaderManage
     public void onLoadFinished(@NonNull Loader<ArrayList<ToDoEntry>> loader, ArrayList<ToDoEntry> entities) {
         if(loader.getId() == ALL_ITEMS_LOADER_ID)
         {
-            greetingsEventsAdapter = new GreetingsEventsAdapter(getApplicationContext(), updatedGreetingsEntries);
+            greetingsEventsAdapter = new GreetingsEventsAdapter(GreetingsActivity.this, updatedGreetingsEntries);
             mListView.setAdapter(greetingsEventsAdapter);
 
-            if(entities.size() > 0)
+            if(entities!=null&&entities.size() > 0)
             {
                 allEntries = entities;
                 ArrayList<GreetingsToDoEntry> greetingsToDoEntries = new ArrayList<>();

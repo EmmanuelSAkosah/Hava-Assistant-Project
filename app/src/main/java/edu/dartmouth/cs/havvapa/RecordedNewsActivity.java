@@ -55,11 +55,13 @@ public class RecordedNewsActivity extends AppCompatActivity
     public static void refreshHistoryView(){
 
         ArrayList<NewsItem> newsList = datasource.getAllEntries();
-        for(NewsItem item : newsList){
-            Log.d("itemId", String.valueOf(item.getNewsItemId()) + "  " + String.valueOf(newsList.size()));
-        }
+        if(newsList.size()>0){
+            for(NewsItem item : newsList){
+                Log.d("itemId", String.valueOf(item.getNewsItemId()) + "  " + String.valueOf(newsList.size()));
+            }
 
-        mNewsAdapter.setmNewsList(newsList);
-        listView.setAdapter(mNewsAdapter);
+            mNewsAdapter.setmNewsList(newsList);
+            listView.setAdapter(mNewsAdapter);
+        }
     }
 }

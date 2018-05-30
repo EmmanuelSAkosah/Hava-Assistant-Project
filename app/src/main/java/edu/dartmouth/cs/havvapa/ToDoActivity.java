@@ -54,19 +54,19 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (item.getItemId())
         {
             case R.id.menuitem_schedule_event_btn:
-                startActivity(new Intent(getApplicationContext(), ScheduleEventActivity.class));
+                startActivity(new Intent(ToDoActivity.this, ScheduleEventActivity.class));
                 //Intent intent = new Intent(getActivity(), ScheduleEventActivity.EventOptionsActivity.class);
                 //startActivity(intent);
                 finish();
                 return true;
 
             case R.id.menuitem_settings:
-                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                startActivity(new Intent(ToDoActivity.this, SignUpActivity.class));
                 finish();
                 return true;
 
             case R.id.menuitem_editProfile:
-                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                startActivity(new Intent(ToDoActivity.this, SignUpActivity.class));
                 finish();
                 return true;
 
@@ -106,7 +106,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         compactCalendarView.invalidate();
 
         ListView mListView = findViewById(R.id.calendarListView);
-        mToDoListAdapter = new ToDoListAdapter(getApplicationContext(),updatedToDoItemEnries);
+        mToDoListAdapter = new ToDoListAdapter(ToDoActivity.this,updatedToDoItemEnries);
         mListView.setAdapter(mToDoListAdapter);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -117,7 +117,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
                 {
                     long selectedEntryId = allEntries.get(position).getId();
                     Log.d("ID_?", String.valueOf(selectedEntryId));
-                    Intent displayIntent = new Intent(getApplicationContext(), ScheduleEventActivity.class);
+                    Intent displayIntent = new Intent(ToDoActivity.this, ScheduleEventActivity.class);
                     displayIntent.putExtra("ENTRY_ROW_ID", selectedEntryId);
                     startActivity(displayIntent);
 
@@ -185,18 +185,18 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private String updateDateDisplay(Calendar dateTime)
     {
-        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
+        String mSelectedDate = DateUtils.formatDateTime(ToDoActivity.this, dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_DATE);
         return mSelectedDate;
     }
     private String updateTimeDisplay(Calendar dateTime)
     {
-        String mSelectedTime = DateUtils.formatDateTime(getApplicationContext(), dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
+        String mSelectedTime = DateUtils.formatDateTime(ToDoActivity.this, dateTime.getTimeInMillis(),DateUtils.FORMAT_SHOW_TIME);
         return mSelectedTime;
     }
 
     private String updateDateDisplay2(long dateTimeInMillis)
     {
-        String mSelectedDate = DateUtils.formatDateTime(getApplicationContext(), dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
+        String mSelectedDate = DateUtils.formatDateTime(ToDoActivity.this, dateTimeInMillis,DateUtils.FORMAT_SHOW_DATE);
         return mSelectedDate;
     }
 
@@ -212,7 +212,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
 
         switch (id){
             case ALL_ITEMS_LOADER_ID:
-                return new ToDoEntryListLoader(getApplicationContext());
+                return new ToDoEntryListLoader(ToDoActivity.this);
         }
 
         return null;
@@ -222,7 +222,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(@NonNull Loader<ArrayList<ToDoEntry>> loader, ArrayList<ToDoEntry> entities) {
         if(loader.getId() == ALL_ITEMS_LOADER_ID)
         {
-            if(entities.size()>0)
+            if(entities!=null &&entities.size()>0)
             {
                 try {
                     compactCalendarView.removeAllEvents();

@@ -20,7 +20,7 @@ public class ToDoItemsSource
     private Calendar todaysCalendar = Calendar.getInstance();
 
     private String[] allColumns = {MySQLiteHelper.ROW_ID,MySQLiteHelper.COLUMN_EVENT_TITLE, MySQLiteHelper.COLUMN_EVENT_LOCATION, MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, MySQLiteHelper.COLUMN_START_DATE_TIME
-    , MySQLiteHelper.COLUMN_END_DATE_TIME, MySQLiteHelper.COLUMN_EVENT_DURATION};
+    , MySQLiteHelper.COLUMN_END_DATE_TIME, MySQLiteHelper.COLUMN_R, MySQLiteHelper.COLUMN_UNIQUE_TIMESTAMP, MySQLiteHelper.COLUMN_UNIQUE_TIMESTAMPP};
 
     public ToDoItemsSource(Context context){
         dbHelper = new MySQLiteHelper(context);
@@ -36,7 +36,9 @@ public class ToDoItemsSource
         values.put(MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, entry.getEventDescription());
         values.put(MySQLiteHelper.COLUMN_START_DATE_TIME, entry.getStartDateTime().getTimeInMillis());
         values.put(MySQLiteHelper.COLUMN_END_DATE_TIME, entry.getEndDateTime().getTimeInMillis());
-        values.put(MySQLiteHelper.COLUMN_EVENT_DURATION, entry.getEventDuration());
+        values.put(MySQLiteHelper.COLUMN_R, entry.getEventReminderOption());
+        values.put(MySQLiteHelper.COLUMN_UNIQUE_TIMESTAMP, entry.getEventUniqueTimestamp());
+        values.put(MySQLiteHelper.COLUMN_UNIQUE_TIMESTAMPP, entry.getEventUniqueTimestamp2());
 
         long insertId = database.insert(MySQLiteHelper.TABLE_ITEMS, null, values);
         Cursor cursor = database.query(MySQLiteHelper.TABLE_ITEMS, allColumns, MySQLiteHelper.ROW_ID + " = " + insertId, null, null, null, null);
@@ -49,7 +51,7 @@ public class ToDoItemsSource
         return entry;
     }
 
-    public void modifyScheduledEvent(long rowId, String modifiedTitle,String modifiedLocation, String modifiedDescription, long modifiedStartDateTime, long modifiedEndDateTime, String modifiedDuration)
+    public void modifyScheduledEvent(long rowId, String modifiedTitle,String modifiedLocation, String modifiedDescription, long modifiedStartDateTime, long modifiedEndDateTime, String modifiedReminderOpt)
     {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         String strFilter = MySQLiteHelper.ROW_ID + " = " + rowId;
@@ -60,7 +62,8 @@ public class ToDoItemsSource
         args.put(MySQLiteHelper.COLUMN_EVENT_DESCRIPTION, modifiedDescription);
         args.put(MySQLiteHelper.COLUMN_START_DATE_TIME, modifiedStartDateTime);
         args.put(MySQLiteHelper.COLUMN_END_DATE_TIME, modifiedEndDateTime);
-        args.put(MySQLiteHelper.COLUMN_EVENT_DURATION, modifiedDuration);
+        args.put(MySQLiteHelper.COLUMN_R, modifiedReminderOpt);
+
 
         database.update(MySQLiteHelper.TABLE_ITEMS, args, strFilter, null);
 
@@ -183,7 +186,9 @@ public class ToDoItemsSource
         entry.setEventDescription(cursor.getString(3));
         entry.setStartDateTime(entryStartDateAndTime);
         entry.setEndDateTime(entryEndDateAndTime);
-        entry.setEventDuration(cursor.getString(6));
+        entry.setEventReminderOption(cursor.getString(6));
+        entry.setEventUniqueTimestamp(cursor.getInt(7));
+        entry.setEventUniqueTimestamp2(cursor.getInt(8));
 
         return entry;
     }
