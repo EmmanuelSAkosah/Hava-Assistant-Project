@@ -98,6 +98,7 @@ public class RingtoneMediaService extends Service
 
         if(vibrationOn){
             Vibrator vibrator = (Vibrator)getSystemService(ScheduleEventActivity.VIBRATOR_SERVICE);
+            Log.d("ISVIBRATOR",String.valueOf(vibrationOn));
             vibrator.vibrate(15000);
         }
 
@@ -110,7 +111,7 @@ public class RingtoneMediaService extends Service
             Uri ringtoneUri = ringtoneManager.getRingtoneUri(RingtoneManager.TYPE_ALL);
 
             AudioManager audioManager = (AudioManager)getSystemService(ScheduleEventActivity.AUDIO_SERVICE);
-            audioManager.setStreamVolume(AudioManager.STREAM_ALARM,7,AudioManager.ADJUST_MUTE);
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM,7,AudioManager.ADJUST_SAME);
             mediaPlayer = new MediaPlayer();
             try {
                 mediaPlayer.setDataSource(this, ringtoneUri);

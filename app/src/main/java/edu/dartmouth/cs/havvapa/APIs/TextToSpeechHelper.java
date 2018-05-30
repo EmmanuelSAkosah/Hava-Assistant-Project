@@ -10,11 +10,9 @@ import com.ibm.watson.developer_cloud.text_to_speech.v1.model.Voice;
 import org.w3c.dom.Text;
 
 import edu.dartmouth.cs.havvapa.GreetingsActivity;
-import edu.dartmouth.cs.havvapa.utils.Preferences;
 
 public class TextToSpeechHelper {
     StreamPlayer streamPlayer;
-
 
     private TextToSpeech initTextToSpeechService() {
         TextToSpeech service = new TextToSpeech();

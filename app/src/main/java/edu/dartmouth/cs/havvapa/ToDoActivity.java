@@ -5,9 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -25,13 +22,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import edu.dartmouth.cs.havvapa.APIs.TextToSpeechHelper;
 import edu.dartmouth.cs.havvapa.CalendarItems.CompactCalendarView;
 import edu.dartmouth.cs.havvapa.CalendarItems.Event;
 import edu.dartmouth.cs.havvapa.adapters.ToDoListAdapter;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoEntryListLoader;
 import edu.dartmouth.cs.havvapa.database_elements.ToDoItemsSource;
-import edu.dartmouth.cs.havvapa.models.NewsItem;
 import edu.dartmouth.cs.havvapa.models.ToDoEntry;
 import edu.dartmouth.cs.havvapa.models.ToDoItemForAdapter;
 
@@ -44,10 +39,8 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     ArrayList<ToDoItemForAdapter> updatedToDoItemEnries = new ArrayList<>();
     private ToDoItemForAdapter item;
     private android.support.v7.widget.Toolbar toolBarForCurrMonth;
-    private CompactCalendarView compactCalendarView;
+    private CompactCalendarView compactCompactCalendarView;
     private Date lastDateClicked;
-    private TextToSpeechHelper textToSpeechHelper;
-    private FloatingActionButton readNews_btn;
 
     private static  final int ALL_ITEMS_LOADER_ID = 1;
 
@@ -78,6 +71,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
                 finish();
                 return true;
 
+
             default:
                 // return super.onOptionsItemSelected(item);
                 return true;
@@ -100,13 +94,13 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportActionBar().setTitle("Plan");  // Set the title. I don't know how it can give null pointer exception.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
-        compactCalendarView.setUseThreeLetterAbbreviation(false);
-        compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
+        compactCompactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
+        compactCompactCalendarView.setUseThreeLetterAbbreviation(false);
+        compactCompactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
 
         toolBarForCurrMonth = findViewById(R.id.tool_bar_for_month_display);
 
-        compactCalendarView.invalidate();
+        compactCompactCalendarView.invalidate();
 
         ListView mListView = findViewById(R.id.calendarListView);
         mToDoListAdapter = new ToDoListAdapter(ToDoActivity.this,updatedToDoItemEnries);
@@ -133,12 +127,12 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         toolBarForCurrMonth = findViewById(R.id.tool_bar_for_month_display);
         toolBarForCurrMonth.setTitle(updateDateDisplay(Calendar.getInstance()) + "  -  " + String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 
-        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+        compactCompactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked)
             {
 
-                List<Event> toDoEvents = compactCalendarView.getEvents(dateClicked);
+                List<Event> toDoEvents = compactCompactCalendarView.getEvents(dateClicked);
                 Calendar currCal = Calendar.getInstance();
                 currCal.setTime(dateClicked);
                 toolBarForCurrMonth.setTitle(updateDateDisplay(currCal) + "  -  " + currCal.get(Calendar.YEAR));
@@ -179,15 +173,7 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        readNews_btn = findViewById(R.id.read_news_btn);
-        readNews_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                readNewsAloud();
-            }
-        });
+        //updatedToDoItemEnries = new ArrayList<>();
 
     }
 
@@ -233,10 +219,10 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(@NonNull Loader<ArrayList<ToDoEntry>> loader, ArrayList<ToDoEntry> entities) {
         if(loader.getId() == ALL_ITEMS_LOADER_ID)
         {
-            if(entities!=null &&entities.size()>0)
+            if(entities.size()>0)
             {
                 try {
-                    compactCalendarView.removeAllEvents();
+                    compactCompactCalendarView.removeAllEvents();
                 }
                 catch (Exception e){
 
@@ -249,9 +235,19 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
                     Calendar cal = toDoEntry.getStartDateTime();
                     events.add(new Event(Color.argb(255, 169, 68, 65), cal.getTimeInMillis(), toDoEntry));
 
+
+                    /*
+                    ToDoItemForAdapter toDoEntryOfScheduledEvent = toDoEntry.getToDoItemOfAdapter();
+                    toDoEntryOfScheduledEvent.setToDoItemTime(updateDateDisplay(cal) + " " + updateTimeDisplay(cal));
+                    toDoEntriesPerScheduledEvent.add(toDoEntryOfScheduledEvent);*/
+
                 }
-                compactCalendarView.addEvents(events);
-                compactCalendarView.invalidate();
+                compactCompactCalendarView.addEvents(events);
+                compactCompactCalendarView.invalidate();
+
+                //updatedToDoItemEnries = toDoEntriesPerScheduledEvent;
+                // mToDoListAdapter.setCalendarItems(updatedToDoItemEnries);
+                // mToDoListAdapter.notifyDataSetChanged();
             }
             else {
                 mToDoListAdapter.clear();
@@ -265,13 +261,6 @@ public class ToDoActivity extends AppCompatActivity implements LoaderManager.Loa
         if(loader.getId()==ALL_ITEMS_LOADER_ID){
             mToDoListAdapter.clear();
             mToDoListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public void readNewsAloud(){
-        for (ToDoEntry toDoEntry : allEntries){
-            textToSpeechHelper.readAloud("Next up,");
-            textToSpeechHelper.readAloud(toDoEntry.getEventTitle());
         }
     }
 }

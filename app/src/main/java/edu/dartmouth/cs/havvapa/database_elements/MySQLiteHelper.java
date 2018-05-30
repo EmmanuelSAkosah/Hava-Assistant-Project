@@ -11,13 +11,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper
 
     public static final String TABLE_ITEMS = "items";
     public static final String ROW_ID = "_id";
-    public static final String COLUMN_EVENT_TITLE = "event_title";
-    public static final String COLUMN_EVENT_LOCATION = "event_location";
+    public static final String COLUMN_EVENT_TITLE = "eventTitle";
+    public static final String COLUMN_EVENT_LOCATION = "eventLocation";
     public static final String COLUMN_EVENT_DESCRIPTION = "event_description";
-    public static final String COLUMN_START_DATE_TIME = "start_date_time";
-    public static final String COLUMN_END_DATE_TIME = "end_date_time";
-    public static final String COLUMN_EVENT_DURATION = "event_duration";
-    public static final String COLUMN_UNIQUE_TIMESTAMP = "timestamp";
+    public static final String COLUMN_START_DATE_TIME = "startDateTime";
+    public static final String COLUMN_END_DATE_TIME = "endDateTime";
+    public static final String COLUMN_R = "opt";
+    public static final String COLUMN_UNIQUE_TIMESTAMP = "itemId";
+    public static final String COLUMN_UNIQUE_TIMESTAMPP = "iteId";
 
 
     private static final String DATABASE_TODO_ITEMS = "CREATE TABLE IF NOT EXISTS " +
@@ -27,18 +28,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper
             COLUMN_EVENT_DESCRIPTION + " TEXT NOT NULL, " +
             COLUMN_START_DATE_TIME + " DATETIME NOT NULL, " +
             COLUMN_END_DATE_TIME + " DATETIME NOT NULL, " +
-            COLUMN_EVENT_DURATION + " TEXT NOT NULL, " +
-            COLUMN_UNIQUE_TIMESTAMP + "INTEGER NOT NULL);";
+            COLUMN_R + " TEXT, " +
+            COLUMN_UNIQUE_TIMESTAMP + " INTEGER NOT NULL, " +
+            COLUMN_UNIQUE_TIMESTAMPP + " INTEGER NOT NULL);";
 
 
     MySQLiteHelper(Context context){
 
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DATABASE_TODO_ITEMS);
+
+
+
     }
 
     @Override
