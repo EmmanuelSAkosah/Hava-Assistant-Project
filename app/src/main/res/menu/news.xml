@@ -5,16 +5,5 @@
         android:id="@+id/saved_news"
         android:title="Hist"
         app:showAsAction="always"/>
-    <item
-        android:id="@+id/saved_topics"
-        android:title="Topics"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-
 
 </menu>
